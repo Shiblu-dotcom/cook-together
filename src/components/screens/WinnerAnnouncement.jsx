@@ -78,7 +78,7 @@ export default function WinnerAnnouncement({
   const [showBadge, setShowBadge] = useState(false);
   const [badgeShown, setBadgeShown] = useState(false);
 
-  const { supported, muted, setMuted, speaking, speak, stop } = useVoice();
+  const { supported, muted, setMuted, speaking, speak, stop, voices, voiceName, setVoice } = useVoice();
 
   // Auto-speak the headline judgment a short moment after the screen mounts.
   // Once per mount; user can tap the speaker to mute or replay.
@@ -121,6 +121,10 @@ export default function WinnerAnnouncement({
         muted={muted}
         speaking={speaking}
         onToggleMute={setMuted}
+        voices={voices}
+        voiceName={voiceName}
+        onSelectVoice={setVoice}
+        onPreview={() => speak("The judge has spoken.", { rate: 0.95 })}
       />
 
       <div style={{ width: "100%", maxWidth: 440, padding: "0 20px", position: "relative", zIndex: 2 }}>

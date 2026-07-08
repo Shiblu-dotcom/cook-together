@@ -13,7 +13,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
   const [p2Swapped, setP2Swapped] = useState(false);
   const [showSwapOptions, setShowSwapOptions] = useState(null); // null | 'p1' | 'p2'
   const [swapOptions, setSwapOptions] = useState([]);
-  const { supported, muted, setMuted, speaking, speak, stop } = useVoice();
+  const { supported, muted, setMuted, speaking, speak, stop, voices, voiceName, setVoice } = useVoice();
 
   // Read out each reveal step out loud so players don't need to keep their
   // eyes on the screen while chopping or stirring.
@@ -67,7 +67,16 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
 
   return (
     <div className="screen-center bg-deep" style={{ minHeight: "100vh" }}>
-      <VoiceControl supported={supported} muted={muted} speaking={speaking} onToggleMute={setMuted} />
+      <VoiceControl
+        supported={supported}
+        muted={muted}
+        speaking={speaking}
+        onToggleMute={setMuted}
+        voices={voices}
+        voiceName={voiceName}
+        onSelectVoice={setVoice}
+        onPreview={() => speak("This is how tonight will sound.", { rate: 0.95 })}
+      />
       <div style={{ width: "100%", maxWidth: 440, padding: "0 20px" }}>
 
         {/* Step 0 — Theme reveal */}

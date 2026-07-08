@@ -3,6 +3,10 @@ import { setSfxMuted } from "../utils/sfx";
 import { setAmbientMuted } from "../utils/ambient";
 
 const STORAGE_KEY = "cook_together_voice_muted";
+const PREF_KEY = "cook_together_voice_name";
+// Cross-instance sync: several screens hold their own useVoice() — when one
+// changes the preferred voice, this event tells the others to re-pick.
+const PREF_EVENT = "cook-together-voice-pref";
 const isClient = typeof window !== "undefined" && "speechSynthesis" in window;
 
 /**
@@ -19,8 +23,15 @@ const isClient = typeof window !== "undefined" && "speechSynthesis" in window;
  *      which are noticeably robotic.
  *   4. Whatever's available.
  */
-const pickVoice = (voices) => {
+const pickVoice = (voices, preferredName = null) => {
   if (!voices || voices.length === 0) return null;
+
+  // A voice the couple picked themselves always wins.
+  if (preferredName) {
+    const chosen = voices.find((v) => v.name === preferredName);
+    if (chosen) return chosen;
+  }
+
   const english = voices.filter((v) => /^en[-_]/i.test(v.lang));
   const pool = english.length > 0 ? english : voices;
 
@@ -133,20 +144,61 @@ export const useVoice = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Curated list of selectable voices + the currently active one.
+  const [voiceOptions, setVoiceOptions] = useState([]);
+  const [voiceName, setVoiceName] = useState(null);
+
   // Load voices once available. The voiceschanged event fires on Chrome
-  // after voices are loaded asynchronously.
+  // after voices are loaded asynchronously; the PREF_EVENT fires when any
+  // screen's picker changes the preferred voice.
   useEffect(() => {
     if (!supported) return undefined;
     const refreshVoice = () => {
       const voices = window.speechSynthesis.getVoices();
-      voiceRef.current = pickVoice(voices);
+      let preferred = null;
+      try {
+        preferred = localStorage.getItem(PREF_KEY);
+      } catch {
+        /* ignore */
+      }
+      const picked = pickVoice(voices, preferred);
+      voiceRef.current = picked;
+      setVoiceName(picked ? picked.name : null);
+
+      // Build the picker list: English, no legacy Desktop voices, deduped,
+      // best-sounding tiers first, capped so the panel stays scannable.
+      const score = (v) => {
+        if (/(Natural|Neural|Online|Enhanced|Premium|Siri)/i.test(v.name)) return 0;
+        if (/^Google/i.test(v.name) || /(Aria|Jenny|Sonia|Ava|Olivia|Libby|Samantha|Karen|Allison|Daniel)/i.test(v.name)) return 1;
+        return 2;
+      };
+      const seen = new Set();
+      const options = voices
+        .filter((v) => /^en[-_]/i.test(v.lang) && !/Desktop/i.test(v.name))
+        .filter((v) => (seen.has(v.name) ? false : seen.add(v.name)))
+        .sort((a, b) => score(a) - score(b))
+        .slice(0, 8)
+        .map((v) => v.name);
+      setVoiceOptions(options);
     };
     refreshVoice();
     window.speechSynthesis.addEventListener("voiceschanged", refreshVoice);
+    window.addEventListener(PREF_EVENT, refreshVoice);
     return () => {
       window.speechSynthesis.removeEventListener("voiceschanged", refreshVoice);
+      window.removeEventListener(PREF_EVENT, refreshVoice);
     };
   }, [supported]);
+
+  // Choose a voice by name — persists and syncs every screen's instance.
+  const setVoice = useCallback((name) => {
+    try {
+      localStorage.setItem(PREF_KEY, name);
+    } catch {
+      /* ignore */
+    }
+    window.dispatchEvent(new Event(PREF_EVENT));
+  }, []);
 
   const stop = useCallback(() => {
     if (!supported) return;
@@ -282,5 +334,15 @@ export const useVoice = () => {
     };
   }, [supported]);
 
-  return { supported, muted, setMuted, speaking, speak, stop };
+  return {
+    supported,
+    muted,
+    setMuted,
+    speaking,
+    speak,
+    stop,
+    voices: voiceOptions,
+    voiceName,
+    setVoice,
+  };
 };
