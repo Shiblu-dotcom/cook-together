@@ -29,6 +29,16 @@ export const QUESTIONS = {
     "If this meal had a soundtrack, what song would it be?",
     "What habit of your partner's secretly makes you smile?",
   ],
+  // Supportive — for comfort and divergent nights. Gentle, low-exposure,
+  // bridge-building. Never probing: nobody already raw gets cracked open.
+  supportive: [
+    "What's one thing your partner could take off your plate this week?",
+    "What's something small that always makes your partner feel better?",
+    "What's one thing that went right today, even a tiny one?",
+    "If you two could escape anywhere this weekend, where would you take your partner?",
+    "What meal from your past always feels like a hug?",
+    "What's one way your partner made your life easier recently?",
+  ],
 };
 
 // Rotation memory: questions a couple has already been asked, persisted so
@@ -52,8 +62,21 @@ const saveUsed = (used) => {
   }
 };
 
-export const getQuestionsForTone = (tone, count = 3) => {
-  const pool = QUESTIONS[tone] || QUESTIONS.mix;
+// Depth escalates with trust: the deep questions are earned, not default.
+// Early nights keep it light; once the game has hosted a few nights it has
+// the standing to ask what actually matters.
+const toneForNight = (tone, gamesPlayed) => {
+  if (tone === "deep" && gamesPlayed < 2) return "mix"; // too soon
+  return tone;
+};
+
+// `bias` comes from the couple's day signal and overrides the AI's tone:
+// "supportive" on comfort/divergent nights (never probe someone who's raw),
+// "flirty" on celebration nights.
+export const getQuestionsForTone = (tone, count = 3, gamesPlayed = 0, bias = null) => {
+  const baseTone = bias && QUESTIONS[bias] ? bias : tone;
+  const effectiveTone = toneForNight(baseTone, gamesPlayed);
+  const pool = QUESTIONS[effectiveTone] || QUESTIONS.mix;
   let used = loadUsed();
 
   // Prefer questions this couple has never seen. If the tone's pool is
@@ -65,6 +88,20 @@ export const getQuestionsForTone = (tone, count = 3) => {
   }
 
   const picked = [...fresh].sort(() => Math.random() - 0.5).slice(0, count);
+
+  // From night 7 on, one earned deep question joins even the lighter tones —
+  // the game has been around long enough to ask. Supportive nights are
+  // exempt: never fire a probing question at someone who's already raw.
+  if (gamesPlayed >= 7 && effectiveTone !== "deep" && effectiveTone !== "supportive" && picked.length > 0) {
+    const deepFresh = QUESTIONS.deep.filter(
+      (q) => !used.includes(q) && !picked.includes(q)
+    );
+    if (deepFresh.length > 0) {
+      picked[picked.length - 1] =
+        deepFresh[Math.floor(Math.random() * deepFresh.length)];
+    }
+  }
+
   saveUsed([...used, ...picked]);
   return picked;
 };

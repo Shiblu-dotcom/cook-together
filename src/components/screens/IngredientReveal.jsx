@@ -4,13 +4,18 @@ import { RefreshCw } from "lucide-react";
 import { useVoice } from "../../hooks/useVoice";
 import VoiceControl from "../ui/VoiceControl";
 
-export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, openingMessage, onReady }) {
+export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, openingMessage, easyFor, onReady }) {
   const [step, setStep] = useState(0); // 0=theme, 1=p1 secret, 2=p2 secret
   // Ingredients are drawn from the pool that fits tonight's theme — dessert
   // nights get dessert-compatible picks, savory nights never get matcha.
-  const [ingredients, setIngredients] = useState(() => getRandomIngredients(2, theme));
+  // easyFor quietly hands the forgiving ingredient to whoever has the least
+  // in the tank tonight. Never announced.
+  const [ingredients, setIngredients] = useState(() => getRandomIngredients(2, theme, easyFor));
   const [p1Swapped, setP1Swapped] = useState(false);
   const [p2Swapped, setP2Swapped] = useState(false);
+  // Tiny real-world stakes make the cook-off count — agreed up front,
+  // paid off on the winner screen.
+  const [stakes, setStakes] = useState("");
   const [showSwapOptions, setShowSwapOptions] = useState(null); // null | 'p1' | 'p2'
   const [swapOptions, setSwapOptions] = useState([]);
   const { supported, muted, setMuted, speaking, speak, stop, voices, voiceName, setVoice } = useVoice();
@@ -62,8 +67,14 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
   };
 
   const handleFinish = () => {
-    onReady({ secret1: ingredients[0], secret2: ingredients[1], swapped1: p1Swapped, swapped2: p2Swapped });
+    onReady({ secret1: ingredients[0], secret2: ingredients[1], swapped1: p1Swapped, swapped2: p2Swapped, stakes });
   };
+
+  const STAKES = [
+    "Loser does the dishes 🧽",
+    "Winner picks the next movie 🎬",
+    "Loser writes a love note 💌",
+  ];
 
   return (
     <div className="screen-center bg-deep" style={{ minHeight: "100vh" }}>
@@ -127,6 +138,23 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                 <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6 }}>{cookingTip}</p>
               </div>
             )}
+
+            {/* Optional stakes — one tap, real-world consequence */}
+            <div style={{ marginBottom: 28 }}>
+              <div className="label" style={{ marginBottom: 10 }}>Tonight's stakes (optional)</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
+                {STAKES.map((s) => (
+                  <button
+                    key={s}
+                    className={`chip ${stakes === s ? "selected" : ""}`}
+                    onClick={() => setStakes(stakes === s ? "" : s)}
+                    style={{ fontSize: 13 }}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <button className="btn-primary" onClick={() => setStep(1)}>
               Reveal {p1Name}'s Secret →

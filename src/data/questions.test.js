@@ -28,11 +28,28 @@ describe("question rotation", () => {
     third.forEach((q) => expect(QUESTIONS.flirty).toContain(q));
   });
 
-  it("tracks tones independently", () => {
+  it("tracks tones independently (deep is earned from night 2)", () => {
     getQuestionsForTone("flirty", 3);
-    const deep = getQuestionsForTone("deep", 3);
+    const deep = getQuestionsForTone("deep", 3, 5);
     expect(deep).toHaveLength(3);
     deep.forEach((q) => expect(QUESTIONS.deep).toContain(q));
+  });
+
+  it("downgrades deep to mix on the very first nights — too soon to probe", () => {
+    const early = getQuestionsForTone("deep", 3, 0);
+    early.forEach((q) => expect(QUESTIONS.mix).toContain(q));
+  });
+
+  it("supportive bias overrides the AI's tone on rough nights", () => {
+    const qs = getQuestionsForTone("flirty", 3, 3, "supportive");
+    qs.forEach((q) => expect(QUESTIONS.supportive).toContain(q));
+  });
+
+  it("supportive nights never get the earned deep question injected", () => {
+    for (let i = 0; i < 10; i++) {
+      const qs = getQuestionsForTone("mix", 3, 10, "supportive");
+      qs.forEach((q) => expect(QUESTIONS.deep).not.toContain(q));
+    }
   });
 
   it("falls back to the mix pool for unknown tones", () => {

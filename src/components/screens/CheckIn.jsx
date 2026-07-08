@@ -34,6 +34,9 @@ const SKILL_LABELS = [
   "5 — Gordon who?",
 ];
 
+const VALENCE_LABELS = ["Rough 😮‍💨", "Meh", "Okay", "Good", "Great 😄"];
+const ENERGY_LABELS = ["Running on empty 🪫", "Low", "Okay", "Charged", "Fully wired 🔋"];
+
 export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
   // New users now go through 2 screens:
   //   0 = the essentials (vibe, cravings, relationship length, skill sliders)
@@ -52,6 +55,12 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
     relationshipLength: "",
     celebration: "",
     combinedDay: "",
+    // The night signal — valence (how the day went) and energy (what's left
+    // in the tank), per person. These quietly conduct the whole night.
+    p1Valence: 3,
+    p1Energy: 3,
+    p2Valence: 3,
+    p2Energy: 3,
   });
 
   const set = (key, val) => setData((d) => ({ ...d, [key]: val }));
@@ -152,15 +161,31 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
             How was today? (optional)
           </h2>
           <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 24, lineHeight: 1.5 }}>
-            Helps the AI personalize the night. Skip if you'd rather just cook.
+            Twenty seconds — it quietly shapes the whole night.
           </p>
+
+          <MoodSliders
+            name={p1Name}
+            valence={data.p1Valence}
+            energy={data.p1Energy}
+            onValence={(v) => set("p1Valence", v)}
+            onEnergy={(v) => set("p1Energy", v)}
+          />
+          <MoodSliders
+            name={p2Name}
+            valence={data.p2Valence}
+            energy={data.p2Energy}
+            onValence={(v) => set("p2Valence", v)}
+            onEnergy={(v) => set("p2Energy", v)}
+          />
+
           <Section
-            label="Both of you — how was today?"
+            label="Anything to add? (optional)"
             mic={<VoiceInput value={data.combinedDay} onChange={(v) => set("combinedDay", v)} compact />}
           >
             <textarea
               className="input-field"
-              rows={3}
+              rows={2}
               placeholder="The highlights, the rough patches, anything..."
               value={data.combinedDay}
               onChange={(e) => set("combinedDay", e.target.value)}
@@ -195,6 +220,14 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
           🤫 Take turns — each person types privately while the other looks away.
         </div>
 
+        <MoodSliders
+          name={p1Name}
+          valence={data.p1Valence}
+          energy={data.p1Energy}
+          onValence={(v) => set("p1Valence", v)}
+          onEnergy={(v) => set("p1Energy", v)}
+        />
+
         <Section
           label={`${p1Name} — how was your day?`}
           mic={<VoiceInput value={data.p1Day} onChange={(v) => set("p1Day", v)} compact />}
@@ -227,6 +260,14 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
             background: "var(--border-subtle)",
             margin: "20px 0 24px",
           }}
+        />
+
+        <MoodSliders
+          name={p2Name}
+          valence={data.p2Valence}
+          energy={data.p2Energy}
+          onValence={(v) => set("p2Valence", v)}
+          onEnergy={(v) => set("p2Energy", v)}
         />
 
         <Section
@@ -324,6 +365,30 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
             Skip — just cook
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+// The two-slider mood capture — the birth of the night signal. Compact on
+// purpose: two drags, done.
+function MoodSliders({ name, valence, energy, onValence, onEnergy }) {
+  return (
+    <div className="card-sm" style={{ marginBottom: 20, padding: "16px 18px" }}>
+      <div className="label" style={{ marginBottom: 12, color: "var(--accent-gold)" }}>
+        {name} — quick pulse
+      </div>
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 6 }}>
+          How was the day?
+        </div>
+        <SliderInput value={valence} onChange={onValence} labels={VALENCE_LABELS} />
+      </div>
+      <div>
+        <div style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 6 }}>
+          Energy left?
+        </div>
+        <SliderInput value={energy} onChange={onEnergy} labels={ENERGY_LABELS} />
       </div>
     </div>
   );

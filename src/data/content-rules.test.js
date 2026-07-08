@@ -3,6 +3,7 @@ import { SECRET_INGREDIENTS, getAlternatives, getRandomIngredients, getThemeProf
 import { THEMES } from "./themes";
 import { QUESTIONS } from "./questions";
 import { TWISTS } from "./twists";
+import { COOP_MOMENTS } from "./coopMoments";
 import { DIETARY_RULE, buildContextPrompt, buildJudgmentPrompt } from "../utils/aiPrompts";
 
 // Hard content rule: no pork or alcohol anywhere — static data or AI prompts.
@@ -22,6 +23,7 @@ describe("dietary content rules", () => {
   scanText("themes", JSON.stringify(THEMES));
   scanText("questions", JSON.stringify(QUESTIONS));
   scanText("twists", JSON.stringify(TWISTS));
+  scanText("coop moments", JSON.stringify(COOP_MOMENTS));
 
   it("DIETARY_RULE is injected into both AI prompts", () => {
     const fakeState = {

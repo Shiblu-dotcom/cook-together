@@ -11,6 +11,13 @@ export const TWISTS = [
   { id: "no_utensils", text: "⚡ TWIST: No utensils for the next 90 seconds. Hands only!", difficulty: "hard" },
 ];
 
-export const getRandomTwist = () => {
-  return TWISTS[Math.floor(Math.random() * TWISTS.length)];
+// `style` comes from the AI's read of the night: "fun" after a rough day
+// (keep it light), "hard" when they asked for chaos, "any" otherwise.
+export const getRandomTwist = (style = "any") => {
+  const pool =
+    style && style !== "any"
+      ? TWISTS.filter((t) => t.difficulty === style)
+      : TWISTS;
+  const source = pool.length > 0 ? pool : TWISTS;
+  return source[Math.floor(Math.random() * source.length)];
 };

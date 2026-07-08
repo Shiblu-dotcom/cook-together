@@ -54,7 +54,20 @@ export const getAlternatives = (ingredient, count = 3, themeName = "") => {
   return ordered.slice(0, count);
 };
 
-export const getRandomIngredients = (count = 2, themeName = "") => {
-  const shuffled = [...poolForTheme(themeName)].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+// `easyFor` bends the deal to the night: if one partner had a rough day,
+// their slot ("p1" = first, "p2" = second) draws from easy ingredients only,
+// so the game quietly goes gentle on them.
+export const getRandomIngredients = (count = 2, themeName = "", easyFor = null) => {
+  const pool = poolForTheme(themeName);
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  const picks = shuffled.slice(0, count);
+
+  const easySlot = easyFor === "p1" ? 0 : easyFor === "p2" ? 1 : -1;
+  if (easySlot >= 0 && picks[easySlot] && picks[easySlot].difficulty !== "easy") {
+    const easy = shuffled.find(
+      (i) => i.difficulty === "easy" && !picks.some((p) => p.name === i.name)
+    );
+    if (easy) picks[easySlot] = easy;
+  }
+  return picks;
 };

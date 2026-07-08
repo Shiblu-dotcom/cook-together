@@ -229,7 +229,19 @@ export const useAI = () => {
       secret1 = null,
       secret2 = null,
       minutesLeft = null,
+      night = null,
     } = ctx;
+    const coupleState = ctx.coupleState ?? night?.coupleState ?? null;
+
+    // Chef's warmth follows the room — never explained, just felt.
+    const toneLine =
+      coupleState === "comfort" || coupleState === "divergent"
+        ? "Tonight, be extra warm, patient, and proactive — offer help before they ask, keep the bar low, celebrate small wins. "
+        : coupleState === "gentle"
+        ? "Tonight, keep everything easy and low-effort — shortcuts are wisdom, not cheating. "
+        : coupleState === "celebration"
+        ? "Tonight they're riding high — bring banter, dares, and a little challenge. "
+        : "";
 
     // The persona has a name (Chef) and a voice — warm, quick, never preachy.
     // We avoid emojis because the replies are also read aloud via TTS, where
@@ -240,6 +252,7 @@ export const useAI = () => {
       `${p1Name} and ${p2Name} through a 15-minute couples cook-off. ` +
       `Tonight's theme: "${theme}". ` +
       (minutesLeft ? `About ${minutesLeft} minute${minutesLeft === 1 ? "" : "s"} left on the clock — factor that into your advice. ` : "") +
+      toneLine +
       (secret1?.name ? `${p1Name}'s secret ingredient is ${secret1.name}. ` : "") +
       (secret2?.name ? `${p2Name}'s secret ingredient is ${secret2.name}. ` : "") +
       `\n\nStyle:\n` +

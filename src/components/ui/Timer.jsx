@@ -3,11 +3,12 @@ import { sfxTick, sfxTimesUp } from "../../utils/sfx";
 
 const TOTAL = 15 * 60;
 
-export default function Timer({ onTwistTime, onTimeUp, onTick, paused = false, initialSeconds = TOTAL }) {
+export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, paused = false, initialSeconds = TOTAL }) {
   const [seconds, setSeconds] = useState(initialSeconds);
   const [running, setRunning] = useState(true);
-  // If we're resuming past the twist mark, the twist already happened.
+  // If we're resuming past a trigger mark, that beat already happened.
   const twistFired = useRef(initialSeconds <= 4 * 60);
+  const coopFired = useRef(initialSeconds <= 9 * 60);
   const intervalRef = useRef(null);
 
   // The interval only decrements — pure state update, no side effects. All
@@ -28,15 +29,22 @@ export default function Timer({ onTwistTime, onTimeUp, onTick, paused = false, i
   // trigger, countdown beeps, and time-up. Callbacks are read through refs so
   // this effect keys ONLY on the clock — a parent re-render handing us new
   // callback identities must not re-fire it (that's an infinite loop).
-  const callbacksRef = useRef({ onTick, onTwistTime, onTimeUp });
+  const callbacksRef = useRef({ onTick, onTwistTime, onCoopTime, onTimeUp });
   useEffect(() => {
-    callbacksRef.current = { onTick, onTwistTime, onTimeUp };
+    callbacksRef.current = { onTick, onTwistTime, onCoopTime, onTimeUp };
   });
 
   const timeUpFired = useRef(false);
   useEffect(() => {
     const cb = callbacksRef.current;
     if (cb.onTick) cb.onTick(seconds);
+
+    // The Together Moment fires crossing the 9-minute mark — mid-cook,
+    // when both dishes exist enough to cooperate over.
+    if (seconds <= 9 * 60 && seconds > 0 && !coopFired.current) {
+      coopFired.current = true;
+      if (cb.onCoopTime) cb.onCoopTime();
+    }
 
     // Twist fires when we cross the 4-minute mark (crossing, not equality,
     // so the 60x demo step and resumed sessions can't skip over it).

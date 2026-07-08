@@ -52,7 +52,7 @@ function Confetti() {
 }
 
 export default function WinnerAnnouncement({
-  p1Name, p2Name, judgment, newBadges = [], existingBadges = [],
+  p1Name, p2Name, judgment, stakes, newBadges = [], existingBadges = [],
   onContinue,
 }) {
   // Fanfare as the winner flies in.
@@ -157,6 +157,33 @@ export default function WinnerAnnouncement({
             </>
           )}
         </div>
+
+        {/* Stakes payoff — the tiny real-world consequence they agreed to */}
+        {stakes && !isTie && (
+          <div
+            className="card-sm animate-fade-in-up delay-200"
+            style={{ textAlign: "center", marginBottom: 16, animationFillMode: "forwards", borderColor: "var(--border-strong)" }}
+          >
+            <div className="label" style={{ marginBottom: 6, color: "var(--accent-gold)" }}>⚖️ The Stakes</div>
+            <p style={{ fontSize: 15, color: "var(--text-primary)" }}>
+              {stakes} —{" "}
+              <strong style={{ color: "var(--accent-gold)" }}>
+                {stakes.startsWith("Winner") ? winner : winner === p1Name ? p2Name : p1Name}
+              </strong>
+              , that's you.
+            </p>
+          </div>
+        )}
+        {stakes && isTie && (
+          <div
+            className="card-sm animate-fade-in-up delay-200"
+            style={{ textAlign: "center", marginBottom: 16, animationFillMode: "forwards" }}
+          >
+            <p style={{ fontSize: 14, color: "var(--text-secondary)" }}>
+              ⚖️ A tie — you do the stakes <em>together</em>. {stakes.replace(/^(Loser|Winner)/, "Both of you")}
+            </p>
+          </div>
+        )}
 
         {/* Scores */}
         <div className="card animate-fade-in-up delay-200" style={{ marginBottom: 20, animationFillMode: "forwards" }}>

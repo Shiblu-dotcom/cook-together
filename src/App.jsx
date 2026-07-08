@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from "react";
 import { sfxChime } from "./utils/sfx";
+import { computeNightSignal } from "./utils/nightSignal";
 import { useGame, getSavedSession, clearSavedSession } from "./hooks/useGame";
 import { useAI } from "./hooks/useAI";
 import { useStorage } from "./hooks/useStorage";
@@ -218,11 +219,18 @@ export default function App() {
   // ─── Check-in ──────────────────────────────────────────────────────────────
   const handleCheckInComplete = useCallback(
     async (checkInData) => {
+      // The conductor: derive the night signal from the day check-in. It
+      // steers every stage locally (ingredients, twist, questions, Chef) and
+      // is described to the AI for theme + judge tone. Works with or
+      // without the AI — the steering is deterministic.
+      const night = computeNightSignal(checkInData);
       updateCheckIn(checkInData);
+      updateGame({ night });
       setPhase(PHASES.LOADING_AI);
 
       const stateForAI = {
         ...gameState,
+        night,
         checkIn: { ...gameState.checkIn, ...checkInData },
       };
 
@@ -234,13 +242,13 @@ export default function App() {
       }
       setPhase(PHASES.INGREDIENTS);
     },
-    [gameState, updateCheckIn, updateAIContext, buildGameContext]
+    [gameState, updateCheckIn, updateGame, updateAIContext, buildGameContext]
   );
 
   // ─── Ingredients ───────────────────────────────────────────────────────────
   const handleIngredientsReady = useCallback(
-    ({ secret1, secret2, swapped1, swapped2 }) => {
-      updateGame({ secret1, secret2, swapped1, swapped2 });
+    ({ secret1, secret2, swapped1, swapped2, stakes }) => {
+      updateGame({ secret1, secret2, swapped1, swapped2, stakes: stakes || "" });
       setPhase(PHASES.COOKING);
     },
     [updateGame]
@@ -248,8 +256,8 @@ export default function App() {
 
   // ─── Cooking ───────────────────────────────────────────────────────────────
   const handleTimeUp = useCallback(
-    (twist) => {
-      updateGame({ twist, secondsLeft: null });
+    (twist, coopMoment) => {
+      updateGame({ twist, coopMoment, secondsLeft: null });
       setPhase(PHASES.TIMEUP);
     },
     [updateGame]
@@ -270,7 +278,21 @@ export default function App() {
       setPhase(PHASES.JUDGING);
       setAiError(null);
 
-      const fullState = { ...gameState, ...dishData };
+      // The judge's memory: everything this couple has accumulated. Night 10's
+      // judge remembers night 3's ridiculous dish name.
+      const profileForMemory = getProfile();
+      const fullState = {
+        ...gameState,
+        ...dishData,
+        history: profileForMemory
+          ? {
+              gamesPlayed: profileForMemory.gamesPlayed || 0,
+              pastWords: (profileForMemory.wordCollection || []).map((w) => w.word),
+              lastTitle: profileForMemory.coupleTitle || "",
+              dishHistory: (profileForMemory.dishHistory || []).slice(-5),
+            }
+          : null,
+      };
       try {
         const judgment = await getJudgment(fullState);
         updateJudgment(judgment);
@@ -323,6 +345,9 @@ export default function App() {
       newBadges: gameState.newBadges || [],
       memories: gameState.memories,
       questionAnswers: gameState.questionsAnswered,
+      dish1Name: gameState.dish1Name,
+      dish2Name: gameState.dish2Name,
+      winner: gameState.judgment.winner,
     });
     setPhase(PHASES.THE_WORD);
   }, [gameState, updateProfileAfterGame]);
@@ -435,6 +460,7 @@ export default function App() {
           theme={gameState.aiContext.theme}
           cookingTip={gameState.aiContext.cookingTip}
           openingMessage={gameState.aiContext.openingMessage}
+          easyFor={gameState.night?.easyFor}
           onReady={handleIngredientsReady}
         />
       )}
@@ -446,6 +472,10 @@ export default function App() {
           theme={gameState.aiContext.theme}
           musicMood={gameState.aiContext.musicMood}
           questionTone={gameState.aiContext.questionTone}
+          questionBias={gameState.night?.questionToneOverride}
+          twistStyle={gameState.night?.twistStyle}
+          night={gameState.night}
+          gamesPlayed={gameState.gamesPlayed}
           secret1={gameState.secret1}
           secret2={gameState.secret2}
           memories={gameState.memories}
@@ -492,6 +522,7 @@ export default function App() {
           p1Name={gameState.p1Name}
           p2Name={gameState.p2Name}
           judgment={gameState.judgment}
+          stakes={gameState.stakes}
           newBadges={gameState.newBadges || []}
           existingBadges={profile?.badges || []}
           onContinue={handleWinnerContinue}

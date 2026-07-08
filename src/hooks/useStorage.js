@@ -89,6 +89,21 @@ export const useStorage = () => {
       ].slice(-100);
     }
 
+    // Dish history feeds the judge's memory — it lets night 10's judge say
+    // "still chasing the high of The Golden Hour, I see."
+    if (gameResult.dish1Name || gameResult.dish2Name) {
+      updated.dishHistory = [
+        ...(profile.dishHistory || []),
+        {
+          dish1: gameResult.dish1Name || "",
+          dish2: gameResult.dish2Name || "",
+          winner: gameResult.winner || "",
+          theme: gameResult.theme || "",
+          date: new Date().toISOString().split("T")[0],
+        },
+      ].slice(-20);
+    }
+
     saveProfile(updated);
     return updated;
   };

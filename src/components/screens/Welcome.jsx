@@ -206,6 +206,14 @@ export default function Welcome({ onStart, onViewProfile, resumeSlot, onResume }
             <p style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 4 }}>
               Ready for round {roundNum}?
             </p>
+            {returning.wordCollection?.length > 0 && (
+              <p style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 8 }}>
+                Last night's word:{" "}
+                <span className="font-display" style={{ color: "var(--accent-gold)", fontWeight: 700, fontSize: 14 }}>
+                  {returning.wordCollection[returning.wordCollection.length - 1].word}
+                </span>
+              </p>
+            )}
           </div>
         )}
 

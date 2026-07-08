@@ -7,25 +7,30 @@ import CookingAssistant from "../ui/CookingAssistant";
 import { useVoice } from "../../hooks/useVoice";
 import { getQuestionsForTone } from "../../data/questions";
 import { getRandomTwist } from "../../data/twists";
-import { sfxTwist } from "../../utils/sfx";
+import { getRandomCoopMoment } from "../../data/coopMoments";
+import { sfxTwist, sfxChime } from "../../utils/sfx";
 import { startAmbient, stopAmbient, setAmbientMood } from "../../utils/ambient";
 
 export default function Cooking({
-  p1Name, p2Name, theme, musicMood: initialMood, questionTone,
-  secret1, secret2,
+  p1Name, p2Name, theme, musicMood: initialMood, questionTone, questionBias,
+  secret1, secret2, twistStyle, gamesPlayed, night,
   memories, onAddMemory, onQuestionAnswer, onTimeUp,
   initialSeconds, onTick,
 }) {
   const [mood, setMood] = useState(initialMood || "chill");
   const [twist, setTwist] = useState(null);
   const [showTwist, setShowTwist] = useState(false);
+  const [coop, setCoop] = useState(null);
+  const [showCoop, setShowCoop] = useState(false);
   const [paused, setPaused] = useState(false);
   const [peeking, setPeeking] = useState(null); // null | 'choose' | 'p1' | 'p2'
   // Coarse clock for the Chef assistant — updated every 30s so re-renders
   // stay rare but Chef can give time-aware advice ("plate it, 3 minutes left").
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds || 15 * 60);
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [questions] = useState(() => getQuestionsForTone(questionTone || "mix"));
+  const [questions] = useState(() =>
+    getQuestionsForTone(questionTone || "mix", 3, gamesPlayed || 0, questionBias || null)
+  );
   const questionIdx = useRef(0);
   const questionTimers = useRef([]);
   const twistTimeoutRef = useRef(null);
@@ -76,7 +81,8 @@ export default function Cooking({
   };
 
   const handleTwistTime = () => {
-    const t = getRandomTwist();
+    // The AI reads the night: light twists after rough days, chaos on request.
+    const t = getRandomTwist(twistStyle || "any");
     setTwist(t);
     setShowTwist(true);
     twistRef.current = t;
@@ -92,8 +98,27 @@ export default function Cooking({
     }, 8000);
   };
 
+  // The Together Moment — the one forced-cooperation beat of the night.
+  const coopRef = useRef(null);
+  const coopTimeoutRef = useRef(null);
+  const handleCoopTime = () => {
+    const c = getRandomCoopMoment();
+    setCoop(c);
+    setShowCoop(true);
+    coopRef.current = c;
+    sfxChime();
+    if (voice.supported && !voice.muted) {
+      voice.speak(`Together now. ${c.text.replace(/^🤝\s*TOGETHER:\s*/, "")}`);
+    }
+    if (coopTimeoutRef.current) clearTimeout(coopTimeoutRef.current);
+    coopTimeoutRef.current = setTimeout(() => {
+      setShowCoop(false);
+      coopTimeoutRef.current = null;
+    }, 10000);
+  };
+
   const handleTimeUp = () => {
-    onTimeUp(twistRef.current);
+    onTimeUp(twistRef.current, coopRef.current);
   };
 
   // Report remaining time upward every 5 ticks so a reload can resume the
@@ -107,12 +132,13 @@ export default function Cooking({
     [onTick]
   );
 
-  // Escape closes whichever overlay is up — peek or twist.
+  // Escape closes whichever overlay is up — peek, twist, or together moment.
   useEffect(() => {
     const onKey = (e) => {
       if (e.key !== "Escape") return;
       setPeeking(null);
       setShowTwist(false);
+      setShowCoop(false);
       if (twistTimeoutRef.current) {
         clearTimeout(twistTimeoutRef.current);
         twistTimeoutRef.current = null;
@@ -191,6 +217,7 @@ export default function Cooking({
           />
           <Timer
             onTwistTime={handleTwistTime}
+            onCoopTime={handleCoopTime}
             onTimeUp={handleTimeUp}
             onTick={handleTick}
             paused={paused}
@@ -300,6 +327,45 @@ export default function Cooking({
         </div>
       )}
 
+      {/* Together Moment overlay — warm, not alarming */}
+      {showCoop && coop && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="coop-title"
+          onClick={() => setShowCoop(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.82)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 60,
+            padding: 24,
+            cursor: "pointer",
+          }}
+        >
+          <div
+            className="card animate-twist-in"
+            style={{ textAlign: "center", maxWidth: 380, borderColor: "rgba(125,211,168,0.4)" }}
+          >
+            <div style={{ fontSize: 48, marginBottom: 16 }} aria-hidden="true">🤝</div>
+            <div className="label" style={{ color: "var(--accent-green, #7dd3a8)", marginBottom: 10 }}>
+              Together Moment
+            </div>
+            <h2
+              id="coop-title"
+              className="font-display"
+              style={{ fontSize: 21, fontWeight: 700, color: "var(--text-primary)", marginBottom: 12, lineHeight: 1.4 }}
+            >
+              {coop.text.replace(/^🤝\s*TOGETHER:\s*/, "")}
+            </h2>
+            <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>Tap anywhere when you've done it</p>
+          </div>
+        </div>
+      )}
+
       {/* Twist overlay */}
       {showTwist && twist && (
         <div
@@ -357,9 +423,9 @@ export default function Cooking({
         onCapture={onAddMemory}
       />
 
-      {/* Ask Chef — AI cooking assistant, aware of the clock */}
+      {/* Ask Chef — AI cooking assistant, aware of the clock and the night */}
       <CookingAssistant
-        ctx={{ p1Name, p2Name, theme, secret1, secret2, minutesLeft: Math.ceil(secondsLeft / 60) }}
+        ctx={{ p1Name, p2Name, theme, secret1, secret2, night, minutesLeft: Math.ceil(secondsLeft / 60) }}
       />
     </div>
   );

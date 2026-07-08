@@ -1,3 +1,5 @@
+import { describeNightForAI } from "./nightSignal";
+
 // Universal dietary guardrail — the app serves a global audience, so every
 // AI-generated theme, tip, or comment must be inclusive by default.
 export const DIETARY_RULE =
@@ -12,6 +14,9 @@ Based on this couple's check-in data, decide the following for their cooking cha
 Return ONLY valid JSON, no markdown, no explanation.
 
 ${DIETARY_RULE}
+${describeNightForAI(gameState.night, p1Name, p2Name)}
+
+THEME GUIDANCE BY NIGHT: celebration → ambitious, go-big themes. comfort → warm, nostalgic, familiar. gentle → easy, low-effort. divergent → warm and low-stakes (never high-pressure). balanced → whatever fits their vibe.
 
 Check-in data:
 - Player 1: ${p1Name}, day: "${checkIn.p1Day}", excited about: "${checkIn.p1Excited}"
@@ -43,6 +48,9 @@ export const buildJudgmentPrompt = (gameState) => {
 You are a world-class cooking show judge for a couples cooking challenge app called "Cook Together, Stay Together."
 
 ${DIETARY_RULE}
+${describeNightForAI(gameState.night, p1Name, p2Name)}
+
+THE WORD should capture tonight's ARC — where they started versus where they ended. If they came in split or drained and cooked their way back to each other, reach for repair words (steadied, mended, held) over generic praise words.
 
 TONIGHT'S CONTEXT:
 - Players: ${p1Name} and ${p2Name}
@@ -55,6 +63,14 @@ TONIGHT'S CONTEXT:
 - Relationship length: "${checkIn.relationshipLength}"
 - Cooking theme: "${aiContext.theme}"
 - Twist that happened: "${twist ? twist.text : 'No twist'}"
+- Together Moment they shared mid-cook: "${gameState.coopMoment ? gameState.coopMoment.text : 'none'}"
+${gameState.stakes ? `- Stakes they agreed on up front: "${gameState.stakes}". You may playfully nod to what awaits the loser in winnerReason — never cruel.` : ""}
+${gameState.history && gameState.history.gamesPlayed > 0 ? `
+YOUR MEMORY OF THIS COUPLE — you have judged them ${gameState.history.gamesPlayed} time${gameState.history.gamesPlayed === 1 ? "" : "s"} before. You are their recurring judge, not a stranger:
+- Their past Words, oldest first: ${gameState.history.pastWords.join(", ") || "none yet"}
+- Their standing couple title: "${gameState.history.lastTitle || "none yet"}"
+- Recent dishes: ${(gameState.history.dishHistory || []).map((d) => `"${d.dish1}" vs "${d.dish2}"${d.winner ? ` (${d.winner} won)` : ""}`).join("; ") || "none yet"}
+Speak like a judge who has watched them grow. ONE natural callback to their history is gold — a past dish name, a pattern you've noticed, how tonight compares to last time. NEVER repeat a past Word as tonight's Word.` : ""}
 - ${p1Name}'s secret ingredient: "${secret1 ? secret1.name : 'unknown'}" — Used it: ${usedSecret1}
 - ${p2Name}'s secret ingredient: "${secret2 ? secret2.name : 'unknown'}" — Used it: ${usedSecret2}
 - ${p1Name}'s dish: "${dish1Name}" — "${dish1Description}"
