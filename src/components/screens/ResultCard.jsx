@@ -1,0 +1,321 @@
+import { useState } from "react";
+import { Download, Share2, Edit2, Check } from "lucide-react";
+import { downloadCard, shareCard } from "../../utils/shareCard";
+
+const TEMPLATES = [
+  {
+    id: "dark_moody",
+    label: "Dark & Moody",
+    bg: "linear-gradient(135deg, #0d0d0d 0%, #1a0a2e 100%)",
+    textColor: "#ffe066",
+    accentColor: "#ff9800",
+    border: "1px solid rgba(245,207,93,0.2)",
+  },
+  {
+    id: "warm_soft",
+    label: "Warm & Soft",
+    bg: "linear-gradient(135deg, #2a1a0e 0%, #1a0f06 100%)",
+    textColor: "#f5c97a",
+    accentColor: "#e8855a",
+    border: "1px solid rgba(245,201,122,0.3)",
+  },
+  {
+    id: "bold_loud",
+    label: "Bold & Loud",
+    bg: "linear-gradient(135deg, #1a0030 0%, #0d1a30 100%)",
+    textColor: "#ffffff",
+    accentColor: "#ffe066",
+    border: "1px solid rgba(255,255,255,0.15)",
+  },
+  {
+    id: "cinematic",
+    label: "Cinematic",
+    bg: "linear-gradient(160deg, #0a0010 0%, #1a0820 50%, #0d1520 100%)",
+    textColor: "#e8d5b7",
+    accentColor: "#c8a96e",
+    border: "1px solid rgba(200,169,110,0.2)",
+  },
+];
+
+export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, onPlayAgain }) {
+  const [templateIdx, setTemplateIdx] = useState(0);
+  const [caption, setCaption] = useState("");
+  const [editingCaption, setEditingCaption] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [actionError, setActionError] = useState(null);
+
+  const tpl = TEMPLATES[templateIdx];
+  const safeJudgment = judgment || {};
+  const {
+    theWord = "TONIGHT",
+    coupleTitle = "Worth Watching",
+    compatibilityScore = 0,
+    winner = "tie",
+  } = safeJudgment;
+  const heroMemory = memories && memories.length > 0 ? memories[0].photo : null;
+
+  const handleDownload = async () => {
+    if (downloading) return;
+    setDownloading(true);
+    setActionError(null);
+    try {
+      await downloadCard("result-card", `cook-together-${(theWord || "card").toLowerCase()}.png`);
+    } catch (err) {
+      console.error(err);
+      setActionError("Couldn't download the card. Try again?");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (sharing) return;
+    setSharing(true);
+    setActionError(null);
+    try {
+      await shareCard("result-card", `Cook Together — ${theWord}`);
+    } catch (err) {
+      console.error(err);
+      setActionError("Couldn't share. Try downloading instead?");
+    } finally {
+      setSharing(false);
+    }
+  };
+
+  return (
+    <div className="screen bg-deep" style={{ paddingTop: 32, paddingBottom: 40, alignItems: "center" }}>
+      <div style={{ width: "100%", maxWidth: 440, padding: "0 20px" }}>
+        <h2 className="font-display" style={{ fontSize: 24, textAlign: "center", marginBottom: 8 }}>
+          Your Result Card
+        </h2>
+        <p style={{ color: "var(--text-secondary)", fontSize: 14, textAlign: "center", marginBottom: 24 }}>
+          Download it, share it, treasure it.
+        </p>
+
+        {/* The card */}
+        <div
+          id="result-card"
+          style={{
+            background: tpl.bg,
+            border: tpl.border,
+            borderRadius: 24,
+            padding: "32px 28px",
+            marginBottom: 20,
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Texture overlay for cinematic */}
+          {tpl.id === "cinematic" && (
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E\")",
+                opacity: 0.3,
+                pointerEvents: "none",
+              }}
+            />
+          )}
+
+          {/* App name + date */}
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20, position: "relative" }}>
+            <span style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5, fontFamily: "'Playfair Display', serif", letterSpacing: "0.05em" }}>
+              Cook Together
+            </span>
+            <span style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5 }}>
+              {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+            </span>
+          </div>
+
+          {/* Names */}
+          <p style={{ fontSize: 14, color: tpl.textColor, opacity: 0.7, marginBottom: 4, position: "relative" }}>
+            {p1Name} & {p2Name}
+          </p>
+
+          {/* The Word */}
+          <h1
+            className="font-display"
+            style={{
+              fontSize: 56,
+              fontWeight: 900,
+              color: tpl.accentColor,
+              letterSpacing: "0.04em",
+              marginBottom: 8,
+              lineHeight: 1.1,
+              position: "relative",
+              textShadow: `0 0 40px ${tpl.accentColor}30`,
+            }}
+          >
+            {theWord}
+          </h1>
+
+          {/* Couple title */}
+          <p style={{ fontSize: 14, color: tpl.textColor, opacity: 0.8, marginBottom: 20, fontStyle: "italic", position: "relative" }}>
+            {coupleTitle}
+          </p>
+
+          {/* Memory photo */}
+          {heroMemory && (
+            <div style={{ marginBottom: 16, borderRadius: 12, overflow: "hidden", position: "relative" }}>
+              <img
+                src={heroMemory}
+                alt={`A memory from ${p1Name} and ${p2Name}'s night`}
+                style={{ width: "100%", height: 160, objectFit: "cover" }}
+              />
+            </div>
+          )}
+
+          {/* Stats row */}
+          <div style={{ display: "flex", gap: 12, marginBottom: 16, position: "relative" }}>
+            <div
+              style={{
+                flex: 1,
+                background: "rgba(255,255,255,0.05)",
+                borderRadius: 12,
+                padding: "10px 14px",
+                textAlign: "center",
+              }}
+            >
+              <div style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5, marginBottom: 4 }}>Compatibility</div>
+              <div style={{ fontSize: 20, fontFamily: "'Playfair Display', serif", fontWeight: 700, color: tpl.accentColor }}>
+                {compatibilityScore}%
+              </div>
+            </div>
+            <div
+              style={{
+                flex: 1,
+                background: "rgba(255,255,255,0.05)",
+                borderRadius: 12,
+                padding: "10px 14px",
+                textAlign: "center",
+              }}
+            >
+              <div style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5, marginBottom: 4 }}>Winner</div>
+              <div style={{ fontSize: 16, fontFamily: "'Playfair Display', serif", fontWeight: 700, color: tpl.accentColor }}>
+                {winner === "tie" ? "Tie 🤝" : winner}
+              </div>
+            </div>
+          </div>
+
+          {/* Caption */}
+          {caption && (
+            <p style={{ fontSize: 13, color: tpl.textColor, opacity: 0.6, fontStyle: "italic", position: "relative" }}>
+              "{caption}"
+            </p>
+          )}
+
+          {/* Theme */}
+          <p style={{ fontSize: 11, color: tpl.textColor, opacity: 0.35, marginTop: 16, position: "relative" }}>
+            {theme} • cook-together.app
+          </p>
+        </div>
+
+        {/* Template picker */}
+        <div
+          role="radiogroup"
+          aria-label="Card style"
+          style={{ display: "flex", gap: 8, marginBottom: 20, overflowX: "auto", paddingBottom: 4 }}
+        >
+          {TEMPLATES.map((t, i) => {
+            const isSel = templateIdx === i;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTemplateIdx(i)}
+                role="radio"
+                aria-checked={isSel}
+                style={{
+                  flexShrink: 0,
+                  background: t.bg,
+                  border: `2px solid ${isSel ? "var(--accent-gold)" : "rgba(255,255,255,0.1)"}`,
+                  borderRadius: 10,
+                  padding: "8px 14px",
+                  fontSize: 12,
+                  color: isSel ? "var(--accent-gold)" : "var(--text-secondary)",
+                  cursor: "pointer",
+                  transition: "border-color 0.15s ease, color 0.15s ease",
+                  fontFamily: "'DM Sans', sans-serif",
+                }}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Caption editor */}
+        <div style={{ marginBottom: 20 }}>
+          {editingCaption ? (
+            <div style={{ display: "flex", gap: 8 }}>
+              <input
+                className="input-field"
+                placeholder="Add a caption..."
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                maxLength={100}
+              />
+              <button
+                onClick={() => setEditingCaption(false)}
+                style={{
+                  background: "rgba(245,207,93,0.1)",
+                  border: "1px solid var(--border-subtle)",
+                  borderRadius: 12,
+                  padding: "0 14px",
+                  cursor: "pointer",
+                  color: "var(--accent-gold)",
+                }}
+              >
+                <Check size={16} />
+              </button>
+            </div>
+          ) : (
+            <button
+              className="btn-ghost"
+              onClick={() => setEditingCaption(true)}
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
+              <Edit2 size={14} /> {caption ? "Edit caption" : "Add caption"}
+            </button>
+          )}
+        </div>
+
+        {/* Action buttons */}
+        <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+          <button
+            className="btn-secondary"
+            onClick={handleDownload}
+            disabled={downloading}
+            aria-busy={downloading}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+          >
+            <Download size={16} aria-hidden="true" /> {downloading ? "Saving..." : "Download"}
+          </button>
+          <button
+            className="btn-primary"
+            onClick={handleShare}
+            disabled={sharing}
+            aria-busy={sharing}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+          >
+            <Share2 size={16} aria-hidden="true" /> {sharing ? "Sharing..." : "Share →"}
+          </button>
+        </div>
+
+        {actionError && (
+          <p
+            role="alert"
+            style={{ fontSize: 13, color: "var(--accent-red)", marginBottom: 16, textAlign: "center" }}
+          >
+            {actionError}
+          </p>
+        )}
+
+        <button className="btn-ghost" onClick={onPlayAgain} style={{ width: "100%", marginTop: 8 }}>
+          Play again ↩
+        </button>
+      </div>
+    </div>
+  );
+}

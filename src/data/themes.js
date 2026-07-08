@@ -1,0 +1,17 @@
+export const THEMES = [
+  { id: "italian_street", name: "Italian Street Food", emoji: "🇮🇹", difficulty: "medium" },
+  { id: "spicy_asian", name: "Spicy Asian Fusion", emoji: "🌶️", difficulty: "hard" },
+  { id: "breakfast_dinner", name: "Breakfast for Dinner", emoji: "🥞", difficulty: "easy" },
+  { id: "mystery_battle", name: "Mystery Ingredient Battle", emoji: "🎭", difficulty: "hard" },
+  { id: "five_dollar", name: "5-Dollar Gourmet", emoji: "💵", difficulty: "medium" },
+  { id: "grandma_secret", name: "Grandma's Secret Recipe", emoji: "👵", difficulty: "medium" },
+  { id: "tropical", name: "Tropical Island Vibes", emoji: "🌴", difficulty: "easy" },
+  { id: "midnight_snack", name: "Midnight Snack Showdown", emoji: "🌙", difficulty: "easy" },
+  { id: "comfort_battle", name: "Comfort Food Battle", emoji: "🍲", difficulty: "easy" },
+  { id: "street_tacos", name: "Street Taco Wars", emoji: "🌮", difficulty: "easy" },
+  { id: "fine_dining", name: "Fine Dining on a Budget", emoji: "✨", difficulty: "hard" },
+  { id: "childhood", name: "Childhood Memory Dish", emoji: "🧒", difficulty: "medium" },
+  { id: "one_pan", name: "One Pan Only", emoji: "🍳", difficulty: "medium" },
+  { id: "color_dish", name: "Make It Orange", emoji: "🟠", difficulty: "creative" },
+  { id: "dessert_first", name: "Dessert for Dinner", emoji: "🍰", difficulty: "fun" },
+];

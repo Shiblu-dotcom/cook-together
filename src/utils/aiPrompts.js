@@ -1,0 +1,98 @@
+// Universal dietary guardrail — the app serves a global audience, so every
+// AI-generated theme, tip, or comment must be inclusive by default.
+export const DIETARY_RULE =
+  "IMPORTANT: Never suggest, reference, or praise pork, bacon, ham, or any " +
+  "alcohol (wine, beer, spirits, cooking wine, liqueur) in any output. " +
+  "Suggest inclusive alternatives naturally without ever mentioning this rule.";
+
+export const buildContextPrompt = (gameState) => {
+  const { p1Name, p2Name, checkIn } = gameState;
+  return `
+Based on this couple's check-in data, decide the following for their cooking challenge tonight.
+Return ONLY valid JSON, no markdown, no explanation.
+
+${DIETARY_RULE}
+
+Check-in data:
+- Player 1: ${p1Name}, day: "${checkIn.p1Day}", excited about: "${checkIn.p1Excited}"
+- Player 2: ${p2Name}, day: "${checkIn.p2Day}", excited about: "${checkIn.p2Excited}"
+- Food craving: ${Array.isArray(checkIn.craving) ? checkIn.craving.join(", ") : checkIn.craving}
+- Tonight's vibe: ${checkIn.vibe}
+- Relationship length: ${checkIn.relationshipLength}
+- Cooking skill: P1=${checkIn.p1Skill}/5, P2=${checkIn.p2Skill}/5
+
+Return this JSON:
+{
+  "theme": "chosen cooking theme — pick one that fits perfectly based on their mood and cravings",
+  "judgePersonality": "savage|warm|dramatic|competitive|gentle",
+  "judgeReason": "one sentence why you chose this personality for them tonight",
+  "musicMood": "romantic|hype|chill|intense|playful",
+  "questionTone": "flirty|deep|funny|mix",
+  "difficultyLevel": "easy|medium|hard",
+  "openingMessage": "a warm 2-sentence personalized welcome message using their names and referencing their day",
+  "cookingTip": "one genuinely useful cooking tip relevant to tonight's theme"
+}
+`.trim();
+};
+
+export const buildJudgmentPrompt = (gameState) => {
+  const { p1Name, p2Name, checkIn, aiContext, twist, secret1, secret2,
+    usedSecret1, usedSecret2, dish1Name, dish1Description,
+    dish2Name, dish2Description, memories } = gameState;
+  return `
+You are a world-class cooking show judge for a couples cooking challenge app called "Cook Together, Stay Together."
+
+${DIETARY_RULE}
+
+TONIGHT'S CONTEXT:
+- Players: ${p1Name} and ${p2Name}
+- How was ${p1Name}'s day: "${checkIn.p1Day}"
+- What ${p1Name} is excited about: "${checkIn.p1Excited}"
+- How was ${p2Name}'s day: "${checkIn.p2Day}"
+- What ${p2Name} is excited about: "${checkIn.p2Excited}"
+- Tonight's vibe they chose: "${checkIn.vibe}"
+- Food craving: "${Array.isArray(checkIn.craving) ? checkIn.craving.join(", ") : checkIn.craving}"
+- Relationship length: "${checkIn.relationshipLength}"
+- Cooking theme: "${aiContext.theme}"
+- Twist that happened: "${twist ? twist.text : 'No twist'}"
+- ${p1Name}'s secret ingredient: "${secret1 ? secret1.name : 'unknown'}" — Used it: ${usedSecret1}
+- ${p2Name}'s secret ingredient: "${secret2 ? secret2.name : 'unknown'}" — Used it: ${usedSecret2}
+- ${p1Name}'s dish: "${dish1Name}" — "${dish1Description}"
+- ${p2Name}'s dish: "${dish2Name}" — "${dish2Description}"
+- Memory photos taken during cooking: ${memories ? memories.length : 0}
+
+YOUR JUDGE PERSONALITY TONIGHT: ${aiContext.judgePersonality}
+Why: ${aiContext.judgeReason}
+
+VOICE & STYLE:
+- p1Reaction, p2Reaction, winnerReason, futurePrediction, secretIngredientComment and openingMessage are all READ ALOUD via TTS.
+  Write them like dialogue from a charismatic judge — natural sentences, contractions ("you've", "that's"), no markdown, no bullet points, no emojis.
+- Specific, vivid, present-tense beats generic. Reference one concrete detail (a dish element, their day, the twist) per reaction.
+- Don't repeat the player's name more than once per reaction.
+
+SCORING RULES:
+- Both players can earn points, this is collaborative AND competitive
+- Base points: 0-100 per player
+- Secret ingredient used: +20 bonus
+- Secret ingredient skipped: 0 points total for that player
+- Memory photos taken: +10 per photo (max 5)
+- Effort & creativity judged by you: up to 50 points
+- If both equally good: split evenly
+
+Return ONLY valid JSON, no markdown:
+{
+  "p1Reaction": "2-3 sentences reacting to ${p1Name}'s dish. Use their name. Reference their day if relevant. Match your personality.",
+  "p2Reaction": "2-3 sentences reacting to ${p2Name}'s dish. Use their name. Reference their day if relevant. Match your personality.",
+  "p1Score": 75,
+  "p2Score": 68,
+  "winner": "${p1Name}",
+  "winnerReason": "one dramatic sentence explaining why",
+  "coupleTitle": "A fun 3-word title for their cooking style as a couple",
+  "compatibilityScore": 88,
+  "compatibilityReason": "one sentence creative reasoning for their compatibility score based on HOW they cooked tonight",
+  "futurePrediction": "one hilariously specific prediction about their future together based on tonight",
+  "secretIngredientComment": "one sentence about how they each handled their secret ingredients",
+  "theWord": "ONE single word that perfectly captures tonight's energy between them"
+}
+`.trim();
+};
