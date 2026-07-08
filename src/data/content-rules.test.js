@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SECRET_INGREDIENTS, getAlternatives, getRandomIngredients } from "./ingredients";
+import { SECRET_INGREDIENTS, getAlternatives, getRandomIngredients, getThemeProfile } from "./ingredients";
 import { THEMES } from "./themes";
 import { QUESTIONS } from "./questions";
 import { TWISTS } from "./twists";
@@ -51,12 +51,44 @@ describe("ingredient helpers", () => {
     }
   });
 
-  it("every ingredient has an emoji, name, category, and difficulty", () => {
+  it("every ingredient has an emoji, name, category, difficulty, and fits", () => {
     for (const ing of SECRET_INGREDIENTS) {
       expect(ing.emoji).toBeTruthy();
       expect(ing.name).toBeTruthy();
       expect(ing.category).toBeTruthy();
       expect(["easy", "medium", "hard"]).toContain(ing.difficulty);
+      expect(["savory", "dessert", "any"]).toContain(ing.fits);
+    }
+  });
+});
+
+describe("theme-matched ingredients", () => {
+  it("classifies themes into profiles", () => {
+    expect(getThemeProfile("Dessert for Dinner")).toBe("dessert");
+    expect(getThemeProfile("Street Taco Wars")).toBe("savory");
+    expect(getThemeProfile("Mystery Ingredient Battle")).toBe("open");
+    expect(getThemeProfile("Midnight Snack Showdown")).toBe("open");
+  });
+
+  it("dessert themes never deal savory-only ingredients", () => {
+    for (let i = 0; i < 30; i++) {
+      const picks = getRandomIngredients(2, "Dessert for Dinner");
+      picks.forEach((p) => expect(["dessert", "any"]).toContain(p.fits));
+    }
+  });
+
+  it("savory themes never deal dessert-only ingredients", () => {
+    for (let i = 0; i < 30; i++) {
+      const picks = getRandomIngredients(2, "Street Taco Wars");
+      picks.forEach((p) => expect(["savory", "any"]).toContain(p.fits));
+    }
+  });
+
+  it("swap alternatives stay inside the theme's profile", () => {
+    const banana = SECRET_INGREDIENTS.find((i) => i.name === "Overripe banana");
+    for (let i = 0; i < 20; i++) {
+      const alts = getAlternatives(banana, 3, "Dessert for Dinner");
+      alts.forEach((a) => expect(["dessert", "any"]).toContain(a.fits));
     }
   });
 });

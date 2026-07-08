@@ -6,7 +6,9 @@ import VoiceControl from "../ui/VoiceControl";
 
 export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, openingMessage, onReady }) {
   const [step, setStep] = useState(0); // 0=theme, 1=p1 secret, 2=p2 secret
-  const [ingredients, setIngredients] = useState(() => getRandomIngredients(2));
+  // Ingredients are drawn from the pool that fits tonight's theme — dessert
+  // nights get dessert-compatible picks, savory nights never get matcha.
+  const [ingredients, setIngredients] = useState(() => getRandomIngredients(2, theme));
   const [p1Swapped, setP1Swapped] = useState(false);
   const [p2Swapped, setP2Swapped] = useState(false);
   const [showSwapOptions, setShowSwapOptions] = useState(null); // null | 'p1' | 'p2'
@@ -43,7 +45,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
 
   const openSwap = (player) => {
     const orig = player === "p1" ? ingredients[0] : ingredients[1];
-    setSwapOptions(getAlternatives(orig, 3));
+    setSwapOptions(getAlternatives(orig, 3, theme));
     setShowSwapOptions(player);
   };
 
@@ -94,7 +96,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
               {theme}
             </h1>
             <p style={{ color: "var(--text-secondary)", fontSize: 16, marginBottom: 40 }}>
-              You have <strong style={{ color: "var(--text-primary)" }}>15 minutes</strong>. Cook anything. Use your secret ingredient.
+              <strong style={{ color: "var(--text-primary)" }}>15 minutes</strong> · any dish · one secret ingredient
             </p>
 
             {cookingTip && (
@@ -161,16 +163,13 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
               {ingredients[0].name}
             </h2>
 
-            <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 8 }}>
-              You <strong style={{ color: "var(--accent-red)" }}>MUST</strong> use this. Don't tell {p2Name}!
-            </p>
-            <p style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 32 }}>
-              Skip it = 0 points this round.
+            <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 32 }}>
+              Use it or score <strong style={{ color: "var(--accent-red)" }}>0</strong> — and keep it secret 🤫
             </p>
 
             {showSwapOptions === "p1" ? (
               <div style={{ marginBottom: 24 }}>
-                <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>Pick a replacement:</p>
+                <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>Swap to:</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {swapOptions.map((opt) => (
                     <button
@@ -181,7 +180,6 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                     >
                       <span style={{ fontSize: 24 }}>{opt.emoji}</span>
                       {opt.name}
-                      <span style={{ fontSize: 11, color: "var(--text-secondary)" }}>(−10 pts)</span>
                     </button>
                   ))}
                 </div>
@@ -245,16 +243,13 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
               {ingredients[1].name}
             </h2>
 
-            <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 8 }}>
-              You <strong style={{ color: "var(--accent-red)" }}>MUST</strong> use this. Don't tell {p1Name}!
-            </p>
-            <p style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 32 }}>
-              Skip it = 0 points this round.
+            <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 32 }}>
+              Use it or score <strong style={{ color: "var(--accent-red)" }}>0</strong> — and keep it secret 🤫
             </p>
 
             {showSwapOptions === "p2" ? (
               <div style={{ marginBottom: 24 }}>
-                <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>Pick a replacement:</p>
+                <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>Swap to:</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {swapOptions.map((opt) => (
                     <button
@@ -265,7 +260,6 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                     >
                       <span style={{ fontSize: 24 }}>{opt.emoji}</span>
                       {opt.name}
-                      <span style={{ fontSize: 11, color: "var(--text-secondary)" }}>(−10 pts)</span>
                     </button>
                   ))}
                 </div>
