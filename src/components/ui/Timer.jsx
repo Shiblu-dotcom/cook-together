@@ -54,7 +54,6 @@ export default function Timer({ onTwistTime, onTimeUp, onTick, paused = false, i
       sfxTimesUp();
       if (cb.onTimeUp) cb.onTimeUp();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seconds]);
 
   const mins = Math.floor(seconds / 60);

@@ -1,7 +1,7 @@
 {
   "name": "cook-together",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,7 +14,6 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
     "@tailwindcss/vite": "^4.3.0",
-    "howler": "^2.2.4",
     "html2canvas": "^1.4.1",
     "lucide-react": "^1.16.0",
     "react": "^19.2.6",
