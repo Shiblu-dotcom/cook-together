@@ -30,9 +30,11 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
         ? `${opener} ${themeLine} ${reminder}`
         : `${themeLine} ${reminder}`;
     } else if (step === 1) {
-      utter = `${p1Name}, your secret ingredient is ${ingredients[0].name}. You've got to use it. Don't tell ${p2Name}.`;
+      // Privacy: never speak the ingredient name — the partner is standing
+      // right there. The screen shows it; the voice only sets the scene.
+      utter = `${p1Name}, your secret is on the screen. Read it silently — and don't say it out loud.`;
     } else if (step === 2) {
-      utter = `${p2Name}, your secret ingredient is ${ingredients[1].name}. You've got to use it too. Keep it between us.`;
+      utter = `${p2Name}, your turn. Read your secret silently. Not a word.`;
     }
     if (!utter) return undefined;
     const t = setTimeout(() => speak(utter), 350);

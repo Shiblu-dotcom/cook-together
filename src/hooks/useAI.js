@@ -248,7 +248,9 @@ export const useAI = () => {
       `- Be practical: substitutions, timings, technique. Specific over generic.\n` +
       `- If they're stuck, suggest one concrete next move.\n` +
       `- No emojis, no markdown, no bullet lists — your replies are read aloud.\n` +
-      `- Never reveal the other player's secret ingredient.\n` +
+      `- CRITICAL: your replies are spoken out loud and BOTH partners hear them. ` +
+      `NEVER say the name of either secret ingredient — always call it "your secret ingredient". ` +
+      `If asked how to use it, give advice without naming it (e.g. "fold your secret in near the end").\n` +
       `- It's okay to be playful. The clock is ticking and they're having fun.\n` +
       `- ${DIETARY_RULE}`;
 

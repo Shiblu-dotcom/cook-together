@@ -28,15 +28,20 @@ const pickVoice = (voices) => {
   const modern = pool.filter((v) => !/Desktop/i.test(v.name));
   const candidates = modern.length > 0 ? modern : pool;
 
-  // 1. Natural / neural / online — usually the best on the system.
-  const natural = candidates.find((v) => /(Natural|Neural|Online)/i.test(v.name));
+  // 1. Natural / neural / online / enhanced — the best tier on every
+  //    platform: Edge neural on desktop, "(Enhanced)"/"(Premium)"/Siri
+  //    voices on iOS, network voices on Android.
+  const natural = candidates.find((v) =>
+    /(Natural|Neural|Online|Enhanced|Premium|Siri)/i.test(v.name)
+  );
   if (natural) return natural;
 
-  // 2. Known-good premium voices.
+  // 2. Known-good premium voices. Generic Google voices rank high here —
+  //    on Android Chrome they're far better than the local "Android Speech".
   const namePrefs = [
+    /Google US English/i, /Google UK English Female/i, /^Google/i,
     /Aria/i, /Jenny/i, /Sonia/i, /Ava/i, /Olivia/i, /Libby/i,
     /Samantha/i, /Karen/i, /Allison/i, /Daniel/i,
-    /Google US English/i, /Google UK English Female/i,
   ];
   for (const pattern of namePrefs) {
     const match = candidates.find((v) => pattern.test(v.name));
