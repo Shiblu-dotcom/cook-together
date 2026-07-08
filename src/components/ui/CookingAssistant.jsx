@@ -263,6 +263,35 @@ export default function CookingAssistant({ ctx = {} }) {
             )}
           </div>
 
+          {/* Quick prompts — one tap beats typing with messy hands. Shown
+              until the conversation actually starts. */}
+          {messages.length <= 1 && !busy && (
+            <div
+              style={{
+                display: "flex",
+                gap: 6,
+                padding: "0 12px 10px",
+                flexWrap: "wrap",
+              }}
+            >
+              {[
+                "What can I substitute?",
+                "Quick plating idea?",
+                "Help — it's going wrong!",
+              ].map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  className="chip"
+                  onClick={() => send(q)}
+                  style={{ fontSize: 12, padding: "8px 14px" }}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Input */}
           <form
             onSubmit={onSubmit}

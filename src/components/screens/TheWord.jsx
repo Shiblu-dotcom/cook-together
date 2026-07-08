@@ -8,11 +8,13 @@ export default function TheWord({ word, onContinue }) {
   const { supported, muted, setMuted, speaking, speak, stop } = useVoice();
 
   useEffect(() => {
+    // Timers only ever move the sequence forward — a tap may have already
+    // fast-forwarded past them (Math.max keeps late timers from regressing).
     const timers = [
-      setTimeout(() => setPhase(1), 1800),
-      setTimeout(() => setPhase(2), 3800),
-      setTimeout(() => setPhase(3), 5200),
-      setTimeout(() => setPhase(4), 6400),
+      setTimeout(() => setPhase((p) => Math.max(p, 1)), 1800),
+      setTimeout(() => setPhase((p) => Math.max(p, 2)), 3800),
+      setTimeout(() => setPhase((p) => Math.max(p, 3)), 5200),
+      setTimeout(() => setPhase((p) => Math.max(p, 4)), 6400),
     ];
     // Warm chord swells as the word fades in.
     const swell = setTimeout(sfxWord, 1800);
@@ -21,6 +23,9 @@ export default function TheWord({ word, onContinue }) {
       clearTimeout(swell);
     };
   }, []);
+
+  // Impatient? Tapping anywhere skips ahead to the full reveal.
+  const handleSkip = () => setPhase((p) => (p < 4 ? 4 : p));
 
   // Speak the word in sync with phase 1 → "[word]. That's tonight."
   useEffect(() => {
@@ -36,6 +41,7 @@ export default function TheWord({ word, onContinue }) {
 
   return (
     <div
+      onClick={handleSkip}
       style={{
         minHeight: "100vh",
         background: "#000000",
@@ -46,6 +52,7 @@ export default function TheWord({ word, onContinue }) {
         textAlign: "center",
         padding: "0 24px",
         position: "relative",
+        cursor: phase < 4 ? "pointer" : "default",
       }}
     >
       <VoiceControl

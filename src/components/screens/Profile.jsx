@@ -6,6 +6,21 @@ import { downloadCard } from "../../utils/shareCard";
 
 export default function Profile({ profile, onBack }) {
   const [displayMode, setDisplayMode] = useState(profile?.displayMode || "words");
+  const [confirmReset, setConfirmReset] = useState(false);
+
+  const handleStartFresh = () => {
+    // Wipe everything this couple accumulated — profile, any in-flight
+    // session, and the question-rotation memory.
+    try {
+      localStorage.removeItem("cook_together_profile");
+      localStorage.removeItem("cook_together_session");
+      localStorage.removeItem("cook_together_phase");
+      localStorage.removeItem("cook_together_used_questions");
+    } catch {
+      /* ignore */
+    }
+    onBack();
+  };
 
   if (!profile) {
     return (
@@ -295,6 +310,47 @@ export default function Profile({ profile, onBack }) {
             </button>
           </div>
         )}
+
+        {/* Start fresh — quiet, two-step, at the very bottom where it belongs */}
+        <div style={{ marginTop: 40, textAlign: "center" }}>
+          {confirmReset ? (
+            <div className="card-sm" style={{ borderColor: "rgba(255,107,138,0.35)" }}>
+              <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>
+                Delete all nights, words, and memories? This can't be undone.
+              </p>
+              <div style={{ display: "flex", gap: 10 }}>
+                <button className="btn-ghost" onClick={() => setConfirmReset(false)} style={{ flex: 1 }}>
+                  Keep everything
+                </button>
+                <button
+                  onClick={handleStartFresh}
+                  style={{
+                    flex: 1,
+                    background: "rgba(255,107,138,0.12)",
+                    border: "1px solid rgba(255,107,138,0.4)",
+                    borderRadius: 12,
+                    color: "var(--accent-red)",
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: 600,
+                    fontSize: 14,
+                    padding: "10px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Delete everything
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              className="btn-ghost"
+              onClick={() => setConfirmReset(true)}
+              style={{ fontSize: 12, opacity: 0.7 }}
+            >
+              Start fresh — erase this profile
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
