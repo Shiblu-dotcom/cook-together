@@ -1,5 +1,8 @@
 # Cook Together
 
+[![Deploy](https://github.com/Shiblu-dotcom/cook-together/actions/workflows/deploy.yml/badge.svg)](https://github.com/Shiblu-dotcom/cook-together/actions/workflows/deploy.yml)
+**[▶ Play it live](https://shiblu-dotcom.github.io/cook-together/)**
+
 > A 15-minute cook-off for two. Secret ingredients, surprise questions, and an AI judge who knows you.
 
 Cook Together is a couples cooking game that runs in the browser. Each round, the app:

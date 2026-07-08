@@ -21,6 +21,9 @@ export default function Cooking({
   const [showTwist, setShowTwist] = useState(false);
   const [paused, setPaused] = useState(false);
   const [peeking, setPeeking] = useState(null); // null | 'choose' | 'p1' | 'p2'
+  // Coarse clock for the Chef assistant — updated every 30s so re-renders
+  // stay rare but Chef can give time-aware advice ("plate it, 3 minutes left").
+  const [secondsLeft, setSecondsLeft] = useState(initialSeconds || 15 * 60);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questions] = useState(() => getQuestionsForTone(questionTone || "mix"));
   const questionIdx = useRef(0);
@@ -99,9 +102,25 @@ export default function Cooking({
   const handleTick = useCallback(
     (s) => {
       if (onTick && s % 5 === 0) onTick(s);
+      if (s % 30 === 0) setSecondsLeft(s);
     },
     [onTick]
   );
+
+  // Escape closes whichever overlay is up — peek or twist.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== "Escape") return;
+      setPeeking(null);
+      setShowTwist(false);
+      if (twistTimeoutRef.current) {
+        clearTimeout(twistTimeoutRef.current);
+        twistTimeoutRef.current = null;
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <div
@@ -338,8 +357,10 @@ export default function Cooking({
         onCapture={onAddMemory}
       />
 
-      {/* Ask Chef — AI cooking assistant */}
-      <CookingAssistant ctx={{ p1Name, p2Name, theme, secret1, secret2 }} />
+      {/* Ask Chef — AI cooking assistant, aware of the clock */}
+      <CookingAssistant
+        ctx={{ p1Name, p2Name, theme, secret1, secret2, minutesLeft: Math.ceil(secondsLeft / 60) }}
+      />
     </div>
   );
 }

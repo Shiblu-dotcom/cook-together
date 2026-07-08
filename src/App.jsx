@@ -333,12 +333,17 @@ export default function App() {
   }, []);
 
   // ─── Result Card → play again ──────────────────────────────────────────────
+  // Round 2 skips the Welcome screen — names are known, so go straight to
+  // check-in. gamesPlayed is refreshed from the just-updated profile so badge
+  // milestones count correctly across same-session rounds.
   const handlePlayAgain = useCallback(() => {
     clearResumeSlot();
     setResumeSlot(null);
     resetGame();
-    setPhase(PHASES.WELCOME);
-  }, [resetGame]);
+    const p = getProfile();
+    if (p) updateGame({ gamesPlayed: p.gamesPlayed, isReturning: true });
+    setPhase(PHASES.CHECKIN);
+  }, [resetGame, getProfile, updateGame]);
 
   // ─── Exit to home from anywhere mid-flow ───────────────────────────────────
   const handleExitToHome = useCallback(() => {

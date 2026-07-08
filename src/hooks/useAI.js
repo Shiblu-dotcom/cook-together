@@ -228,6 +228,7 @@ export const useAI = () => {
       theme = "any cuisine",
       secret1 = null,
       secret2 = null,
+      minutesLeft = null,
     } = ctx;
 
     // The persona has a name (Chef) and a voice — warm, quick, never preachy.
@@ -238,6 +239,7 @@ export const useAI = () => {
       `You are Chef — a warm, fast-talking cooking friend helping ` +
       `${p1Name} and ${p2Name} through a 15-minute couples cook-off. ` +
       `Tonight's theme: "${theme}". ` +
+      (minutesLeft ? `About ${minutesLeft} minute${minutesLeft === 1 ? "" : "s"} left on the clock — factor that into your advice. ` : "") +
       (secret1?.name ? `${p1Name}'s secret ingredient is ${secret1.name}. ` : "") +
       (secret2?.name ? `${p2Name}'s secret ingredient is ${secret2.name}. ` : "") +
       `\n\nStyle:\n` +
