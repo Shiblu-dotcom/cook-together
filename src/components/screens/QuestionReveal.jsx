@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { startAmbient, stopAmbient } from "../../utils/ambient";
 
 const REACTIONS = ["😂", "❤️", "😮", "🔥", "🥺"];
 
-export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onComplete }) {
+export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onComplete, onReaction }) {
   const [qIdx, setQIdx] = useState(0);
   const [revealStep, setRevealStep] = useState(0); // 0=question, 1=p1answer, 2=p2answer
   const [reactions, setReactions] = useState({});
+
+  // The reveal is the intimate beat of the night — soft romantic pads play
+  // underneath while answers are read for the first time. (Hook sits above
+  // the empty-state early return to keep hook order stable.)
+  useEffect(() => {
+    startAmbient("romantic");
+    return () => stopAmbient();
+  }, []);
 
   if (!questionsAnswered || questionsAnswered.length === 0) {
     return (
@@ -31,6 +40,9 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
 
   const handleReaction = (emoji) => {
     setReactions((r) => ({ ...r, [`${qIdx}-${revealStep}`]: emoji }));
+    // Persist upward too — reactions belong in the couple's history, not
+    // just this screen's ephemeral state.
+    if (onReaction) onReaction(qIdx, revealStep === 1 ? "p1" : "p2", emoji);
   };
 
   const handleNext = () => {

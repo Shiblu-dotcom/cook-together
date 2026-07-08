@@ -149,6 +149,21 @@ export const useGame = () => {
     }));
   }, []);
 
+  // Record an emoji reaction given during the reveal, so it persists to the
+  // profile with the answers instead of vanishing when the screen unmounts.
+  // `who` is "p1" or "p2" — whose answer was reacted to.
+  const addReaction = useCallback((questionIdx, who, emoji) => {
+    hasInteractedRef.current = true;
+    setGameState((prev) => ({
+      ...prev,
+      questionsAnswered: prev.questionsAnswered.map((entry, i) =>
+        i === questionIdx
+          ? { ...entry, reactions: { ...entry.reactions, [who]: emoji } }
+          : entry
+      ),
+    }));
+  }, []);
+
   const resetGame = useCallback(() => {
     hasInteractedRef.current = false;
     try {
@@ -184,6 +199,7 @@ export const useGame = () => {
     updateJudgment,
     addMemory,
     addQuestionAnswer,
+    addReaction,
     resetGame,
     setGameState,
   };

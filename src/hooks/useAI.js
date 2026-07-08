@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { buildContextPrompt, buildJudgmentPrompt, DIETARY_RULE } from "../utils/aiPrompts";
 import { getFallbackWord } from "../utils/wordGenerator";
+import { calculateScore, resolveWinner } from "../utils/scoring";
 import { THEMES } from "../data/themes";
 
 const MODEL = "claude-opus-4-8";
@@ -154,13 +155,22 @@ export const useAI = () => {
       const result = images.length
         ? await callClaudeVisionJSON(prompt, images)
         : await callClaudeJSON(prompt);
+
+      // The tie rule (scores within 5 = nobody loses) is a game rule, not a
+      // suggestion — enforce it deterministically on whatever the AI said.
+      const p1Score = typeof result.p1Score === "number" ? result.p1Score : 70;
+      const p2Score = typeof result.p2Score === "number" ? result.p2Score : 65;
+      const verdict = resolveWinner(p1Score, p2Score, gameState.p1Name, gameState.p2Name);
+
       return {
         p1Reaction: result.p1Reaction || `${gameState.p1Name}, you gave it your all tonight.`,
         p2Reaction: result.p2Reaction || `${gameState.p2Name}, a valiant effort!`,
-        p1Score: typeof result.p1Score === "number" ? result.p1Score : 70,
-        p2Score: typeof result.p2Score === "number" ? result.p2Score : 65,
-        winner: result.winner || gameState.p1Name,
-        winnerReason: result.winnerReason || "A narrow victory decided by passion.",
+        p1Score,
+        p2Score,
+        winner: verdict.winner,
+        winnerReason: verdict.winner === "tie"
+          ? "Too close to call — tonight, the kitchen wins."
+          : result.winnerReason || "A narrow victory decided by passion.",
         coupleTitle: result.coupleTitle || "The Adventurous Duo",
         compatibilityScore: typeof result.compatibilityScore === "number" ? result.compatibilityScore : 85,
         compatibilityReason: result.compatibilityReason || "You work together like salt and pepper.",
@@ -170,13 +180,33 @@ export const useAI = () => {
       };
     } catch (err) {
       logApiError("AI judgment", err);
+      // Score the fallback honestly from what actually happened — secret
+      // ingredients, swaps, and memories — instead of hardcoded numbers.
+      const p1Score = calculateScore({
+        usedSecretIngredient: !!gameState.usedSecret1,
+        swappedIngredient: !!gameState.swapped1,
+        memoriesTaken: (gameState.memories || []).length,
+        aiCreativityScore: 35,
+        aiEffortScore: 20,
+      });
+      const p2Score = calculateScore({
+        usedSecretIngredient: !!gameState.usedSecret2,
+        swappedIngredient: !!gameState.swapped2,
+        memoriesTaken: (gameState.memories || []).length,
+        aiCreativityScore: 32,
+        aiEffortScore: 21,
+      });
+      const verdict = resolveWinner(p1Score, p2Score, gameState.p1Name, gameState.p2Name);
+
       return {
         p1Reaction: `${gameState.p1Name}, a creative and heartfelt dish. The effort showed.`,
         p2Reaction: `${gameState.p2Name}, you brought real imagination to the plate tonight.`,
-        p1Score: gameState.usedSecret1 ? 72 : 0,
-        p2Score: gameState.usedSecret2 ? 68 : 0,
-        winner: gameState.usedSecret1 ? gameState.p1Name : gameState.p2Name,
-        winnerReason: "A close battle decided by creativity and courage.",
+        p1Score,
+        p2Score,
+        winner: verdict.winner,
+        winnerReason: verdict.winner === "tie"
+          ? "Dead even — tonight, nobody loses."
+          : "A close battle decided by creativity and courage.",
         coupleTitle: "The Beautifully Chaotic Duo",
         compatibilityScore: 82,
         compatibilityReason: "You fill each other's gaps like the best ingredients do.",

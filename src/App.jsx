@@ -179,6 +179,7 @@ export default function App() {
     updateJudgment,
     addMemory,
     addQuestionAnswer,
+    addReaction,
     resetGame,
     setGameState,
   } = useGame();
@@ -477,6 +478,7 @@ export default function App() {
           p1Name={gameState.p1Name}
           p2Name={gameState.p2Name}
           onComplete={handleQuestionsComplete}
+          onReaction={addReaction}
         />
       )}
 
