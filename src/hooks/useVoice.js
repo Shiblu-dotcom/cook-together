@@ -99,6 +99,32 @@ export const useVoice = () => {
   });
   const [speaking, setSpeaking] = useState(false);
   const voiceRef = useRef(null);
+  // Timers for the two Chrome speech bugs we work around (see speak()).
+  const queueTimerRef = useRef(null);
+  const keepaliveRef = useRef(null);
+
+  const clearSpeechTimers = () => {
+    if (queueTimerRef.current) {
+      clearTimeout(queueTimerRef.current);
+      queueTimerRef.current = null;
+    }
+    if (keepaliveRef.current) {
+      clearInterval(keepaliveRef.current);
+      keepaliveRef.current = null;
+    }
+  };
+
+  // If the hosting screen unmounts mid-speech, kill everything cleanly.
+  useEffect(() => {
+    return () => {
+      clearSpeechTimers();
+      try {
+        window.speechSynthesis?.cancel();
+      } catch {
+        /* ignore */
+      }
+    };
+  }, []);
 
   // Keep the sfx + ambient engines in sync with the persisted mute preference.
   useEffect(() => {
@@ -124,6 +150,7 @@ export const useVoice = () => {
 
   const stop = useCallback(() => {
     if (!supported) return;
+    clearSpeechTimers();
     try {
       window.speechSynthesis.cancel();
     } catch {
@@ -146,35 +173,71 @@ export const useVoice = () => {
 
       try {
         // Cancel anything queued so consecutive calls don't pile up.
+        clearSpeechTimers();
         window.speechSynthesis.cancel();
         setSpeaking(true);
 
-        sentences.forEach((sentence, i) => {
-          const utter = new SpeechSynthesisUtterance(sentence);
-          if (voiceRef.current) utter.voice = voiceRef.current;
+        const finish = () => {
+          clearSpeechTimers();
+          setSpeaking(false);
+        };
 
-          // Subtle rate variation: ±4% around baseline keeps things alive.
-          utter.rate = Math.max(0.65, Math.min(1.35, rate + wiggle(i, 0.04)));
+        // Chrome bug #1: an utterance queued in the same tick as cancel()
+        // is sometimes silently swallowed or garbled — this is exactly the
+        // end-of-game glitch (Winner screen's speech cancelled, The Word's
+        // speech starting right after). A short beat between cancel and
+        // queue avoids it.
+        queueTimerRef.current = setTimeout(() => {
+          queueTimerRef.current = null;
 
-          // Questions tilt the pitch up a touch; statements get a tiny natural drift.
-          const isQuestion = /\?\s*$/.test(sentence);
-          const isExcited = /!\s*$/.test(sentence);
-          let p = pitch + wiggle(i + 7, 0.04);
-          if (isQuestion) p += 0.10;
-          else if (isExcited) p += 0.06;
-          utter.pitch = Math.max(0.5, Math.min(1.6, p));
+          sentences.forEach((sentence, i) => {
+            const utter = new SpeechSynthesisUtterance(sentence);
+            if (voiceRef.current) utter.voice = voiceRef.current;
 
-          utter.volume = volume;
+            // Subtle rate variation: ±4% around baseline keeps things alive.
+            utter.rate = Math.max(0.65, Math.min(1.35, rate + wiggle(i, 0.04)));
 
-          // Only fire onend when the LAST sentence finishes.
-          if (i === sentences.length - 1) {
-            utter.onend = () => setSpeaking(false);
-            utter.onerror = () => setSpeaking(false);
-          } else {
-            utter.onerror = () => setSpeaking(false);
+            // Questions tilt the pitch up a touch; statements get a tiny natural drift.
+            const isQuestion = /\?\s*$/.test(sentence);
+            const isExcited = /!\s*$/.test(sentence);
+            let p = pitch + wiggle(i + 7, 0.04);
+            if (isQuestion) p += 0.10;
+            else if (isExcited) p += 0.06;
+            utter.pitch = Math.max(0.5, Math.min(1.6, p));
+
+            utter.volume = volume;
+
+            // Only fire onend when the LAST sentence finishes.
+            if (i === sentences.length - 1) {
+              utter.onend = finish;
+              utter.onerror = finish;
+            } else {
+              utter.onerror = finish;
+            }
+            window.speechSynthesis.speak(utter);
+          });
+
+          // Chrome bug #2: desktop Chrome silently stalls speech after
+          // ~15 seconds — long verdict speeches hit this. A periodic
+          // pause/resume nudge keeps it talking. iOS chokes on the nudge,
+          // so skip it there (iOS doesn't have the stall bug anyway).
+          const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+          if (!isIOS) {
+            keepaliveRef.current = setInterval(() => {
+              try {
+                if (window.speechSynthesis.speaking) {
+                  window.speechSynthesis.pause();
+                  window.speechSynthesis.resume();
+                } else {
+                  clearInterval(keepaliveRef.current);
+                  keepaliveRef.current = null;
+                }
+              } catch {
+                /* ignore */
+              }
+            }, 10000);
           }
-          window.speechSynthesis.speak(utter);
-        });
+        }, 80);
       } catch {
         setSpeaking(false);
       }
