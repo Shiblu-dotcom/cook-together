@@ -125,6 +125,37 @@ export default function Welcome({ onStart, onViewProfile, resumeSlot, onResume }
           </p>
         )}
 
+        {/* How it works — three beats, first-timers only */}
+        {!returning && (
+          <div
+            className="animate-fade-in opacity-0 delay-400"
+            style={{
+              display: "flex",
+              gap: 8,
+              marginBottom: 28,
+              width: "100%",
+              animationFillMode: "forwards",
+            }}
+          >
+            {[
+              { emoji: "🤫", text: "Get a secret ingredient" },
+              { emoji: "🔥", text: "Cook for 15 minutes" },
+              { emoji: "👨‍⚖️", text: "Let the AI judge decide" },
+            ].map((step, i) => (
+              <div
+                key={i}
+                className="card-sm"
+                style={{ flex: 1, textAlign: "center", padding: "12px 8px" }}
+              >
+                <div style={{ fontSize: 22, marginBottom: 6 }} aria-hidden="true">{step.emoji}</div>
+                <div style={{ fontSize: 11, color: "var(--text-secondary)", lineHeight: 1.4 }}>
+                  {step.text}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Interrupted night — offer to pick up where they left off */}
         {resumeSlot && (
           <div

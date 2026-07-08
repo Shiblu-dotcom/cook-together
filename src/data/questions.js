@@ -31,8 +31,40 @@ export const QUESTIONS = {
   ],
 };
 
+// Rotation memory: questions a couple has already been asked, persisted so
+// repeat game nights get fresh questions until the pool is exhausted.
+const USED_KEY = "cook_together_used_questions";
+
+const loadUsed = () => {
+  try {
+    const raw = localStorage.getItem(USED_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveUsed = (used) => {
+  try {
+    localStorage.setItem(USED_KEY, JSON.stringify(used));
+  } catch {
+    /* storage full — rotation degrades gracefully to random */
+  }
+};
+
 export const getQuestionsForTone = (tone, count = 3) => {
   const pool = QUESTIONS[tone] || QUESTIONS.mix;
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
+  let used = loadUsed();
+
+  // Prefer questions this couple has never seen. If the tone's pool is
+  // exhausted, retire its entries from the used list and start a fresh cycle.
+  let fresh = pool.filter((q) => !used.includes(q));
+  if (fresh.length < count) {
+    used = used.filter((q) => !pool.includes(q));
+    fresh = pool;
+  }
+
+  const picked = [...fresh].sort(() => Math.random() - 0.5).slice(0, count);
+  saveUsed([...used, ...picked]);
+  return picked;
 };

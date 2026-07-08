@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download } from "lucide-react";
 import BadgeDisplay from "../ui/BadgeDisplay";
 import { BADGES } from "../../data/badges";
+import { downloadCard } from "../../utils/shareCard";
 
 export default function Profile({ profile, onBack }) {
   const [displayMode, setDisplayMode] = useState(profile?.displayMode || "words");
@@ -221,9 +222,77 @@ export default function Profile({ profile, onBack }) {
 
         {/* Badges */}
         {badgeObjects.length > 0 && (
-          <div>
+          <div style={{ marginBottom: 24 }}>
             <div className="label" style={{ marginBottom: 12 }}>Badges</div>
             <BadgeDisplay badges={badgeObjects} size="md" />
+          </div>
+        )}
+
+        {/* Your Story — the memory-machine payoff: everything the nights
+            added up to, as one downloadable keepsake card. */}
+        {wordCollection.length > 0 && (
+          <div>
+            <div className="label" style={{ marginBottom: 12 }}>Your Story</div>
+            <div
+              id="story-card"
+              style={{
+                background: "linear-gradient(160deg, #1d0d28 0%, #120912 60%, #1a0f14 100%)",
+                border: "1px solid var(--border-strong)",
+                borderRadius: 24,
+                padding: "32px 28px",
+                textAlign: "center",
+              }}
+            >
+              <p
+                className="font-display"
+                style={{ fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.08em", marginBottom: 6 }}
+              >
+                Cook Together
+              </p>
+              <h3 className="font-display text-gold" style={{ fontSize: 26, fontWeight: 900, marginBottom: 4 }}>
+                {profile.p1Name} &amp; {profile.p2Name}
+              </h3>
+              <p style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 20 }}>
+                {profile.gamesPlayed} night{profile.gamesPlayed !== 1 ? "s" : ""} together
+                {compatibilityHistory.length > 0 &&
+                  ` · ${Math.round(compatibilityHistory.reduce((a, b) => a + b, 0) / compatibilityHistory.length)}% compatible`}
+              </p>
+
+              {/* The words, oldest to newest — the emotional map */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 20 }}>
+                {wordCollection.map((entry, i) => (
+                  <span
+                    key={i}
+                    className="font-display"
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: "var(--accent-gold)",
+                      background: "rgba(245,207,93,0.08)",
+                      border: "1px solid var(--border-subtle)",
+                      borderRadius: 100,
+                      padding: "6px 16px",
+                    }}
+                  >
+                    {entry.word}
+                  </span>
+                ))}
+              </div>
+
+              {profile.coupleTitle && (
+                <p style={{ fontSize: 13, color: "var(--text-secondary)", fontStyle: "italic" }}>
+                  {profile.coupleTitle}
+                </p>
+              )}
+            </div>
+
+            <button
+              className="btn-secondary"
+              onClick={() => downloadCard("story-card", `cook-together-story.png`)}
+              style={{ marginTop: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+            >
+              <Download size={16} aria-hidden="true" /> Download your story
+            </button>
           </div>
         )}
       </div>

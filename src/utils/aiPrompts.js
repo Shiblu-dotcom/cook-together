@@ -60,6 +60,9 @@ TONIGHT'S CONTEXT:
 - ${p1Name}'s dish: "${dish1Name}" — "${dish1Description}"
 - ${p2Name}'s dish: "${dish2Name}" — "${dish2Description}"
 - Memory photos taken during cooking: ${memories ? memories.length : 0}
+${gameState.dish1Photo || gameState.dish2Photo ? `
+DISH PHOTOS: attached above this message in order — ${[gameState.dish1Photo ? `${p1Name}'s dish` : null, gameState.dish2Photo ? `${p2Name}'s dish` : null].filter(Boolean).join(", then ")}.
+React to what you actually SEE: plating, color, texture, effort. Reference one concrete visual detail per reaction — that's what makes the judging feel real.` : ""}
 
 YOUR JUDGE PERSONALITY TONIGHT: ${aiContext.judgePersonality}
 Why: ${aiContext.judgeReason}

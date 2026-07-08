@@ -7,7 +7,10 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const MODEL = "claude-opus-4-8"; // pinned server-side — clients cannot override
 const MAX_TOKENS_CAP = 1024;
-const MAX_BODY_CHARS = 60_000; // generous for game prompts, hostile to abuse
+// Judgment requests carry up to two ~900px dish photos as base64 (~110KB
+// each encoded), so the cap must accommodate images while still bounding
+// abuse — the pinned model + max_tokens cap do the real cost-limiting.
+const MAX_BODY_CHARS = 600_000;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

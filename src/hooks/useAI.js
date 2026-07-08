@@ -47,6 +47,18 @@ const logApiError = (label, err) => {
   }
 };
 
+// Extract and parse the JSON payload from a Messages response.
+const parseJSONResponse = (response) => {
+  const text = response.content
+    .filter((b) => b.type === "text")
+    .map((b) => b.text)
+    .join("")
+    .trim();
+  // Strip markdown code fences if present
+  const cleaned = text.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+  return JSON.parse(cleaned);
+};
+
 // One-shot JSON call. These prompts are unique per game night, so no cache
 // breakpoints here — there is no reusable prefix to cache.
 const callClaudeJSON = async (prompt) => {
@@ -54,16 +66,27 @@ const callClaudeJSON = async (prompt) => {
     max_tokens: 1024,
     messages: [{ role: "user", content: prompt }],
   });
+  return parseJSONResponse(response);
+};
 
-  const text = response.content
-    .filter((b) => b.type === "text")
-    .map((b) => b.text)
-    .join("")
-    .trim();
+// Vision variant — image blocks first, then the text prompt, so the prompt's
+// "photos attached above" phrasing matches what the model actually sees.
+const callClaudeVisionJSON = async (prompt, imageBlocks) => {
+  const response = await runMessage({
+    max_tokens: 1024,
+    messages: [
+      { role: "user", content: [...imageBlocks, { type: "text", text: prompt }] },
+    ],
+  });
+  return parseJSONResponse(response);
+};
 
-  // Strip markdown code fences if present
-  const cleaned = text.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
-  return JSON.parse(cleaned);
+// Convert a canvas data URL (from the dish camera) into an Anthropic image
+// content block. Returns null for anything that isn't a valid base64 data URL.
+const dataUrlToImageBlock = (dataUrl) => {
+  const m = /^data:(image\/(?:jpeg|png|webp));base64,(.+)$/.exec(dataUrl || "");
+  if (!m) return null;
+  return { type: "image", source: { type: "base64", media_type: m[1], data: m[2] } };
 };
 
 // Multi-turn chat for the cooking assistant. The system prompt and growing
@@ -123,7 +146,14 @@ export const useAI = () => {
   const getJudgment = async (gameState) => {
     try {
       const prompt = buildJudgmentPrompt(gameState);
-      const result = await callClaudeJSON(prompt);
+      // Attach the dish photos so the judge reacts to what it actually sees.
+      // Order matters and matches the prompt: P1's dish, then P2's.
+      const images = [gameState.dish1Photo, gameState.dish2Photo]
+        .map(dataUrlToImageBlock)
+        .filter(Boolean);
+      const result = images.length
+        ? await callClaudeVisionJSON(prompt, images)
+        : await callClaudeJSON(prompt);
       return {
         p1Reaction: result.p1Reaction || `${gameState.p1Name}, you gave it your all tonight.`,
         p2Reaction: result.p2Reaction || `${gameState.p2Name}, a valiant effort!`,

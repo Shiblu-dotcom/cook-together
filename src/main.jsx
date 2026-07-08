@@ -8,3 +8,14 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+
+// Offline shell + installability. Production only — a service worker during
+// dev would cache-fight with Vite's HMR. BASE_URL keeps the scope correct on
+// GitHub Pages (/cook-together/) and Vercel (/) alike.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register(`${import.meta.env.BASE_URL}sw.js`)
+      .catch(() => {/* offline support is progressive — never break the app */})
+  })
+}
