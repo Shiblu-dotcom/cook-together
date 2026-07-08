@@ -56,14 +56,20 @@ export const useCamera = () => {
     const w = videoRef.current.videoWidth;
     const h = videoRef.current.videoHeight;
     if (!w || !h) return null;
+    // Downscale to max 900px on the long edge and compress harder — these
+    // photos live in localStorage as base64 (~5MB quota total), so a full
+    // 1280px frame at 0.85 quality (~300KB each) would exhaust it within a
+    // few games. 900px at 0.7 is ~80KB and still looks great on a card.
+    const MAX_EDGE = 900;
+    const scale = Math.min(1, MAX_EDGE / Math.max(w, h));
     const canvas = document.createElement("canvas");
-    canvas.width = w;
-    canvas.height = h;
+    canvas.width = Math.round(w * scale);
+    canvas.height = Math.round(h * scale);
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
-    ctx.drawImage(videoRef.current, 0, 0);
+    ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
     try {
-      return canvas.toDataURL("image/jpeg", 0.85);
+      return canvas.toDataURL("image/jpeg", 0.7);
     } catch {
       return null;
     }

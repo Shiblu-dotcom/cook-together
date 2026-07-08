@@ -39,7 +39,17 @@ The game uses [Anthropic's Claude](https://console.anthropic.com/) for personali
 VITE_ANTHROPIC_API_KEY=sk-ant-…
 ```
 
-> ⚠️ The key is bundled into the client-side JavaScript. That's fine for local play, but **don't deploy this build publicly with a real key** — anyone could extract it from the bundle. For a public deployment, proxy the Claude calls through a small backend.
+> ⚠️ The key is bundled into the client-side JavaScript. That's fine for local play, but **don't deploy this build publicly with a real key** — anyone could extract it from the bundle. For a public deployment, use the built-in proxy (below).
+
+## Deploying
+
+**GitHub Pages (static, no AI key):** already wired up — every push to `main` runs the tests and deploys via GitHub Actions. The AI judge uses built-in fallback responses.
+
+**Vercel (full AI experience):** the repo includes a serverless proxy at [api/claude.js](api/claude.js) that keeps the key server-side. The client automatically uses it whenever no `VITE_ANTHROPIC_API_KEY` is set.
+
+1. Go to [vercel.com/new](https://vercel.com/new) and import this repository
+2. In the project settings, add an environment variable: `ANTHROPIC_API_KEY` = your key
+3. Deploy — done. The game gets real AI judging and the key never reaches the browser.
 
 ## Scripts
 

@@ -5,12 +5,35 @@ import { THEMES } from "../data/themes";
 
 const MODEL = "claude-opus-4-8";
 
-// Browser-side client for the prototype. In production these calls move to a
-// backend so the key never ships to the client.
-const client = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
+// Two ways to reach Claude, tried in this order:
+//   1. A client-side key (local dev convenience) — calls the API directly.
+//   2. The /api/claude serverless proxy (production on Vercel) — the key
+//      stays server-side and never ships in the bundle.
+// If neither works (e.g. static GitHub Pages with no key), callers fall back
+// to canned responses, so the game never breaks.
+const CLIENT_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
+const HAS_CLIENT_KEY = !!CLIENT_KEY && CLIENT_KEY !== "your_anthropic_api_key_here";
+
+const client = HAS_CLIENT_KEY
+  ? new Anthropic({ apiKey: CLIENT_KEY, dangerouslyAllowBrowser: true })
+  : null;
+
+// Send one Messages request via whichever path is available. Returns the
+// message object ({ content: [...] }) in the same shape either way.
+const runMessage = async (body) => {
+  if (client) {
+    return client.messages.create({ model: MODEL, ...body });
+  }
+  const res = await fetch("/api/claude", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    throw new Error(`Proxy error ${res.status}`);
+  }
+  return res.json();
+};
 
 const logApiError = (label, err) => {
   if (err instanceof Anthropic.AuthenticationError) {
@@ -27,8 +50,7 @@ const logApiError = (label, err) => {
 // One-shot JSON call. These prompts are unique per game night, so no cache
 // breakpoints here — there is no reusable prefix to cache.
 const callClaudeJSON = async (prompt) => {
-  const response = await client.messages.create({
-    model: MODEL,
+  const response = await runMessage({
     max_tokens: 1024,
     messages: [{ role: "user", content: prompt }],
   });
@@ -49,8 +71,7 @@ const callClaudeJSON = async (prompt) => {
 // reads on every follow-up turn once the conversation passes the model's
 // minimum cacheable prefix.
 const callClaudeChat = async (messages, systemPrompt) => {
-  const response = await client.messages.create({
-    model: MODEL,
+  const response = await runMessage({
     max_tokens: 400,
     cache_control: { type: "ephemeral" },
     system: [{ type: "text", text: systemPrompt }],
