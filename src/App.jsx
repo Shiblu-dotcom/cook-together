@@ -481,6 +481,14 @@ export default function App() {
   const profile = getProfile();
 
   return (
+    <>
+    {/* Desktop only: the side space carries the wordmark quietly, so the
+        column reads as a designed layout, not a stranded phone view. */}
+    <aside className="desktop-rail" aria-hidden="true">
+      <div className="desktop-rail-word font-display">Cook<br />Together</div>
+      <div className="desktop-rail-sub font-display">Stay Together</div>
+      <div className="desktop-rail-line">One kitchen. Two cooks. Fifteen minutes.</div>
+    </aside>
     <div className="app-shell">
       {EXIT_PHASES.has(phase) && <ExitButton onExit={handleExitToHome} />}
 
@@ -677,5 +685,6 @@ export default function App() {
       </Suspense>
       </ErrorBoundary>
     </div>
+    </>
   );
 }

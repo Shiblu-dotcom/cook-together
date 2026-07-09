@@ -274,7 +274,7 @@ export default function WinnerAnnouncement({
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
             <div className="label" style={{ color: "var(--accent-gold)" }}>Compatibility</div>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700, color: "var(--accent-gold)" }}>
+            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 700, color: "var(--accent-gold)" }}>
               {compatibilityScore}%
             </div>
           </div>

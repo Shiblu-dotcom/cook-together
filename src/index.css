@@ -19,12 +19,14 @@
   --accent-green: #7dd3a8;      /* fresh mint, easier on the eye than #66bb6a */
   --accent-violet: #b48cd6;     /* dusk violet — for occasional cool counterpoint */
 
-  --text-primary: #f5ecd6;      /* warm cream */
-  --text-secondary: #b5a99e;    /* warm taupe — much friendlier than cold #aaa */
-  --text-muted: #7a6e66;
+  /* Contrast raised deliberately: moody is the light, not the ink.
+     Primary reads near-white warm; secondary is clearly legible on cards. */
+  --text-primary: #f9f4e6;      /* warm near-white */
+  --text-secondary: #cec3b4;    /* warm stone — crisp on the dark cards */
+  --text-muted: #9c9083;
 
-  --border-subtle: rgba(245, 207, 93, 0.22);
-  --border-strong: rgba(245, 207, 93, 0.38);
+  --border-subtle: rgba(245, 207, 93, 0.30);
+  --border-strong: rgba(245, 207, 93, 0.52);
   --glow-gold: rgba(245, 207, 93, 0.18);
   --focus-ring: 0 0 0 3px rgba(245, 207, 93, 0.5);
 
@@ -105,24 +107,56 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* On wider screens, give the shell a hair more room and a soft outer glow so
-   the app reads as a deliberately framed experience, not a stranded phone view. */
+/* Desktop: a crisp full-height column with hairline edges — an intentional
+   app column, not a phone screenshot floating on a dark wall. The side space
+   carries the wordmark (below). Flat on purpose: no glow, no radius. */
 @media (min-width: 720px) {
   .app-shell {
     max-width: 520px;
-    box-shadow:
-      0 0 0 1px rgba(255, 224, 102, 0.08),
-      0 0 0 10px rgba(255, 240, 220, 0.015),
-      0 40px 120px -20px rgba(255, 138, 61, 0.14),
-      0 20px 60px -10px rgba(138, 43, 226, 0.08);
-    border-radius: 28px;
-    margin: 24px 0;
+    border-left: 1px solid var(--border-subtle);
+    border-right: 1px solid var(--border-subtle);
+    background: var(--bg-primary);
+  }
+}
+
+/* The desktop rail — the wordmark living quietly in the left margin.
+   One loud element per screen is the app column; this stays a whisper. */
+.desktop-rail { display: none; }
+@media (min-width: 1080px) {
+  .desktop-rail {
+    display: block;
+    position: fixed;
+    left: calc((100vw - 520px) / 4);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: left;
+    pointer-events: none;
+    user-select: none;
+  }
+  .desktop-rail-word {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1.02;
+    color: rgba(245, 236, 214, 0.16);
+    letter-spacing: -0.02em;
+  }
+  .desktop-rail-sub {
+    font-style: italic;
+    font-size: 24px;
+    color: rgba(245, 207, 93, 0.30);
+    margin-top: 10px;
+  }
+  .desktop-rail-line {
+    font-size: 13px;
+    color: rgba(245, 236, 214, 0.28);
+    letter-spacing: 0.05em;
+    margin-top: 22px;
   }
 }
 
 /* Typography */
 .font-display {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   /* Optical tightening — large serif display type wants to sit closer than
      the font's default tracking. Inline letter-spacing still overrides. */
   letter-spacing: -0.015em;
@@ -165,48 +199,28 @@ p {
     inset 0 1px 0 rgba(255, 240, 220, 0.08);
 }
 
-/* Buttons */
+/* Buttons — one loud element per screen. The hero is a flat, confident
+   block of gold: no gradient, no glow, no sheen. It earns attention by
+   being the only bright thing, not the shiniest thing. */
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-gold-bright), var(--accent-orange));
-  color: #1a0d10;                 /* near-black warm — readable on gold */
+  background: var(--accent-gold);
+  color: #1a1208;                 /* near-black warm — crisp on solid gold */
   font-family: 'DM Sans', sans-serif;
   font-weight: 700;
   font-size: 16px;
   letter-spacing: 0.01em;
   padding: 16px 32px;
-  border-radius: 16px;
+  border-radius: 14px;
   border: none;
   cursor: pointer;
   width: 100%;
   min-height: 48px; /* WCAG minimum touch target */
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out), filter 0.2s ease, opacity 0.2s ease;
-  animation: pulseGlow 3s ease-in-out infinite;
-  box-shadow: 0 4px 18px rgba(245, 207, 93, 0.18);
-}
-
-/* Light sheen that sweeps across on hover — the "polished metal" touch. */
-.btn-primary::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -80%;
-  width: 55%;
-  height: 100%;
-  background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%);
-  transform: skewX(-20deg);
-  transition: left 0.5s ease;
-  pointer-events: none;
-}
-
-.btn-primary:hover:not(:disabled)::after {
-  left: 130%;
+  transition: transform 0.22s var(--ease-out), background 0.2s var(--ease-out), opacity 0.2s ease;
 }
 
 .btn-primary:hover:not(:disabled) {
+  background: var(--accent-gold-bright);
   transform: translateY(-1px);
-  box-shadow: 0 10px 32px rgba(245, 207, 93, 0.40), 0 0 0 1px rgba(255, 226, 122, 0.4) inset;
 }
 
 .btn-primary:active:not(:disabled) {
@@ -216,11 +230,9 @@ p {
 .btn-primary:disabled,
 .btn-primary[aria-disabled="true"] {
   cursor: not-allowed;
-  filter: grayscale(0.5) brightness(0.65);
-  opacity: 0.7;
-  animation: none;
+  background: rgba(245, 207, 93, 0.28);
+  color: rgba(26, 18, 8, 0.55);
   transform: none;
-  box-shadow: none;
 }
 
 .btn-secondary {
@@ -291,12 +303,10 @@ p {
   box-shadow: 0 0 0 3px rgba(245, 207, 93, 0.10);
 }
 
-/* Gold gradient text — uses the bright gold for shine plus terracotta for warmth */
+/* Display gold — one solid, confident color. No gradient fills: flat ink
+   on a dark ground reads crisper and more deliberate than shine. */
 .text-gold {
-  background: linear-gradient(135deg, var(--accent-gold-bright) 0%, var(--accent-gold) 45%, var(--accent-orange) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-gold);
 }
 
 .text-gold-solid {
@@ -399,7 +409,7 @@ p {
 
 /* Timer */
 .timer-display {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-size: 72px;
   font-weight: 700;
   letter-spacing: -2px;

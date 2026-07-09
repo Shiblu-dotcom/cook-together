@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Download, Flame } from "lucide-react";
 import BadgeDisplay from "../ui/BadgeDisplay";
 import { BADGES } from "../../data/badges";
 import { downloadCard } from "../../utils/shareCard";
@@ -157,7 +157,7 @@ export default function Profile({ profile, onBack }) {
                       {entry.word}
                       {/* Calm nights get a small flame — a quiet marker, no label */}
                       {entry.calm && (
-                        <span aria-label="A calm night" style={{ fontSize: 13, marginLeft: 6, opacity: 0.7 }}>🕯</span>
+                        <Flame size={12} aria-label="A calm night" style={{ marginLeft: 6, opacity: 0.7, verticalAlign: "-1px" }} />
                       )}
                     </div>
                     <div style={{ fontSize: 11, color: "var(--text-secondary)" }}>{entry.date}</div>
@@ -294,7 +294,7 @@ export default function Profile({ profile, onBack }) {
                     }}
                   >
                     {entry.word}
-                    {entry.calm && <span style={{ fontSize: 11, marginLeft: 4, opacity: 0.7 }}>🕯</span>}
+                    {entry.calm && <Flame size={10} aria-hidden="true" style={{ marginLeft: 4, opacity: 0.7, verticalAlign: "-1px" }} />}
                   </span>
                 ))}
               </div>

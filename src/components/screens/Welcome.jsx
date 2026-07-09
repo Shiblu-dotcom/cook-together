@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ChefHat } from "lucide-react";
-import Particles from "../ui/Particles";
+import { ChefHat, Flame } from "lucide-react";
 import { useStorage } from "../../hooks/useStorage";
 
 // The AI calls require a Claude API key. If the key is missing or is still the
@@ -77,8 +76,6 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
 
   return (
     <div className="screen-center bg-deep" style={{ minHeight: "100vh" }}>
-      <Particles count={14} />
-
       <div
         style={{
           position: "relative",
@@ -102,12 +99,11 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
               width: 72,
               height: 72,
               borderRadius: "50%",
-              background: "linear-gradient(135deg, rgba(245,207,93,0.15), rgba(255,138,61,0.1))",
-              border: "1px solid var(--border-subtle)",
+              background: "rgba(245,207,93,0.10)",
+              border: "1px solid var(--border-strong)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              animation: "pulseGlow 3s ease-in-out infinite",
             }}
           >
             <ChefHat size={32} color="var(--accent-gold)" aria-hidden="true" />
@@ -208,7 +204,8 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
               animationFillMode: "forwards",
             }}
           >
-            🕯 Last night you made something together when it was hard. That counts.
+            <Flame size={12} aria-hidden="true" style={{ verticalAlign: "-1px", marginRight: 5 }} />
+            Last night you made something together when it was hard. That counts.
           </p>
         )}
 
@@ -232,7 +229,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
                 ? `"${resumeSlot.state.aiContext.theme}" was still cooking.`
                 : "Your last session was interrupted."}
             </p>
-            <button className="btn-primary" onClick={onResume} style={{ padding: "12px 24px", fontSize: 15 }}>
+            <button className="btn-secondary" onClick={onResume} style={{ padding: "12px 24px", fontSize: 15 }}>
               Back to the kitchen →
             </button>
           </div>
@@ -339,9 +336,14 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
             color: "var(--text-secondary)",
             opacity: !p1Name.trim() || !p2Name.trim() ? 0.35 : undefined,
             animationFillMode: "forwards",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            whiteSpace: "nowrap",
           }}
         >
-          🕯 or start a calm night
+          <Flame size={13} aria-hidden="true" />
+          or start a calm night
         </button>
 
         {/* Profile link */}
@@ -355,9 +357,9 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
           </button>
         )}
 
-        {/* Dev hint — only shown when the Anthropic key isn't configured.
-            Once a real key is set, this disappears entirely. */}
-        {!HAS_REAL_KEY && (
+        {/* Dev hint — dev builds only, and only when the key isn't set.
+            Production users never see plumbing. */}
+        {import.meta.env.DEV && !HAS_REAL_KEY && (
           <div
             className="animate-fade-in opacity-0 delay-600"
             style={{

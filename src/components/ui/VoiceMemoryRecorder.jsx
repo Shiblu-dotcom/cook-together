@@ -194,7 +194,7 @@ export default function VoiceMemoryRecorder({ open, onClose, onCapture }) {
           >
             <Square size={32} color="#0d0d0d" fill="#0d0d0d" aria-hidden="true" />
           </button>
-          <p style={{ marginTop: 20, fontSize: 20, fontFamily: "'Playfair Display', serif", color: "var(--accent-gold)" }}>
+          <p style={{ marginTop: 20, fontSize: 20, fontFamily: "'Fraunces', serif", color: "var(--accent-gold)" }}>
             {seconds}s
           </p>
           <p style={{ fontSize: 12, color: "var(--text-secondary)" }}>Tap to stop</p>
