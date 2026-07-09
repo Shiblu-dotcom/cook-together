@@ -155,6 +155,10 @@ export default function Profile({ profile, onBack }) {
                       style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}
                     >
                       {entry.word}
+                      {/* Calm nights get a small flame — a quiet marker, no label */}
+                      {entry.calm && (
+                        <span aria-label="A calm night" style={{ fontSize: 13, marginLeft: 6, opacity: 0.7 }}>🕯</span>
+                      )}
                     </div>
                     <div style={{ fontSize: 11, color: "var(--text-secondary)" }}>{entry.date}</div>
                     {entry.theme && (
@@ -290,6 +294,7 @@ export default function Profile({ profile, onBack }) {
                     }}
                   >
                     {entry.word}
+                    {entry.calm && <span style={{ fontSize: 11, marginLeft: 4, opacity: 0.7 }}>🕯</span>}
                   </span>
                 ))}
               </div>
