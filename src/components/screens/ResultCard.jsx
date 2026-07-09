@@ -37,7 +37,7 @@ const TEMPLATES = [
   },
 ];
 
-export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, onPlayAgain }) {
+export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName, memories, onPlayAgain }) {
   const [templateIdx, setTemplateIdx] = useState(0);
   const [caption, setCaption] = useState("");
   const [editingCaption, setEditingCaption] = useState(false);
@@ -50,7 +50,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
   const {
     theWord = "TONIGHT",
     coupleTitle = "Worth Watching",
-    compatibilityScore = 0,
+    plateScore = 0,
     winner = "tie",
   } = safeJudgment;
   const heroMemory = memories && memories.length > 0 ? memories[0].photo : null;
@@ -152,9 +152,16 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
           </h1>
 
           {/* Couple title */}
-          <p style={{ fontSize: 14, color: tpl.textColor, opacity: 0.8, marginBottom: 20, fontStyle: "italic", position: "relative" }}>
+          <p style={{ fontSize: 14, color: tpl.textColor, opacity: 0.8, marginBottom: plateName ? 6 : 20, fontStyle: "italic", position: "relative" }}>
             {coupleTitle}
           </p>
+
+          {/* The plate they made */}
+          {plateName && (
+            <p style={{ fontSize: 13, color: tpl.textColor, opacity: 0.6, marginBottom: 20, position: "relative" }}>
+              "{plateName}"
+            </p>
+          )}
 
           {/* Memory photo */}
           {heroMemory && (
@@ -178,9 +185,9 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
                 textAlign: "center",
               }}
             >
-              <div style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5, marginBottom: 4 }}>Compatibility</div>
+              <div style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5, marginBottom: 4 }}>The plate</div>
               <div style={{ fontSize: 20, fontFamily: "'Playfair Display', serif", fontWeight: 700, color: tpl.accentColor }}>
-                {compatibilityScore}%
+                {plateScore}<span style={{ fontSize: 12, opacity: 0.6 }}>/100</span>
               </div>
             </div>
             <div
@@ -216,7 +223,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
         <div
           role="radiogroup"
           aria-label="Card style"
-          style={{ display: "flex", gap: 8, marginBottom: 20, overflowX: "auto", paddingBottom: 4 }}
+          style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}
         >
           {TEMPLATES.map((t, i) => {
             const isSel = templateIdx === i;
@@ -227,7 +234,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
                 role="radio"
                 aria-checked={isSel}
                 style={{
-                  flexShrink: 0,
+                  whiteSpace: "nowrap",
                   background: t.bg,
                   border: `2px solid ${isSel ? "var(--accent-gold)" : "rgba(255,255,255,0.1)"}`,
                   borderRadius: 10,
@@ -290,7 +297,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
             aria-busy={downloading}
             style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
           >
-            <Download size={16} aria-hidden="true" /> {downloading ? "Saving…" : "Save it"}
+            <Download size={16} aria-hidden="true" /> <span style={{ whiteSpace: "nowrap" }}>{downloading ? "Saving…" : "Save it"}</span>
           </button>
           <button
             className="btn-primary"
@@ -299,7 +306,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
             aria-busy={sharing}
             style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
           >
-            <Share2 size={16} aria-hidden="true" /> {sharing ? "Sharing…" : "Share →"}
+            <Share2 size={16} aria-hidden="true" /> <span style={{ whiteSpace: "nowrap" }}>{sharing ? "Sharing…" : "Share →"}</span>
           </button>
         </div>
 

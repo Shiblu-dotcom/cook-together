@@ -663,6 +663,7 @@ export default function App() {
           p1Name={gameState.p1Name}
           p2Name={gameState.p2Name}
           judgment={gameState.judgment}
+          plateName={gameState.plateName}
           theme={gameState.aiContext.theme}
           memories={gameState.memories}
           onPlayAgain={handlePlayAgain}
