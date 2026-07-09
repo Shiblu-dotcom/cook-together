@@ -140,6 +140,13 @@
   100% { background-position: 200% center; }
 }
 
+/* Opacity-only breathing for fullscreen glows (no transform, so it's safe
+   anywhere — including behind position:fixed layers). */
+@keyframes glowPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
 @keyframes twistSlideIn {
   0% { opacity: 0; transform: translateY(-60px) scale(0.9); }
   60% { transform: translateY(8px) scale(1.02); }
@@ -188,7 +195,7 @@
 .animate-heartbeat { animation: heartbeat 1.5s ease infinite; }
 .animate-spin { animation: spin 1s linear infinite; }
 .animate-screen-flash { animation: screenFlash 1s ease infinite; }
-.animate-card-flip { animation: cardFlip 0.6s ease; }
+.animate-card-flip { animation: cardFlip 0.65s var(--ease-out, ease); }
 
 /* Delay utilities */
 .delay-100 { animation-delay: 0.1s; }

@@ -129,12 +129,13 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
           Cook Together
         </h1>
         <p
-          className="animate-fade-in-up opacity-0 delay-200"
+          className="font-display animate-fade-in-up opacity-0 delay-200"
           style={{
-            fontSize: 20,
+            fontSize: 19,
+            fontStyle: "italic",
             color: "var(--text-secondary)",
-            marginBottom: returning ? 40 : 16,
-            letterSpacing: "0.05em",
+            marginBottom: returning ? 40 : 18,
+            letterSpacing: "0.06em",
             textAlign: "center",
             animationFillMode: "forwards",
           }}
@@ -142,21 +143,21 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
           Stay Together
         </p>
 
-        {/* One-line explanation for first-time visitors — disappears once they're returning. */}
+        {/* The premise, in one breath — first-timers only. The how-it-works
+            cards below carry the details; this line just sets the table. */}
         {!returning && (
           <p
             className="animate-fade-in opacity-0 delay-300"
             style={{
-              fontSize: 14,
+              fontSize: 15,
               color: "var(--text-secondary)",
-              maxWidth: 320,
+              letterSpacing: "0.04em",
               textAlign: "center",
-              lineHeight: 1.55,
-              marginBottom: 32,
+              marginBottom: 34,
               animationFillMode: "forwards",
             }}
           >
-            A 15-minute cook-off for two. Secret ingredients, surprise questions, and an AI judge who knows you.
+            One kitchen. Two cooks. Fifteen minutes.
           </p>
         )}
 

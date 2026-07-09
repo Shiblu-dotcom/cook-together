@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { startAmbient, stopAmbient } from "../../utils/ambient";
+import { sfxChime } from "../../utils/sfx";
+import { hapticTap } from "../../utils/haptics";
 
 const REACTIONS = ["😂", "❤️", "😮", "🔥", "🥺"];
 
@@ -47,6 +49,9 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
 
   const handleNext = () => {
     if (revealStep < 2) {
+      // An answer is about to be seen for the first time — mark it.
+      sfxChime();
+      hapticTap();
       setRevealStep((s) => s + 1);
     } else if (!isLast) {
       setQIdx((i) => i + 1);
@@ -114,7 +119,10 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
                 })}
               </div>
             </div>
-            <p style={{ fontSize: 16, color: "var(--text-primary)", lineHeight: 1.6 }}>{current.p1Answer}</p>
+            {/* Their own words get the serif — same register as the witness. */}
+            <p className="font-display" style={{ fontSize: 17, fontStyle: "italic", color: "var(--text-primary)", lineHeight: 1.65 }}>
+              {current.p1Answer}
+            </p>
           </div>
         )}
 
@@ -156,7 +164,9 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
                 })}
               </div>
             </div>
-            <p style={{ fontSize: 16, color: "var(--text-primary)", lineHeight: 1.6 }}>{current.p2Answer}</p>
+            <p className="font-display" style={{ fontSize: 17, fontStyle: "italic", color: "var(--text-primary)", lineHeight: 1.65 }}>
+              {current.p2Answer}
+            </p>
           </div>
         )}
 
