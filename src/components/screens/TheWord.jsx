@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import VoiceControl from "../ui/VoiceControl";
 import { useVoice } from "../../hooks/useVoice";
 import { sfxWord } from "../../utils/sfx";
-import { hapticSuccess } from "../../utils/haptics";
+import { hapticHeartbeat } from "../../utils/haptics";
 
 export default function TheWord({ word, onContinue }) {
   const [phase, setPhase] = useState(0); // 0=black, 1=word, 2=subtitle, 3=saved, 4=button
@@ -22,7 +22,7 @@ export default function TheWord({ word, onContinue }) {
     // Warm chord swells as the word fades in.
     const swell = setTimeout(() => {
       sfxWord();
-      hapticSuccess();
+      hapticHeartbeat();
     }, 2200);
     return () => {
       timers.forEach(clearTimeout);

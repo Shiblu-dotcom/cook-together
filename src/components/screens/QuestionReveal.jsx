@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { startAmbient, stopAmbient } from "../../utils/ambient";
-import { sfxChime } from "../../utils/sfx";
+import { sfxReveal } from "../../utils/sfx";
 import { hapticTap } from "../../utils/haptics";
 
 const REACTIONS = ["😂", "❤️", "😮", "🔥", "🥺"];
@@ -50,7 +50,7 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
   const handleNext = () => {
     if (revealStep < 2) {
       // An answer is about to be seen for the first time — mark it.
-      sfxChime();
+      sfxReveal();
       hapticTap();
       setRevealStep((s) => s + 1);
     } else if (!isLast) {

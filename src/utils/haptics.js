@@ -12,3 +12,5 @@ const buzz = (pattern) => {
 export const hapticTap = () => buzz(12);
 export const hapticSuccess = () => buzz([15, 70, 30]);
 export const hapticTimeUp = () => buzz([45, 90, 45, 90, 90]);
+// Lub-dub. The Word is about the two of them — it lands like a heartbeat.
+export const hapticHeartbeat = () => buzz([30, 80, 45]);
