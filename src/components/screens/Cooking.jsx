@@ -308,7 +308,7 @@ export default function Cooking({
           ) : (
             <>
               <p style={{ fontSize: 14, color: "var(--text-secondary)", marginBottom: 28 }}>
-                🤫 {peeking === "p1" ? p2Name : p1Name}, look away!
+                {peeking === "p1" ? p2Name : p1Name}, look away 🤫
               </p>
               <div style={{ fontSize: 80, marginBottom: 12 }} aria-hidden="true">
                 {(peeking === "p1" ? secret1 : secret2)?.emoji}

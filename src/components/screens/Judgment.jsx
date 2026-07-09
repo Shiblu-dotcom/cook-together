@@ -45,18 +45,23 @@ export default function Judgment({ isLoading, error, onRetry }) {
 
         {isLoading && (
           <>
-            <div
-              aria-hidden="true"
-              style={{
-                width: 40,
-                height: 40,
-                border: "3px solid rgba(245,207,93,0.2)",
-                borderTop: "3px solid var(--accent-gold)",
-                borderRadius: "50%",
-                animation: "spin 1s linear infinite",
-                margin: "0 auto 28px",
-              }}
-            />
+            {/* Three breathing dots — quieter than a spinner, reads as
+                "the judge is thinking" rather than "the app is loading". */}
+            <div aria-hidden="true" style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 28 }}>
+              {[0, 1, 2].map((i) => (
+                <span
+                  key={i}
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: "var(--accent-gold)",
+                    animation: `pulse 1.4s ease-in-out ${i * 0.22}s infinite`,
+                    display: "inline-block",
+                  }}
+                />
+              ))}
+            </div>
 
             <p
               className="font-display"
