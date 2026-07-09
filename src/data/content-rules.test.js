@@ -4,7 +4,11 @@ import { THEMES } from "./themes";
 import { QUESTIONS } from "./questions";
 import { TWISTS } from "./twists";
 import { COOP_MOMENTS } from "./coopMoments";
-import { DIETARY_RULE, buildContextPrompt, buildJudgmentPrompt } from "../utils/aiPrompts";
+import {
+  CALM_THEMES, CALM_MOMENTS, CALM_QUESTIONS, CALM_WORDS, CALM_WITNESS_FALLBACKS,
+  getCalmTheme, getCalmMoment, getCalmQuestion, getCalmWord, getCalmWitnessFallback,
+} from "./calm";
+import { DIETARY_RULE, buildContextPrompt, buildJudgmentPrompt, buildWitnessPrompt } from "../utils/aiPrompts";
 
 // Hard content rule: no pork or alcohol anywhere — static data or AI prompts.
 // This test is the enforcement mechanism; if someone adds "bacon" back, CI fails.
@@ -24,6 +28,11 @@ describe("dietary content rules", () => {
   scanText("questions", JSON.stringify(QUESTIONS));
   scanText("twists", JSON.stringify(TWISTS));
   scanText("coop moments", JSON.stringify(COOP_MOMENTS));
+  scanText("calm themes", JSON.stringify(CALM_THEMES));
+  scanText("calm moments", JSON.stringify(CALM_MOMENTS));
+  scanText("calm questions", JSON.stringify(CALM_QUESTIONS));
+  scanText("calm words", JSON.stringify(CALM_WORDS));
+  scanText("calm witness fallbacks", JSON.stringify(CALM_WITNESS_FALLBACKS));
 
   it("DIETARY_RULE is injected into both AI prompts", () => {
     const fakeState = {
@@ -34,6 +43,55 @@ describe("dietary content rules", () => {
     };
     expect(buildContextPrompt(fakeState)).toContain(DIETARY_RULE);
     expect(buildJudgmentPrompt(fakeState)).toContain(DIETARY_RULE);
+  });
+});
+
+describe("calm night rules", () => {
+  const calmState = {
+    p1Name: "Sofia",
+    p2Name: "Marco",
+    calmTheme: "Soup and Bread",
+    dish1Name: "Tuesday Soup",
+    history: { gamesPlayed: 3, pastWords: ["Golden", "Braver"] },
+  };
+
+  it("witness prompt carries the dietary rule and the hard rules", () => {
+    const prompt = buildWitnessPrompt(calmState);
+    expect(prompt).toContain(DIETARY_RULE);
+    expect(prompt).toContain("Never tease, critique");
+    expect(prompt).toContain("Never mention scores, winning");
+    expect(prompt).toContain("Never speculate about why the night was hard");
+    expect(prompt).toContain("Never use therapy language");
+    expect(prompt).toContain("silence counts fully as success");
+  });
+
+  it("witness prompt works with no history and no dish name", () => {
+    const prompt = buildWitnessPrompt({ p1Name: "A", p2Name: "B" });
+    expect(prompt).toContain("something warm");
+    expect(prompt).not.toContain("undefined");
+  });
+
+  it("calm questions ask about gratitude or curiosity, never grievance", () => {
+    const grievance = /\b(wrong|fight|argue|argument|fault|blame|fix us|problem|annoy)\b/i;
+    for (const q of CALM_QUESTIONS) {
+      expect(q).not.toMatch(grievance);
+    }
+  });
+
+  it("calm helpers return members of their pools", () => {
+    for (let i = 0; i < 10; i++) {
+      expect(CALM_THEMES).toContainEqual(getCalmTheme());
+      expect(CALM_MOMENTS).toContain(getCalmMoment());
+      expect(CALM_QUESTIONS).toContain(getCalmQuestion());
+      expect(CALM_WORDS).toContain(getCalmWord());
+      expect(CALM_WITNESS_FALLBACKS).toContain(getCalmWitnessFallback());
+    }
+  });
+
+  it("calm words are single quiet words, not phrases", () => {
+    for (const w of CALM_WORDS) {
+      expect(w).toMatch(/^[A-Z][a-z]+$/);
+    }
   });
 });
 

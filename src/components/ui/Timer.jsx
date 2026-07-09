@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { sfxTick, sfxTimesUp } from "../../utils/sfx";
+import { sfxTick, sfxTimesUp, sfxChime } from "../../utils/sfx";
 
 const TOTAL = 15 * 60;
 
-export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, paused = false, initialSeconds = TOTAL }) {
+// `calm` strips every urgency cue: no color shift, no shaking, no countdown
+// beeps, no red flash — and the end is a soft chime instead of a gong.
+// Calm nights have a clock, not a countdown.
+export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, paused = false, initialSeconds = TOTAL, calm = false }) {
   const [seconds, setSeconds] = useState(initialSeconds);
   const [running, setRunning] = useState(true);
   // If we're resuming past a trigger mark, that beat already happened.
@@ -54,14 +57,17 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
     }
 
     // Final countdown ticks — one soft beep per second for the last ten.
-    if (seconds <= 10 && seconds > 0) sfxTick();
+    // Calm nights get no countdown pressure at all.
+    if (!calm && seconds <= 10 && seconds > 0) sfxTick();
 
     if (seconds <= 0 && !timeUpFired.current) {
       timeUpFired.current = true;
       setRunning(false);
-      sfxTimesUp();
+      if (calm) sfxChime();
+      else sfxTimesUp();
       if (cb.onTimeUp) cb.onTimeUp();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seconds]);
 
   const mins = Math.floor(seconds / 60);
@@ -80,7 +86,9 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
 
   // Urgency colors track the candlelit palette:
   // calm → champagne → terracotta → coral → fire-coral as time runs out.
+  // On calm nights the clock stays champagne gold the whole way.
   const getColor = () => {
+    if (calm) return "#f5cf5d";
     if (seconds > 10 * 60) return "#f5cf5d";  // champagne gold
     if (seconds > 5 * 60) return "#ff8a3d";   // terracotta
     if (seconds > 60) return "#ff6b8a";       // coral
@@ -88,6 +96,7 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
   };
 
   const getAnimation = () => {
+    if (calm) return "none";
     if (seconds <= 10 && seconds > 0) return "shakeIntense 0.3s ease infinite";
     if (seconds <= 60) return "timerUrgent 0.5s ease infinite";
     if (seconds <= 5 * 60) return "timerUrgent 1s ease infinite";
@@ -165,7 +174,7 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
         {display}
       </div>
 
-      {seconds <= 10 && seconds > 0 && (
+      {!calm && seconds <= 10 && seconds > 0 && (
         <div
           aria-hidden="true"
           style={{

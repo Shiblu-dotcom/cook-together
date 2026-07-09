@@ -50,10 +50,12 @@ export const useStorage = () => {
       totalP1Points: profile.totalP1Points + (gameResult.p1Points || 0),
       totalP2Points: profile.totalP2Points + (gameResult.p2Points || 0),
       coupleTitle: gameResult.coupleTitle || profile.coupleTitle,
-      compatibilityHistory: [
-        ...profile.compatibilityHistory,
-        gameResult.compatibilityScore || 0,
-      ],
+      // Calm nights record no compatibility number — the app never turns a
+      // hard night into data about the relationship.
+      compatibilityHistory:
+        typeof gameResult.compatibilityScore === "number" && gameResult.compatibilityScore > 0
+          ? [...profile.compatibilityHistory, gameResult.compatibilityScore]
+          : profile.compatibilityHistory,
       themes: [...profile.themes, gameResult.theme || ""].filter(Boolean),
       badges: [
         ...new Set([...profile.badges, ...(gameResult.newBadges || [])]),
@@ -67,6 +69,7 @@ export const useStorage = () => {
           word: gameResult.theWord,
           date: new Date().toISOString().split("T")[0],
           theme: gameResult.theme || "",
+          ...(gameResult.calm ? { calm: true } : {}),
         },
       ];
     }

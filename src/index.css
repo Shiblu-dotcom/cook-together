@@ -451,6 +451,39 @@ body::before {
   50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.12); }
 }
 
+/* ─── Calm night ──────────────────────────────────────────────────────────
+   Everything here moves slower and softer than the game's animations —
+   a calm night should feel like candlelight, not UI. */
+
+/* Slower, gentler breathing than glowBreathe. */
+@keyframes calmBreathe {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.75; transform: translate(-50%, -50%) scale(1.06); }
+}
+
+/* A candle's flicker: tiny, irregular, alive. */
+@keyframes calmFlicker {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  22% { transform: scale(1.03) rotate(-1deg); opacity: 0.92; }
+  48% { transform: scale(0.98) rotate(1deg); opacity: 1; }
+  71% { transform: scale(1.02) rotate(0deg); opacity: 0.95; }
+}
+
+/* Slow soft entrance — twice as slow as the game's fades, on purpose. */
+@keyframes calmIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-calm-in { animation: calmIn 1.4s ease both; }
+.calm-flame { display: inline-block; animation: calmFlicker 3.5s ease-in-out infinite; }
+
+/* Calm scenes dim the grain and warm the light slightly. */
+.calm-scene {
+  background-image:
+    radial-gradient(ellipse 60% 45% at 50% 35%, rgba(245, 207, 93, 0.05) 0%, transparent 65%);
+}
+
 /* Inputs should not zoom on iOS (font-size >= 16px keeps Safari from zooming). */
 input.input-field,
 textarea.input-field {

@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { buildContextPrompt, buildJudgmentPrompt, DIETARY_RULE } from "../utils/aiPrompts";
+import { buildContextPrompt, buildJudgmentPrompt, buildWitnessPrompt, DIETARY_RULE } from "../utils/aiPrompts";
 import { getFallbackWord } from "../utils/wordGenerator";
+import { getCalmWord, getCalmWitnessFallback } from "../data/calm";
 import { calculateScore, resolveWinner } from "../utils/scoring";
 import { THEMES } from "../data/themes";
 
@@ -280,5 +281,21 @@ export const useAI = () => {
     }
   };
 
-  return { buildGameContext, getJudgment, chatWithAssistant };
+  // The calm night's witness — notices, never judges. Falls back to warm
+  // canned lines so a hard night is never left hanging on a failed request.
+  const getWitness = async (gameState) => {
+    try {
+      const prompt = buildWitnessPrompt(gameState);
+      const result = await callClaudeJSON(prompt);
+      return {
+        witness: result.witness || getCalmWitnessFallback(),
+        theWord: result.theWord || getCalmWord(),
+      };
+    } catch (err) {
+      logApiError("Calm witness", err);
+      return { witness: getCalmWitnessFallback(), theWord: getCalmWord() };
+    }
+  };
+
+  return { buildGameContext, getJudgment, chatWithAssistant, getWitness };
 };

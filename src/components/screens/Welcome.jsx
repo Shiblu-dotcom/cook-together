@@ -10,15 +10,41 @@ import { useStorage } from "../../hooks/useStorage";
 const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
 const HAS_REAL_KEY = !!API_KEY && API_KEY !== "your_anthropic_api_key_here";
 
-export default function Welcome({ onStart, onViewProfile, resumeSlot, onResume }) {
+const CALM_NOTE_KEY = "cook_together_calm_note";
+
+// Read the morning-after note once: shown only 6–48h after a calm night,
+// then it disappears forever. Never a push, never a streak.
+const readCalmNote = () => {
+  try {
+    const raw = localStorage.getItem(CALM_NOTE_KEY);
+    if (!raw) return false;
+    const age = Date.now() - new Date(raw).getTime();
+    return age > 6 * 3600_000 && age < 48 * 3600_000;
+  } catch {
+    return false;
+  }
+};
+
+export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlot, onResume }) {
   const { getProfile, createProfile } = useStorage();
   // Hydrate from localStorage lazily so we don't trigger a cascading render
   // (React 19's react-hooks/set-state-in-effect rule).
   const [returning] = useState(() => getProfile());
   const [p1Name, setP1Name] = useState(() => returning?.p1Name ?? "");
   const [p2Name, setP2Name] = useState(() => returning?.p2Name ?? "");
+  const [calmNote] = useState(readCalmNote);
   const p1Ref = useRef(null);
   const p2Ref = useRef(null);
+
+  // The note shows once, then is gone.
+  useEffect(() => {
+    if (!calmNote) return;
+    try {
+      localStorage.removeItem(CALM_NOTE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }, [calmNote]);
 
   // Auto-focus the first empty input on mount. Friendlier for new users on
   // desktop; on mobile this is a no-op because programmatic focus doesn't
@@ -36,6 +62,15 @@ export default function Welcome({ onStart, onViewProfile, resumeSlot, onResume }
       createProfile(p1Name.trim(), p2Name.trim());
     }
     onStart({ p1Name: p1Name.trim(), p2Name: p2Name.trim(), isReturning: !!returning, gamesPlayed: returning?.gamesPlayed || 0 });
+  };
+
+  // The calm night's quiet door — deliberate, never suggested by the app.
+  const handleCalm = () => {
+    if (!p1Name.trim() || !p2Name.trim() || !onCalmNight) return;
+    if (!returning) {
+      createProfile(p1Name.trim(), p2Name.trim());
+    }
+    onCalmNight({ p1Name: p1Name.trim(), p2Name: p2Name.trim(), isReturning: !!returning, gamesPlayed: returning?.gamesPlayed || 0 });
   };
 
   const roundNum = returning ? returning.gamesPlayed + 1 : 1;
@@ -156,6 +191,26 @@ export default function Welcome({ onStart, onViewProfile, resumeSlot, onResume }
           </div>
         )}
 
+        {/* Morning-after note — appears once, 6–48h after a calm night,
+            then is gone. One line, no streaks, no follow-up. */}
+        {calmNote && (
+          <p
+            className="animate-fade-in opacity-0 delay-200"
+            style={{
+              fontSize: 13,
+              color: "var(--text-secondary)",
+              fontStyle: "italic",
+              textAlign: "center",
+              maxWidth: 320,
+              lineHeight: 1.6,
+              marginBottom: 24,
+              animationFillMode: "forwards",
+            }}
+          >
+            🕯 Last night you made something together when it was hard. That counts.
+          </p>
+        )}
+
         {/* Interrupted night — offer to pick up where they left off */}
         {resumeSlot && (
           <div
@@ -270,6 +325,24 @@ export default function Welcome({ onStart, onViewProfile, resumeSlot, onResume }
             Let's Cook 🍳
           </button>
         </div>
+
+        {/* The quiet door. Deliberately understated — the app never suggests
+            it, never links it to anything it knows. It just sits here. */}
+        <button
+          className="btn-ghost animate-fade-in opacity-0 delay-500"
+          onClick={handleCalm}
+          disabled={!p1Name.trim() || !p2Name.trim()}
+          aria-disabled={!p1Name.trim() || !p2Name.trim()}
+          style={{
+            marginTop: 14,
+            fontSize: 13,
+            color: "var(--text-secondary)",
+            opacity: !p1Name.trim() || !p2Name.trim() ? 0.35 : undefined,
+            animationFillMode: "forwards",
+          }}
+        >
+          🕯 or start a calm night
+        </button>
 
         {/* Profile link */}
         {returning && (

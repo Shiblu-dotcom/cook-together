@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from "react";
 import { sfxChime } from "./utils/sfx";
 import { computeNightSignal } from "./utils/nightSignal";
+import { getCalmTheme } from "./data/calm";
 import { useGame, getSavedSession, clearSavedSession } from "./hooks/useGame";
 import { useAI } from "./hooks/useAI";
 import { useStorage } from "./hooks/useStorage";
@@ -24,6 +25,9 @@ const WinnerAnnouncement = lazy(() => import("./components/screens/WinnerAnnounc
 const TheWord = lazy(() => import("./components/screens/TheWord"));
 const ResultCard = lazy(() => import("./components/screens/ResultCard"));
 const Profile = lazy(() => import("./components/screens/Profile"));
+const CalmIntro = lazy(() => import("./components/screens/CalmIntro"));
+const CalmCook = lazy(() => import("./components/screens/CalmCook"));
+const CalmClose = lazy(() => import("./components/screens/CalmClose"));
 
 // Minimal themed fallback shown for the split-second a screen chunk loads.
 function ScreenLoader() {
@@ -58,9 +62,15 @@ const PHASES = {
   THE_WORD: "the_word",
   RESULT_CARD: "result_card",
   PROFILE: "profile",
+  // The calm night — cooperative, no scores, private by default.
+  CALM_INTRO: "calm_intro",
+  CALM_COOK: "calm_cook",
+  CALM_CLOSE: "calm_close",
 };
 
-// Phases where a "quit to home" affordance is friendly to offer.
+// Phases where a "quit to home" affordance is friendly to offer. Every calm
+// phase is here — a mode built around fragile moments must never trap
+// anyone inside it.
 const EXIT_PHASES = new Set([
   PHASES.CHECKIN,
   PHASES.LOADING_AI,
@@ -69,6 +79,9 @@ const EXIT_PHASES = new Set([
   PHASES.TIMEUP,
   PHASES.SUBMIT,
   PHASES.JUDGING,
+  PHASES.CALM_INTRO,
+  PHASES.CALM_COOK,
+  PHASES.CALM_CLOSE,
 ]);
 
 const LOADING_MESSAGES = [
@@ -86,6 +99,8 @@ const PHASE_KEY = "cook_together_phase";
 const safePhaseForResume = (p) => {
   if (p === PHASES.LOADING_AI) return PHASES.CHECKIN;
   if (p === PHASES.JUDGING) return PHASES.SUBMIT;
+  // An interrupted calm night stays over — never re-open it uninvited.
+  if (p === PHASES.CALM_INTRO || p === PHASES.CALM_CLOSE) return PHASES.WELCOME;
   return p;
 };
 
@@ -184,8 +199,11 @@ export default function App() {
     resetGame,
     setGameState,
   } = useGame();
-  const { buildGameContext, getJudgment } = useAI();
+  const { buildGameContext, getJudgment, getWitness } = useAI();
   const { getProfile, updateProfileAfterGame } = useStorage();
+
+  // The calm night's witness + word, held only for the close screen.
+  const [calmResult, setCalmResult] = useState(null);
 
   // ─── Welcome ───────────────────────────────────────────────────────────────
   const handleWelcomeStart = useCallback(
@@ -198,6 +216,67 @@ export default function App() {
     },
     [updateGame]
   );
+
+  // ─── The calm night ─────────────────────────────────────────────────────────
+  // Entered only by a deliberate, private tap — never suggested by the app.
+  const handleCalmEntry = useCallback(
+    ({ p1Name, p2Name, isReturning, gamesPlayed }) => {
+      clearResumeSlot();
+      setResumeSlot(null);
+      updateGame({ p1Name, p2Name, isReturning, gamesPlayed });
+      setPhase(PHASES.CALM_INTRO);
+    },
+    [updateGame]
+  );
+
+  const handleCalmBegin = useCallback(
+    ({ calmMood }) => {
+      const calmTheme = getCalmTheme().name;
+      updateGame({ calm: true, calmMood: calmMood || null, calmTheme });
+      setPhase(PHASES.CALM_COOK);
+    },
+    [updateGame]
+  );
+
+  const handleCalmDone = useCallback(
+    async ({ dishName }) => {
+      const profile = getProfile();
+      const history = profile
+        ? {
+            gamesPlayed: profile.gamesPlayed,
+            pastWords: (profile.wordCollection || []).map((w) => w.word),
+          }
+        : null;
+      const result = await getWitness({ ...gameState, dish1Name: dishName, history });
+      setCalmResult(result);
+      setPhase(PHASES.CALM_CLOSE);
+    },
+    [gameState, getWitness, getProfile]
+  );
+
+  const handleCalmGoodnight = useCallback(() => {
+    // The word saves like any night; nothing else is recorded — no points,
+    // no compatibility number, no diagnosis. Just the record of showing up.
+    updateProfileAfterGame({
+      theWord: calmResult?.theWord,
+      theme: gameState.calmTheme,
+      calm: true,
+      memories: gameState.memories,
+      questionAnswers: [],
+    });
+    // The morning-after note: one quiet acknowledgment on the next visit,
+    // then it disappears. Never a push, never a streak.
+    try {
+      localStorage.setItem("cook_together_calm_note", new Date().toISOString());
+    } catch {
+      /* ignore */
+    }
+    clearResumeSlot();
+    setResumeSlot(null);
+    setCalmResult(null);
+    resetGame();
+    setPhase(PHASES.WELCOME);
+  }, [calmResult, gameState, updateProfileAfterGame, resetGame]);
 
   // ─── Resume a saved night ───────────────────────────────────────────────────
   const handleResume = useCallback(() => {
@@ -403,8 +482,30 @@ export default function App() {
         <Welcome
           onStart={handleWelcomeStart}
           onViewProfile={handleViewProfile}
+          onCalmNight={handleCalmEntry}
           resumeSlot={resumeSlot}
           onResume={handleResume}
+        />
+      )}
+
+      {phase === PHASES.CALM_INTRO && (
+        <CalmIntro onStart={handleCalmBegin} onBack={() => setPhase(PHASES.WELCOME)} />
+      )}
+
+      {phase === PHASES.CALM_COOK && (
+        <CalmCook
+          theme={gameState.calmTheme}
+          memories={gameState.memories}
+          onAddMemory={addMemory}
+          onDone={handleCalmDone}
+        />
+      )}
+
+      {phase === PHASES.CALM_CLOSE && (
+        <CalmClose
+          witness={calmResult?.witness}
+          word={calmResult?.theWord}
+          onGoodnight={handleCalmGoodnight}
         />
       )}
 
