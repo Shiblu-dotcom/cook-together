@@ -208,7 +208,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
 
             {showSwapOptions === "p1" ? (
               <div style={{ marginBottom: 24 }}>
-                <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>Swap to:</p>
+                <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>Trade it for:</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {swapOptions.map((opt) => (
                     <button
@@ -288,7 +288,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
 
             {showSwapOptions === "p2" ? (
               <div style={{ marginBottom: 24 }}>
-                <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>Swap to:</p>
+                <p style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>Trade it for:</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   {swapOptions.map((opt) => (
                     <button

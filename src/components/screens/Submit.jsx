@@ -91,7 +91,7 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
         {/* Header */}
         <div style={{ marginBottom: 32, textAlign: "center" }}>
           <div className="label" style={{ color: "var(--accent-gold)", marginBottom: 8 }}>
-            Player {playerStep} of 2
+            {playerStep === 1 ? "First up" : "And now"}
           </div>
           <h2 className="font-display" style={{ fontSize: 28, fontWeight: 700 }}>
             {currentName}'s Dish
@@ -196,7 +196,7 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
         <div style={{ marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
             <label className="label" style={{ flex: 1 }}>
-              Describe it in one sentence
+              Tell the judge what it is
             </label>
             <VoiceInput
               value={currentData.description}
@@ -250,7 +250,7 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
           disabled={!canProceed}
           aria-disabled={!canProceed}
         >
-          {playerStep === 1 ? `Done → ${otherName}'s turn` : "Send to the Judge 👨‍⚖️"}
+          {playerStep === 1 ? `Done → ${otherName}'s turn` : "To the judge →"}
         </button>
       </div>
 

@@ -120,7 +120,7 @@ export default function TheWord({ word, onContinue }) {
             animation: "fadeIn 0.8s ease forwards",
           }}
         >
-          Added to your collection
+          Yours to keep.
         </p>
       )}
 
@@ -137,7 +137,7 @@ export default function TheWord({ word, onContinue }) {
           }}
         >
           <button className="btn-primary" onClick={onContinue}>
-            See your night's result →
+            Keep tonight →
           </button>
         </div>
       )}

@@ -226,11 +226,11 @@ export default function Cooking({
         </div>
 
         <p style={{ color: "var(--text-secondary)", fontSize: 14, marginTop: 20 }}>
-          {paused ? "▶ Paused — tap the timer to resume." : "Cook. Create. Don't panic."}
+          {paused ? "Paused. No rush — tap to carry on." : "Cook. Create. Don't panic."}
         </p>
         {!paused && (
           <p style={{ color: "var(--text-muted, #7a6e66)", fontSize: 12, marginTop: 6 }}>
-            Tap the timer to pause
+            Tap the clock if you need a breather
           </p>
         )}
 
@@ -320,7 +320,7 @@ export default function Cooking({
                 {(peeking === "p1" ? secret1 : secret2)?.name}
               </h2>
               <p style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 20 }}>
-                Tap anywhere to hide
+                Tap to tuck it away
               </p>
             </>
           )}
@@ -397,7 +397,7 @@ export default function Cooking({
             >
               {twist.text}
             </h2>
-            <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>Tap anywhere to dismiss</p>
+            <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>Tap when you've read it</p>
           </div>
         </div>
       )}

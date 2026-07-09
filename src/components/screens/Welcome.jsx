@@ -232,7 +232,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
                 : "Your last session was interrupted."}
             </p>
             <button className="btn-primary" onClick={onResume} style={{ padding: "12px 24px", fontSize: 15 }}>
-              Resume where you left off →
+              Back to the kitchen →
             </button>
           </div>
         )}
@@ -350,7 +350,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
             onClick={onViewProfile}
             style={{ marginTop: 20, animationFillMode: "forwards" }}
           >
-            View profile →
+            Your story →
           </button>
         )}
 

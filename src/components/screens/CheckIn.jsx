@@ -335,7 +335,7 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
             </button>
           )}
           <span className="label" style={{ flex: 1 }}>
-            Check-in — {screen + 1} of {totalScreens}
+            Before the cooking — {screen + 1} of {totalScreens}
           </span>
         </div>
         <div className="progress-bar">
@@ -353,7 +353,7 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
           aria-disabled={!canProceed()}
           style={{ marginTop: 12 }}
         >
-          {screen < totalScreens - 1 ? "Next →" : "Start the night"}
+          {screen < totalScreens - 1 ? "Keep going →" : "Start the night"}
         </button>
 
         {screen === totalScreens - 1 && (

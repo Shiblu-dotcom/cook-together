@@ -22,7 +22,7 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
         <div style={{ padding: "0 24px" }}>
           <div style={{ fontSize: 48, marginBottom: 20 }}>💬</div>
           <h2 className="font-display" style={{ fontSize: 28, marginBottom: 12 }}>
-            No questions answered
+            Nothing to reveal tonight
           </h2>
           <p style={{ color: "var(--text-secondary)", marginBottom: 40 }}>
             Too busy cooking to answer. Honestly, fair.
@@ -61,7 +61,7 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
       <div style={{ width: "100%", maxWidth: 440, padding: "0 20px" }}>
         {/* Progress */}
         <div className="label" style={{ textAlign: "center", marginBottom: 24, color: "var(--text-secondary)" }}>
-          Question {qIdx + 1} of {questionsAnswered.length}
+          {qIdx + 1} of {questionsAnswered.length}
         </div>
 
         {/* Question */}
@@ -70,7 +70,7 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
           style={{ textAlign: "center", marginBottom: 24 }}
           key={`q-${qIdx}`}
         >
-          <div className="label" style={{ marginBottom: 10, color: "var(--accent-gold)" }}>The Question</div>
+          <div className="label" style={{ marginBottom: 10, color: "var(--accent-gold)" }}>While you cooked, we asked</div>
           <p className="font-display" style={{ fontSize: 18, lineHeight: 1.6, color: "var(--text-primary)" }}>
             {current.question}
           </p>

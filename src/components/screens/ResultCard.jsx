@@ -87,7 +87,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
     <div className="screen bg-deep" style={{ paddingTop: 32, paddingBottom: 40, alignItems: "center" }}>
       <div style={{ width: "100%", maxWidth: 440, padding: "0 20px" }}>
         <h2 className="font-display" style={{ fontSize: 24, textAlign: "center", marginBottom: 8 }}>
-          Your Result Card
+          Tonight, on one card
         </h2>
         <p style={{ color: "var(--text-secondary)", fontSize: 14, textAlign: "center", marginBottom: 24 }}>
           Download it, share it, treasure it.
@@ -290,7 +290,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
             aria-busy={downloading}
             style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
           >
-            <Download size={16} aria-hidden="true" /> {downloading ? "Saving..." : "Download"}
+            <Download size={16} aria-hidden="true" /> {downloading ? "Saving…" : "Save it"}
           </button>
           <button
             className="btn-primary"
@@ -299,7 +299,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
             aria-busy={sharing}
             style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
           >
-            <Share2 size={16} aria-hidden="true" /> {sharing ? "Sharing..." : "Share →"}
+            <Share2 size={16} aria-hidden="true" /> {sharing ? "Sharing…" : "Share →"}
           </button>
         </div>
 
@@ -313,7 +313,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
         )}
 
         <button className="btn-ghost" onClick={onPlayAgain} style={{ width: "100%", marginTop: 8 }}>
-          Play again ↩
+          Another night ↩
         </button>
       </div>
     </div>
