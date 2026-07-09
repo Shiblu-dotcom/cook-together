@@ -369,8 +369,9 @@ export default function App() {
       setAiError(null);
 
       // The judge's memory: everything this couple has accumulated. Night 10's
-      // judge remembers night 3's ridiculous dish name.
-      const profileForMemory = getProfile();
+      // judge remembers night 3's ridiculous dish name. New pairs get a judge
+      // who meets them completely fresh — no history, ever.
+      const profileForMemory = gameState.checkIn?.newPair ? null : getProfile();
       const fullState = {
         ...gameState,
         ...dishData,
@@ -422,6 +423,12 @@ export default function App() {
 
   // ─── Winner → The Word ─────────────────────────────────────────────────────
   const handleWinnerContinue = useCallback(() => {
+    // New-pair nights leave no trace on the couple's profile — no words, no
+    // dishes, no counts. A light night stays light.
+    if (gameState.checkIn?.newPair) {
+      setPhase(PHASES.THE_WORD);
+      return;
+    }
     // Persist to profile
     // One plate: both partners bank the same plate score — they rose together.
     updateProfileAfterGame({
@@ -571,6 +578,8 @@ export default function App() {
           cookingTip={gameState.aiContext.cookingTip}
           openingMessage={gameState.aiContext.openingMessage}
           easyFor={gameState.night?.easyFor}
+          coupleState={gameState.night?.coupleState}
+          newPair={!!gameState.checkIn?.newPair}
           format={gameState.format}
           roles={gameState.roles}
           onSwapRoles={handleSwapRoles}
@@ -585,7 +594,7 @@ export default function App() {
           theme={gameState.aiContext.theme}
           musicMood={gameState.aiContext.musicMood}
           questionTone={gameState.aiContext.questionTone}
-          questionBias={gameState.night?.questionToneOverride}
+          questionBias={gameState.checkIn?.newPair ? "playful" : gameState.night?.questionToneOverride}
           twistStyle={gameState.night?.twistStyle}
           night={gameState.night}
           gamesPlayed={gameState.gamesPlayed}
@@ -636,6 +645,7 @@ export default function App() {
         <WinnerAnnouncement
           p1Name={gameState.p1Name}
           p2Name={gameState.p2Name}
+          newPair={!!gameState.checkIn?.newPair}
           judgment={gameState.judgment}
           stakes={gameState.stakes}
           newBadges={gameState.newBadges || []}

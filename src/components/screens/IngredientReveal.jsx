@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { getRandomIngredients, getAlternatives } from "../../data/ingredients";
+import { suggestDish } from "../../data/dishes";
 import { RefreshCw } from "lucide-react";
 import { useVoice } from "../../hooks/useVoice";
 import VoiceControl from "../ui/VoiceControl";
 
-export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, openingMessage, easyFor, format, roles, onSwapRoles, onReady }) {
+export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, openingMessage, easyFor, coupleState, newPair, format, roles, onSwapRoles, onReady }) {
   const [step, setStep] = useState(0); // 0=theme, 1=p1 secret, 2=p2 secret
   // Ingredients are drawn from the pool that fits tonight's theme — dessert
   // nights get dessert-compatible picks, savory nights never get matcha.
@@ -18,6 +19,9 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
   const [stakes, setStakes] = useState("");
   const [showSwapOptions, setShowSwapOptions] = useState(null); // null | 'p1' | 'p2'
   const [swapOptions, setSwapOptions] = useState([]);
+  // A concrete head start from the dish book — matched to tonight's state
+  // and shape, always optional. "Another idea" deals a different one.
+  const [dish, setDish] = useState(() => suggestDish(coupleState, format, { newPair }));
   const { supported, muted, setMuted, speaking, speak, stop, voices, voiceName, setVoice } = useVoice();
 
   // Read out each reveal step out loud so players don't need to keep their
@@ -147,6 +151,43 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                 )}
               </div>
             )}
+
+            {/* A head start from the dish book — take it or cook your own idea */}
+            {dish && (() => {
+              const aName = roles?.p1 === "prep" || roles?.p1 === "the sauce & side" ? p1Name : p2Name;
+              const bName = aName === p1Name ? p2Name : p1Name;
+              return (
+                <div
+                  style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid var(--border-subtle)",
+                    borderRadius: 14,
+                    padding: "14px 18px",
+                    marginBottom: 28,
+                    textAlign: "left",
+                  }}
+                >
+                  <span className="label" style={{ display: "block", marginBottom: 6 }}>
+                    If you want a head start
+                  </span>
+                  <p className="font-display" style={{ fontSize: 17, fontWeight: 700, marginBottom: 6 }}>
+                    {dish.name}
+                  </p>
+                  <p style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                    <strong style={{ color: "var(--text-primary)" }}>{aName}</strong> — {dish.split.person_a.toLowerCase()}
+                    <br />
+                    <strong style={{ color: "var(--text-primary)" }}>{bName}</strong> — {dish.split.person_b.toLowerCase()}
+                  </p>
+                  <button
+                    className="btn-ghost"
+                    onClick={() => setDish(suggestDish(coupleState, format, { newPair, exclude: [dish.name] }))}
+                    style={{ marginTop: 6, fontSize: 12 }}
+                  >
+                    Another idea →
+                  </button>
+                </div>
+              );
+            })()}
 
             {cookingTip && (
               <div

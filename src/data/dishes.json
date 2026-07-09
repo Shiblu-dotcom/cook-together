@@ -1,0 +1,3142 @@
+{
+  "meta": {
+    "content_rule": "no pork, no alcohol anywhere",
+    "format_legend": {
+      "no-cook": "both partners assemble at once (safest for one kitchen)",
+      "two-roles": "one dish: person A preps, person B works the stove",
+      "two-components": "one plate: one part cooks while the other is assembled"
+    },
+    "couple_states": [
+      "up",
+      "wired",
+      "down",
+      "wiped",
+      "divergent",
+      "new-pair",
+      "repair"
+    ],
+    "notes": "Every dish is 15-min doable in one home kitchen with a single stove. new-pair = first/second date (light only). repair = calm cooperative night.",
+    "fields": {
+      "pantry_core": "3-5 must-have staples the dish cannot be made without; the pantry filter matches against these. Secret ingredients are separate and always substitutable."
+    }
+  },
+  "dishes": [
+    {
+      "name": "Cacio e Pepe",
+      "format": "two-roles",
+      "pantry_core": [
+        "pasta",
+        "pecorino/parmesan",
+        "black pepper"
+      ],
+      "split": {
+        "person_a": "Boils pasta, saves pasta water",
+        "person_b": "Toasts pepper, emulsifies pecorino sauce"
+      },
+      "secret_ingredients": [
+        "lemon zest",
+        "toasted breadcrumbs",
+        "brown butter",
+        "chili flakes"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "down",
+        "new-pair",
+        "repair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Aglio e Olio",
+      "format": "two-roles",
+      "pantry_core": [
+        "spaghetti",
+        "garlic",
+        "olive oil",
+        "chili flakes"
+      ],
+      "split": {
+        "person_a": "Boils spaghetti",
+        "person_b": "Slow-fries garlic, chili, oil, parsley"
+      },
+      "secret_ingredients": [
+        "anchovy",
+        "toasted breadcrumbs",
+        "lemon",
+        "capers"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "wiped",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Lemon Butter Shrimp Pasta",
+      "format": "two-components",
+      "pantry_core": [
+        "pasta",
+        "shrimp",
+        "butter",
+        "lemon"
+      ],
+      "split": {
+        "person_a": "Cooks pasta",
+        "person_b": "Sears shrimp in lemon butter, tosses"
+      },
+      "secret_ingredients": [
+        "capers",
+        "dill",
+        "chili flakes",
+        "parmesan"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "divergent"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "seafood",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Garlic Butter Noodles",
+      "format": "two-roles",
+      "pantry_core": [
+        "noodles",
+        "garlic",
+        "butter",
+        "soy sauce"
+      ],
+      "split": {
+        "person_a": "Boils noodles",
+        "person_b": "Makes garlic soy butter sauce"
+      },
+      "secret_ingredients": [
+        "scallion oil",
+        "toasted sesame",
+        "chili crisp",
+        "fried garlic"
+      ],
+      "couple_states": [
+        "down",
+        "wiped",
+        "new-pair",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Pesto Cherry Tomato Pasta",
+      "format": "two-components",
+      "pantry_core": [
+        "pasta",
+        "pesto",
+        "cherry tomatoes"
+      ],
+      "split": {
+        "person_a": "Cooks pasta",
+        "person_b": "Blisters tomatoes, folds pesto"
+      },
+      "secret_ingredients": [
+        "pine nuts",
+        "burrata",
+        "lemon zest",
+        "basil oil"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Peanut Sesame Noodles",
+      "format": "no-cook",
+      "pantry_core": [
+        "noodles",
+        "peanut butter",
+        "soy sauce",
+        "sesame oil"
+      ],
+      "split": {
+        "person_a": "Whisks peanut sesame sauce",
+        "person_b": "Tosses cooked/cold noodles, herbs, cucumber"
+      },
+      "secret_ingredients": [
+        "lime",
+        "chili crisp",
+        "crushed peanuts",
+        "cilantro"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Garlic Soy Udon",
+      "format": "two-roles",
+      "pantry_core": [
+        "udon",
+        "garlic",
+        "soy sauce",
+        "veg"
+      ],
+      "split": {
+        "person_a": "Preps udon, veg",
+        "person_b": "Stir-fries in garlic soy"
+      },
+      "secret_ingredients": [
+        "butter",
+        "chili crisp",
+        "scallion",
+        "toasted sesame"
+      ],
+      "couple_states": [
+        "wired",
+        "up",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Arrabbiata Penne",
+      "format": "two-components",
+      "pantry_core": [
+        "penne",
+        "canned tomato",
+        "garlic",
+        "chili"
+      ],
+      "split": {
+        "person_a": "Cooks penne",
+        "person_b": "Builds spicy tomato garlic sauce"
+      },
+      "secret_ingredients": [
+        "fresh basil",
+        "chili oil",
+        "olives",
+        "parmesan"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "divergent"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Creamy Mushroom Pasta",
+      "format": "two-roles",
+      "pantry_core": [
+        "pasta",
+        "mushrooms",
+        "cream",
+        "garlic"
+      ],
+      "split": {
+        "person_a": "Boils pasta",
+        "person_b": "Sears mushrooms, builds cream sauce"
+      },
+      "secret_ingredients": [
+        "thyme",
+        "truffle oil",
+        "parmesan",
+        "black pepper"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "up"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chili Garlic Ramen Upgrade",
+      "format": "two-roles",
+      "pantry_core": [
+        "instant ramen",
+        "egg",
+        "garlic",
+        "chili"
+      ],
+      "split": {
+        "person_a": "Boils ramen, soft egg",
+        "person_b": "Builds chili garlic broth, tops"
+      },
+      "secret_ingredients": [
+        "soft egg",
+        "scallion",
+        "chili crisp",
+        "toasted sesame"
+      ],
+      "couple_states": [
+        "wiped",
+        "down",
+        "new-pair",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Tomato Basil Spaghetti",
+      "format": "two-components",
+      "pantry_core": [
+        "spaghetti",
+        "tomatoes",
+        "basil",
+        "garlic"
+      ],
+      "split": {
+        "person_a": "Cooks spaghetti",
+        "person_b": "Quick fresh tomato basil sauce"
+      },
+      "secret_ingredients": [
+        "burrata",
+        "chili flakes",
+        "garlic",
+        "olive oil"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Brown Butter Sage Gnocchi",
+      "format": "two-roles",
+      "pantry_core": [
+        "gnocchi",
+        "butter",
+        "sage"
+      ],
+      "split": {
+        "person_a": "Boils/pan-crisps gnocchi",
+        "person_b": "Browns butter with sage"
+      },
+      "secret_ingredients": [
+        "parmesan",
+        "toasted walnut",
+        "lemon",
+        "nutmeg"
+      ],
+      "couple_states": [
+        "up",
+        "down",
+        "repair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Spicy Miso Noodles",
+      "format": "two-roles",
+      "pantry_core": [
+        "noodles",
+        "miso",
+        "chili",
+        "garlic"
+      ],
+      "split": {
+        "person_a": "Cooks noodles",
+        "person_b": "Builds miso chili sauce"
+      },
+      "secret_ingredients": [
+        "soft egg",
+        "scallion",
+        "sesame",
+        "chili crisp"
+      ],
+      "couple_states": [
+        "wired",
+        "up",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Cold Sesame Soba",
+      "format": "no-cook",
+      "pantry_core": [
+        "soba",
+        "sesame",
+        "soy sauce",
+        "cucumber"
+      ],
+      "split": {
+        "person_a": "Rinses/chills soba",
+        "person_b": "Whisks sesame dressing, tops"
+      },
+      "secret_ingredients": [
+        "cucumber",
+        "toasted sesame",
+        "lime",
+        "chili"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "up"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Egg Fried Rice",
+      "format": "two-roles",
+      "pantry_core": [
+        "cooked rice",
+        "egg",
+        "soy sauce",
+        "scallion"
+      ],
+      "split": {
+        "person_a": "Preps rice, veg, egg",
+        "person_b": "Fries everything in the wok"
+      },
+      "secret_ingredients": [
+        "scallion",
+        "soy butter",
+        "chili crisp",
+        "white pepper"
+      ],
+      "couple_states": [
+        "wiped",
+        "down",
+        "new-pair",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Garlic Butter Shrimp Rice Bowl",
+      "format": "two-components",
+      "pantry_core": [
+        "rice",
+        "shrimp",
+        "garlic",
+        "butter"
+      ],
+      "split": {
+        "person_a": "Warms rice, greens",
+        "person_b": "Sears garlic butter shrimp"
+      },
+      "secret_ingredients": [
+        "lemon",
+        "chili flakes",
+        "parsley",
+        "scallion"
+      ],
+      "couple_states": [
+        "up",
+        "wired"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "seafood",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Teriyaki Chicken Bowl",
+      "format": "two-components",
+      "pantry_core": [
+        "rice",
+        "chicken",
+        "soy sauce",
+        "sugar"
+      ],
+      "split": {
+        "person_a": "Steams rice, slaw",
+        "person_b": "Sears chicken, glazes teriyaki"
+      },
+      "secret_ingredients": [
+        "sesame",
+        "scallion",
+        "pineapple",
+        "chili"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "wired"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chicken Katsu-Style Bowl",
+      "format": "two-roles",
+      "pantry_core": [
+        "chicken",
+        "egg",
+        "breadcrumbs",
+        "rice"
+      ],
+      "split": {
+        "person_a": "Breads thin cutlet, rice",
+        "person_b": "Pan-fries cutlet, sauce"
+      },
+      "secret_ingredients": [
+        "katsu sauce",
+        "sesame",
+        "cabbage",
+        "lemon"
+      ],
+      "couple_states": [
+        "up",
+        "wired"
+      ],
+      "difficulty": "hard",
+      "diet_tags": [
+        "chicken",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Halloumi Couscous Bowl",
+      "format": "no-cook",
+      "pantry_core": [
+        "halloumi",
+        "couscous",
+        "lemon"
+      ],
+      "split": {
+        "person_a": "Fluffs couscous, herbs",
+        "person_b": "Sears halloumi, plates"
+      },
+      "secret_ingredients": [
+        "lemon",
+        "mint",
+        "pomegranate",
+        "chili"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Spicy Tuna Rice Bowl",
+      "format": "no-cook",
+      "pantry_core": [
+        "rice",
+        "canned/fresh tuna",
+        "mayo",
+        "sriracha"
+      ],
+      "split": {
+        "person_a": "Seasons rice, avocado",
+        "person_b": "Mixes spicy tuna, plates"
+      },
+      "secret_ingredients": [
+        "sriracha mayo",
+        "sesame",
+        "scallion",
+        "nori"
+      ],
+      "couple_states": [
+        "wired",
+        "up",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "seafood"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Burrito Bowl",
+      "format": "no-cook",
+      "pantry_core": [
+        "rice",
+        "canned beans",
+        "cheese",
+        "salsa"
+      ],
+      "split": {
+        "person_a": "Warms rice, beans",
+        "person_b": "Preps salsa, cheese, toppings"
+      },
+      "secret_ingredients": [
+        "lime crema",
+        "pickled onion",
+        "cilantro",
+        "hot sauce"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Coconut Lime Chicken Rice",
+      "format": "two-components",
+      "pantry_core": [
+        "rice",
+        "chicken",
+        "coconut milk",
+        "lime"
+      ],
+      "split": {
+        "person_a": "Cooks rice",
+        "person_b": "Sears chicken in coconut lime"
+      },
+      "secret_ingredients": [
+        "cilantro",
+        "chili",
+        "lime zest",
+        "cashew"
+      ],
+      "couple_states": [
+        "up",
+        "down",
+        "repair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Tofu Poke-Style Bowl",
+      "format": "no-cook",
+      "pantry_core": [
+        "rice",
+        "tofu",
+        "soy sauce",
+        "avocado"
+      ],
+      "split": {
+        "person_a": "Seasons rice, veg",
+        "person_b": "Marinates tofu, plates"
+      },
+      "secret_ingredients": [
+        "sesame",
+        "avocado",
+        "scallion",
+        "chili crisp"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan",
+        "tofu"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chickpea Shawarma Bowl",
+      "format": "two-roles",
+      "pantry_core": [
+        "canned chickpeas",
+        "rice",
+        "spices",
+        "tahini"
+      ],
+      "split": {
+        "person_a": "Warms rice, salad",
+        "person_b": "Crisps spiced chickpeas"
+      },
+      "secret_ingredients": [
+        "tahini",
+        "pickled onion",
+        "sumac",
+        "parsley"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Salmon Rice Bowl",
+      "format": "two-components",
+      "pantry_core": [
+        "rice",
+        "salmon",
+        "soy sauce",
+        "cucumber"
+      ],
+      "split": {
+        "person_a": "Seasons rice, cucumber",
+        "person_b": "Sears salmon, flakes over"
+      },
+      "secret_ingredients": [
+        "soy glaze",
+        "sesame",
+        "scallion",
+        "avocado"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "down"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "seafood"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chicken Tinga Tacos",
+      "format": "two-roles",
+      "pantry_core": [
+        "chicken",
+        "tortillas",
+        "canned tomato",
+        "chipotle"
+      ],
+      "split": {
+        "person_a": "Warms tortillas, toppings",
+        "person_b": "Simmers chipotle chicken"
+      },
+      "secret_ingredients": [
+        "lime crema",
+        "pickled onion",
+        "cilantro",
+        "queso fresco"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Shrimp Tacos with Slaw",
+      "format": "two-components",
+      "pantry_core": [
+        "shrimp",
+        "tortillas",
+        "cabbage",
+        "lime"
+      ],
+      "split": {
+        "person_a": "Makes slaw, warms tortillas",
+        "person_b": "Sears seasoned shrimp"
+      },
+      "secret_ingredients": [
+        "chipotle mayo",
+        "lime",
+        "cilantro",
+        "avocado"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "seafood"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Fish Tacos",
+      "format": "two-components",
+      "pantry_core": [
+        "white fish",
+        "tortillas",
+        "cabbage",
+        "lime"
+      ],
+      "split": {
+        "person_a": "Preps crema, cabbage",
+        "person_b": "Pan-fries fish, plates"
+      },
+      "secret_ingredients": [
+        "lime",
+        "chili",
+        "pickled onion",
+        "cilantro"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "seafood"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Falafel Wrap",
+      "format": "no-cook",
+      "pantry_core": [
+        "ready falafel",
+        "pita",
+        "tahini",
+        "salad veg"
+      ],
+      "split": {
+        "person_a": "Warms pita, salad",
+        "person_b": "Crisps ready falafel, tahini"
+      },
+      "secret_ingredients": [
+        "tahini",
+        "pickled turnip",
+        "sumac",
+        "harissa"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chicken Shawarma Wrap",
+      "format": "two-roles",
+      "pantry_core": [
+        "chicken",
+        "pita",
+        "garlic",
+        "spices"
+      ],
+      "split": {
+        "person_a": "Warms pita, garlic sauce",
+        "person_b": "Sears spiced chicken"
+      },
+      "secret_ingredients": [
+        "toum garlic sauce",
+        "pickle",
+        "sumac",
+        "parsley"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Cheese & Chicken Quesadilla",
+      "format": "two-roles",
+      "pantry_core": [
+        "tortillas",
+        "cheese",
+        "cooked chicken"
+      ],
+      "split": {
+        "person_a": "Preps filling, salsa",
+        "person_b": "Griddles quesadilla"
+      },
+      "secret_ingredients": [
+        "chipotle",
+        "scallion",
+        "lime crema",
+        "pickled jalapeno"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "chicken",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Halloumi Veg Pita",
+      "format": "no-cook",
+      "pantry_core": [
+        "halloumi",
+        "pita",
+        "hummus",
+        "veg"
+      ],
+      "split": {
+        "person_a": "Preps veg, hummus",
+        "person_b": "Sears halloumi, fills"
+      },
+      "secret_ingredients": [
+        "harissa",
+        "mint",
+        "lemon",
+        "pomegranate"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Black Bean Tostadas",
+      "format": "no-cook",
+      "pantry_core": [
+        "tostada/tortilla",
+        "canned black beans",
+        "cheese"
+      ],
+      "split": {
+        "person_a": "Mashes beans, toppings",
+        "person_b": "Crisps tostada, plates"
+      },
+      "secret_ingredients": [
+        "lime crema",
+        "avocado",
+        "pickled onion",
+        "cotija"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chicken Caesar Wrap",
+      "format": "no-cook",
+      "pantry_core": [
+        "tortilla",
+        "cooked chicken",
+        "romaine",
+        "caesar dressing"
+      ],
+      "split": {
+        "person_a": "Chops romaine, dressing",
+        "person_b": "Slices cooked chicken, rolls"
+      },
+      "secret_ingredients": [
+        "parmesan",
+        "crouton crumble",
+        "lemon",
+        "black pepper"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "chicken",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Shakshuka",
+      "format": "two-roles",
+      "pantry_core": [
+        "eggs",
+        "canned tomato",
+        "peppers",
+        "onion"
+      ],
+      "split": {
+        "person_a": "Preps peppers, herbs",
+        "person_b": "Simmers sauce, poaches eggs"
+      },
+      "secret_ingredients": [
+        "feta",
+        "harissa",
+        "cumin",
+        "cilantro"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "new-pair",
+        "up"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "egg",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Herb Cheese Omelette",
+      "format": "two-components",
+      "pantry_core": [
+        "eggs",
+        "cheese",
+        "herbs",
+        "butter"
+      ],
+      "split": {
+        "person_a": "Whisks eggs, herbs",
+        "person_b": "Cooks/folds omelette"
+      },
+      "secret_ingredients": [
+        "chive",
+        "gruyere",
+        "black pepper",
+        "butter"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "new-pair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "egg",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Menemen",
+      "format": "two-roles",
+      "pantry_core": [
+        "eggs",
+        "tomatoes",
+        "peppers"
+      ],
+      "split": {
+        "person_a": "Preps tomato, pepper",
+        "person_b": "Soft-scrambles eggs in"
+      },
+      "secret_ingredients": [
+        "feta",
+        "chili",
+        "parsley",
+        "cumin"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Elevated Avocado Toast",
+      "format": "no-cook",
+      "pantry_core": [
+        "bread",
+        "avocado",
+        "egg"
+      ],
+      "split": {
+        "person_a": "Toasts, smashes avocado",
+        "person_b": "Fries egg, tops"
+      },
+      "secret_ingredients": [
+        "chili crisp",
+        "feta",
+        "lemon",
+        "radish"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Croque-Style Cheese Toastie",
+      "format": "two-roles",
+      "pantry_core": [
+        "bread",
+        "cheese",
+        "butter",
+        "milk"
+      ],
+      "split": {
+        "person_a": "Builds sandwich, bechamel",
+        "person_b": "Griddles, melts top"
+      },
+      "secret_ingredients": [
+        "gruyere",
+        "dijon",
+        "nutmeg",
+        "chive"
+      ],
+      "couple_states": [
+        "down",
+        "repair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "dairy",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Egg Curry (quick)",
+      "format": "two-components",
+      "pantry_core": [
+        "eggs",
+        "canned tomato",
+        "rice",
+        "spices"
+      ],
+      "split": {
+        "person_a": "Boils eggs, rice",
+        "person_b": "Simmers tomato curry"
+      },
+      "secret_ingredients": [
+        "cilantro",
+        "garam masala",
+        "chili",
+        "ginger"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "up"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Frittata Wedges",
+      "format": "two-roles",
+      "pantry_core": [
+        "eggs",
+        "veg",
+        "cheese"
+      ],
+      "split": {
+        "person_a": "Whisks eggs, veg",
+        "person_b": "Cooks/finishes frittata"
+      },
+      "secret_ingredients": [
+        "feta",
+        "herbs",
+        "chili",
+        "parmesan"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "new-pair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "egg",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chicken Cashew Stir-Fry",
+      "format": "two-components",
+      "pantry_core": [
+        "chicken",
+        "cashews",
+        "veg",
+        "soy sauce"
+      ],
+      "split": {
+        "person_a": "Preps veg, rice",
+        "person_b": "Stir-fries chicken, cashews, sauce"
+      },
+      "secret_ingredients": [
+        "chili",
+        "scallion",
+        "sesame",
+        "hoisin"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Beef & Broccoli",
+      "format": "two-components",
+      "pantry_core": [
+        "beef",
+        "broccoli",
+        "soy sauce",
+        "rice"
+      ],
+      "split": {
+        "person_a": "Steams rice, broccoli",
+        "person_b": "Sears thin beef, glazes"
+      },
+      "secret_ingredients": [
+        "ginger",
+        "garlic",
+        "sesame",
+        "chili"
+      ],
+      "couple_states": [
+        "up",
+        "wired"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "beef"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Ginger Green Beans & Tofu",
+      "format": "two-roles",
+      "pantry_core": [
+        "tofu",
+        "green beans",
+        "ginger",
+        "garlic"
+      ],
+      "split": {
+        "person_a": "Presses/cubes tofu",
+        "person_b": "Stir-fries with ginger garlic"
+      },
+      "secret_ingredients": [
+        "chili crisp",
+        "sesame",
+        "scallion",
+        "soy glaze"
+      ],
+      "couple_states": [
+        "wired",
+        "down",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan",
+        "tofu"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Honey Garlic Chicken Bites",
+      "format": "two-components",
+      "pantry_core": [
+        "chicken",
+        "honey",
+        "garlic",
+        "rice"
+      ],
+      "split": {
+        "person_a": "Cubes chicken, rice",
+        "person_b": "Sears, glazes honey garlic"
+      },
+      "secret_ingredients": [
+        "sesame",
+        "chili",
+        "scallion",
+        "lime"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Black Pepper Beef",
+      "format": "two-components",
+      "pantry_core": [
+        "beef",
+        "black pepper",
+        "peppers",
+        "rice"
+      ],
+      "split": {
+        "person_a": "Steams rice, peppers",
+        "person_b": "Sears beef in pepper sauce"
+      },
+      "secret_ingredients": [
+        "scallion",
+        "garlic",
+        "chili",
+        "sesame"
+      ],
+      "couple_states": [
+        "up",
+        "wired"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "beef"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Sweet Chili Shrimp",
+      "format": "two-components",
+      "pantry_core": [
+        "shrimp",
+        "sweet chili sauce",
+        "rice"
+      ],
+      "split": {
+        "person_a": "Preps rice, greens",
+        "person_b": "Sears shrimp, sweet chili glaze"
+      },
+      "secret_ingredients": [
+        "lime",
+        "cilantro",
+        "scallion",
+        "sesame"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "seafood"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Tofu Scramble Stir-Fry",
+      "format": "two-roles",
+      "pantry_core": [
+        "tofu",
+        "veg",
+        "turmeric"
+      ],
+      "split": {
+        "person_a": "Crumbles tofu, veg",
+        "person_b": "Stir-fries, seasons"
+      },
+      "secret_ingredients": [
+        "turmeric",
+        "chili crisp",
+        "scallion",
+        "nutritional yeast"
+      ],
+      "couple_states": [
+        "wiped",
+        "down",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan",
+        "tofu"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Lemon Pepper Chicken Skillet",
+      "format": "two-components",
+      "pantry_core": [
+        "chicken",
+        "lemon",
+        "butter",
+        "pepper"
+      ],
+      "split": {
+        "person_a": "Preps sides",
+        "person_b": "Sears lemon pepper chicken"
+      },
+      "secret_ingredients": [
+        "butter",
+        "parsley",
+        "garlic",
+        "lemon zest"
+      ],
+      "couple_states": [
+        "up",
+        "down",
+        "repair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Cashew Veg Stir-Fry",
+      "format": "two-roles",
+      "pantry_core": [
+        "veg",
+        "cashews",
+        "soy sauce"
+      ],
+      "split": {
+        "person_a": "Chops veg",
+        "person_b": "Stir-fries with cashew sauce"
+      },
+      "secret_ingredients": [
+        "chili",
+        "sesame",
+        "scallion",
+        "hoisin"
+      ],
+      "couple_states": [
+        "wired",
+        "new-pair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Garlic Chili Chicken",
+      "format": "two-components",
+      "pantry_core": [
+        "chicken",
+        "garlic",
+        "chili",
+        "rice"
+      ],
+      "split": {
+        "person_a": "Cooks rice",
+        "person_b": "Sears chicken, chili garlic glaze"
+      },
+      "secret_ingredients": [
+        "scallion",
+        "sesame",
+        "lime",
+        "honey"
+      ],
+      "couple_states": [
+        "wired",
+        "up"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Pan-Seared Salmon",
+      "format": "two-components",
+      "pantry_core": [
+        "salmon",
+        "butter",
+        "lemon"
+      ],
+      "split": {
+        "person_a": "Makes lemon butter, sides",
+        "person_b": "Sears salmon skin-crisp"
+      },
+      "secret_ingredients": [
+        "dill",
+        "capers",
+        "lemon",
+        "garlic"
+      ],
+      "couple_states": [
+        "up",
+        "down",
+        "repair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "seafood",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Garlic Butter Shrimp",
+      "format": "two-roles",
+      "pantry_core": [
+        "shrimp",
+        "garlic",
+        "butter"
+      ],
+      "split": {
+        "person_a": "Preps garlic, parsley",
+        "person_b": "Sears shrimp in butter"
+      },
+      "secret_ingredients": [
+        "chili flakes",
+        "lemon",
+        "white pepper",
+        "scallion"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "seafood",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Seared Scallops",
+      "format": "two-components",
+      "pantry_core": [
+        "scallops",
+        "butter"
+      ],
+      "split": {
+        "person_a": "Makes puree/greens",
+        "person_b": "Sears scallops golden"
+      },
+      "secret_ingredients": [
+        "brown butter",
+        "lemon",
+        "chive",
+        "chili"
+      ],
+      "couple_states": [
+        "up",
+        "wired"
+      ],
+      "difficulty": "hard",
+      "diet_tags": [
+        "seafood",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Blackened Fish Fillet",
+      "format": "two-components",
+      "pantry_core": [
+        "white fish",
+        "spices",
+        "butter"
+      ],
+      "split": {
+        "person_a": "Mixes spice, sides",
+        "person_b": "Sears blackened fish"
+      },
+      "secret_ingredients": [
+        "lime",
+        "cilantro",
+        "garlic butter",
+        "chili"
+      ],
+      "couple_states": [
+        "up",
+        "wired"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "seafood"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Sesame Tuna Steak",
+      "format": "two-components",
+      "pantry_core": [
+        "tuna steak",
+        "sesame",
+        "soy sauce"
+      ],
+      "split": {
+        "person_a": "Preps salad, dip",
+        "person_b": "Sears crusted tuna rare"
+      },
+      "secret_ingredients": [
+        "soy ginger",
+        "sesame",
+        "wasabi",
+        "scallion"
+      ],
+      "couple_states": [
+        "up",
+        "wired"
+      ],
+      "difficulty": "hard",
+      "diet_tags": [
+        "seafood"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Lemon Garlic Cod",
+      "format": "two-components",
+      "pantry_core": [
+        "cod",
+        "lemon",
+        "garlic",
+        "butter"
+      ],
+      "split": {
+        "person_a": "Preps veg, lemon",
+        "person_b": "Pan-roasts cod"
+      },
+      "secret_ingredients": [
+        "capers",
+        "parsley",
+        "butter",
+        "chili"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "up"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "seafood",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chili Lime Shrimp Skewers",
+      "format": "two-roles",
+      "pantry_core": [
+        "shrimp",
+        "lime",
+        "chili",
+        "garlic"
+      ],
+      "split": {
+        "person_a": "Skewers, marinade",
+        "person_b": "Sears skewers"
+      },
+      "secret_ingredients": [
+        "cilantro",
+        "lime",
+        "garlic",
+        "chili"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "seafood"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Tomato Soup & Grilled Cheese",
+      "format": "two-roles",
+      "pantry_core": [
+        "canned tomato",
+        "bread",
+        "cheese"
+      ],
+      "split": {
+        "person_a": "Blends/heats tomato soup",
+        "person_b": "Griddles grilled cheese"
+      },
+      "secret_ingredients": [
+        "basil oil",
+        "gruyere",
+        "chili",
+        "cream swirl"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "wiped",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Miso Soup with Tofu",
+      "format": "two-roles",
+      "pantry_core": [
+        "miso",
+        "tofu",
+        "scallion"
+      ],
+      "split": {
+        "person_a": "Cubes tofu, greens",
+        "person_b": "Whisks miso broth"
+      },
+      "secret_ingredients": [
+        "scallion",
+        "seaweed",
+        "sesame",
+        "chili"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan",
+        "tofu"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Coconut Curry Noodle Soup",
+      "format": "two-components",
+      "pantry_core": [
+        "noodles",
+        "coconut milk",
+        "curry paste"
+      ],
+      "split": {
+        "person_a": "Cooks noodles, herbs",
+        "person_b": "Simmers coconut curry broth"
+      },
+      "secret_ingredients": [
+        "lime",
+        "cilantro",
+        "chili crisp",
+        "scallion"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "up"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Lemon Chicken Orzo Soup",
+      "format": "two-roles",
+      "pantry_core": [
+        "chicken",
+        "orzo",
+        "lemon",
+        "stock"
+      ],
+      "split": {
+        "person_a": "Preps orzo, lemon",
+        "person_b": "Simmers chicken broth"
+      },
+      "secret_ingredients": [
+        "dill",
+        "spinach",
+        "black pepper",
+        "parmesan"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "wiped"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Quick Ramen Noodle Soup",
+      "format": "two-roles",
+      "pantry_core": [
+        "instant ramen",
+        "egg",
+        "scallion"
+      ],
+      "split": {
+        "person_a": "Soft egg, toppings",
+        "person_b": "Builds broth, noodles"
+      },
+      "secret_ingredients": [
+        "scallion",
+        "chili crisp",
+        "sesame",
+        "corn"
+      ],
+      "couple_states": [
+        "wiped",
+        "down",
+        "repair",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Roasted Red Pepper Soup",
+      "format": "two-roles",
+      "pantry_core": [
+        "jarred roasted peppers",
+        "stock",
+        "cream"
+      ],
+      "split": {
+        "person_a": "Blends pepper base",
+        "person_b": "Heats, swirls cream"
+      },
+      "secret_ingredients": [
+        "basil",
+        "chili",
+        "feta",
+        "crouton"
+      ],
+      "couple_states": [
+        "down",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Wonton-Style Broth Bowl",
+      "format": "two-roles",
+      "pantry_core": [
+        "ready wontons",
+        "stock",
+        "ginger"
+      ],
+      "split": {
+        "person_a": "Preps ready wontons, greens",
+        "person_b": "Simmers ginger broth"
+      },
+      "secret_ingredients": [
+        "scallion",
+        "sesame",
+        "chili oil",
+        "soy"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Caprese Plate",
+      "format": "no-cook",
+      "pantry_core": [
+        "tomatoes",
+        "mozzarella",
+        "basil"
+      ],
+      "split": {
+        "person_a": "Slices tomato, mozzarella",
+        "person_b": "Arranges basil, dresses"
+      },
+      "secret_ingredients": [
+        "balsamic glaze",
+        "pesto drizzle",
+        "flaky salt",
+        "chili oil"
+      ],
+      "couple_states": [
+        "new-pair",
+        "up",
+        "wiped",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Mezze Board",
+      "format": "no-cook",
+      "pantry_core": [
+        "hummus",
+        "pita",
+        "veg",
+        "olives"
+      ],
+      "split": {
+        "person_a": "Plates hummus, veg",
+        "person_b": "Arranges pita, olives, cheese"
+      },
+      "secret_ingredients": [
+        "za'atar oil",
+        "harissa",
+        "pomegranate",
+        "feta"
+      ],
+      "couple_states": [
+        "new-pair",
+        "up",
+        "wiped",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Grain & Chickpea Salad",
+      "format": "no-cook",
+      "pantry_core": [
+        "grain (quinoa/bulgur)",
+        "canned chickpeas",
+        "feta"
+      ],
+      "split": {
+        "person_a": "Fluffs grains",
+        "person_b": "Tosses chickpeas, feta, dressing"
+      },
+      "secret_ingredients": [
+        "lemon",
+        "mint",
+        "sumac",
+        "pomegranate"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Greek Salad Bowl",
+      "format": "no-cook",
+      "pantry_core": [
+        "cucumber",
+        "tomato",
+        "feta",
+        "olives"
+      ],
+      "split": {
+        "person_a": "Chops veg",
+        "person_b": "Adds feta, olives, dresses"
+      },
+      "secret_ingredients": [
+        "oregano",
+        "red onion",
+        "olive oil",
+        "lemon"
+      ],
+      "couple_states": [
+        "new-pair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Burrata & Peach Plate",
+      "format": "no-cook",
+      "pantry_core": [
+        "burrata",
+        "peach",
+        "basil"
+      ],
+      "split": {
+        "person_a": "Slices peach, greens",
+        "person_b": "Tears burrata, drizzles"
+      },
+      "secret_ingredients": [
+        "balsamic",
+        "basil",
+        "chili",
+        "flaky salt"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Smoked Salmon Board",
+      "format": "no-cook",
+      "pantry_core": [
+        "smoked salmon",
+        "bread",
+        "cream cheese"
+      ],
+      "split": {
+        "person_a": "Plates bread, cream cheese",
+        "person_b": "Arranges salmon, capers"
+      },
+      "secret_ingredients": [
+        "dill",
+        "lemon",
+        "red onion",
+        "black pepper"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "seafood",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chopped Italian Salad",
+      "format": "no-cook",
+      "pantry_core": [
+        "salad veg",
+        "cheese",
+        "vinaigrette"
+      ],
+      "split": {
+        "person_a": "Chops veg, cheese",
+        "person_b": "Whisks vinaigrette, tosses"
+      },
+      "secret_ingredients": [
+        "pepperoncini",
+        "parmesan",
+        "oregano",
+        "olive"
+      ],
+      "couple_states": [
+        "new-pair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Avocado Chickpea Smash Plate",
+      "format": "no-cook",
+      "pantry_core": [
+        "bread",
+        "avocado",
+        "canned chickpeas"
+      ],
+      "split": {
+        "person_a": "Toasts bread",
+        "person_b": "Smashes avocado chickpea, tops"
+      },
+      "secret_ingredients": [
+        "chili crisp",
+        "lemon",
+        "radish",
+        "feta"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Watermelon Feta Salad",
+      "format": "no-cook",
+      "pantry_core": [
+        "watermelon",
+        "feta",
+        "mint"
+      ],
+      "split": {
+        "person_a": "Cubes watermelon",
+        "person_b": "Adds feta, mint, dresses"
+      },
+      "secret_ingredients": [
+        "lime",
+        "chili",
+        "balsamic",
+        "basil"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Margherita Flatbread",
+      "format": "two-components",
+      "pantry_core": [
+        "flatbread",
+        "tomato sauce",
+        "mozzarella"
+      ],
+      "split": {
+        "person_a": "Preps sauce, cheese",
+        "person_b": "Crisps flatbread, melts"
+      },
+      "secret_ingredients": [
+        "basil",
+        "chili oil",
+        "garlic",
+        "burrata"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Pesto Chicken Flatbread",
+      "format": "two-components",
+      "pantry_core": [
+        "flatbread",
+        "pesto",
+        "cooked chicken",
+        "cheese"
+      ],
+      "split": {
+        "person_a": "Spreads pesto, cheese",
+        "person_b": "Crisps, tops chicken"
+      },
+      "secret_ingredients": [
+        "cherry tomato",
+        "parmesan",
+        "chili",
+        "arugula"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Za'atar Halloumi Flatbread",
+      "format": "two-roles",
+      "pantry_core": [
+        "flatbread",
+        "halloumi",
+        "za'atar"
+      ],
+      "split": {
+        "person_a": "Preps toppings",
+        "person_b": "Griddles halloumi flatbread"
+      },
+      "secret_ingredients": [
+        "pomegranate",
+        "mint",
+        "lemon",
+        "chili"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Veg Naan Pizza",
+      "format": "two-components",
+      "pantry_core": [
+        "naan",
+        "tomato sauce",
+        "cheese",
+        "veg"
+      ],
+      "split": {
+        "person_a": "Preps veg, sauce",
+        "person_b": "Crisps naan, melts"
+      },
+      "secret_ingredients": [
+        "chili flakes",
+        "basil",
+        "feta",
+        "garlic oil"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Mac & Cheese (stovetop)",
+      "format": "two-roles",
+      "pantry_core": [
+        "pasta",
+        "cheese",
+        "milk",
+        "butter"
+      ],
+      "split": {
+        "person_a": "Boils pasta",
+        "person_b": "Builds cheese sauce, folds"
+      },
+      "secret_ingredients": [
+        "breadcrumb",
+        "chili crisp",
+        "gruyere",
+        "black pepper"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Loaded Nachos",
+      "format": "no-cook",
+      "pantry_core": [
+        "tortilla chips",
+        "cheese",
+        "toppings"
+      ],
+      "split": {
+        "person_a": "Layers chips, cheese",
+        "person_b": "Preps toppings, melts, plates"
+      },
+      "secret_ingredients": [
+        "jalapeno",
+        "lime crema",
+        "scallion",
+        "guac"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Gnocchi Pomodoro",
+      "format": "two-roles",
+      "pantry_core": [
+        "gnocchi",
+        "canned tomato",
+        "basil"
+      ],
+      "split": {
+        "person_a": "Boils gnocchi",
+        "person_b": "Simmers tomato sauce"
+      },
+      "secret_ingredients": [
+        "basil",
+        "chili",
+        "parmesan",
+        "garlic"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Cheesy Polenta & Greens",
+      "format": "two-components",
+      "pantry_core": [
+        "polenta",
+        "cheese",
+        "greens"
+      ],
+      "split": {
+        "person_a": "Wilts greens",
+        "person_b": "Stirs creamy polenta"
+      },
+      "secret_ingredients": [
+        "parmesan",
+        "chili oil",
+        "garlic",
+        "butter"
+      ],
+      "couple_states": [
+        "down",
+        "repair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Grilled Cheese Flight",
+      "format": "two-roles",
+      "pantry_core": [
+        "bread",
+        "cheese",
+        "butter"
+      ],
+      "split": {
+        "person_a": "Builds 3 mini sandwiches",
+        "person_b": "Griddles, plates trio"
+      },
+      "secret_ingredients": [
+        "tomato jam",
+        "gruyere",
+        "pesto",
+        "chili"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "new-pair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chicken Fajitas",
+      "format": "two-components",
+      "pantry_core": [
+        "chicken",
+        "peppers",
+        "tortillas",
+        "spices"
+      ],
+      "split": {
+        "person_a": "Slices peppers, warms tortillas",
+        "person_b": "Sears fajita chicken"
+      },
+      "secret_ingredients": [
+        "lime",
+        "cumin",
+        "chili",
+        "cilantro"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Paneer Tikka Bowl",
+      "format": "two-components",
+      "pantry_core": [
+        "paneer",
+        "rice",
+        "spices",
+        "yogurt"
+      ],
+      "split": {
+        "person_a": "Warms rice, salad",
+        "person_b": "Sears spiced paneer"
+      },
+      "secret_ingredients": [
+        "mint chutney",
+        "lemon",
+        "chili",
+        "cilantro"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Bibimbap-Style Bowl",
+      "format": "no-cook",
+      "pantry_core": [
+        "rice",
+        "egg",
+        "veg",
+        "gochujang"
+      ],
+      "split": {
+        "person_a": "Preps rice, veg, egg",
+        "person_b": "Fries egg, arranges, gochujang"
+      },
+      "secret_ingredients": [
+        "sesame",
+        "gochujang",
+        "scallion",
+        "kimchi"
+      ],
+      "couple_states": [
+        "up",
+        "wired",
+        "new-pair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Thai Basil Chicken",
+      "format": "two-components",
+      "pantry_core": [
+        "chicken",
+        "basil",
+        "rice",
+        "soy sauce"
+      ],
+      "split": {
+        "person_a": "Steams rice, egg",
+        "person_b": "Stir-fries basil chicken"
+      },
+      "secret_ingredients": [
+        "chili",
+        "fish sauce",
+        "garlic",
+        "lime"
+      ],
+      "couple_states": [
+        "wired",
+        "up"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Shrimp Pad Thai (quick)",
+      "format": "two-roles",
+      "pantry_core": [
+        "rice noodles",
+        "shrimp",
+        "egg",
+        "tamarind/lime"
+      ],
+      "split": {
+        "person_a": "Soaks noodles, preps",
+        "person_b": "Stir-fries with tamarind sauce"
+      },
+      "secret_ingredients": [
+        "peanut",
+        "lime",
+        "scallion",
+        "chili"
+      ],
+      "couple_states": [
+        "up",
+        "wired"
+      ],
+      "difficulty": "hard",
+      "diet_tags": [
+        "seafood",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chicken Souvlaki Plate",
+      "format": "two-components",
+      "pantry_core": [
+        "chicken",
+        "yogurt",
+        "cucumber",
+        "lemon"
+      ],
+      "split": {
+        "person_a": "Makes tzatziki, salad",
+        "person_b": "Sears skewered chicken"
+      },
+      "secret_ingredients": [
+        "lemon",
+        "oregano",
+        "garlic",
+        "dill"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "chicken",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Veg Gyoza Plate",
+      "format": "two-roles",
+      "pantry_core": [
+        "ready gyoza",
+        "soy sauce"
+      ],
+      "split": {
+        "person_a": "Preps dipping sauce, slaw",
+        "person_b": "Pan-fries ready gyoza crisp"
+      },
+      "secret_ingredients": [
+        "chili crisp",
+        "sesame",
+        "scallion",
+        "black vinegar"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Beef Bulgogi Bowl",
+      "format": "two-components",
+      "pantry_core": [
+        "beef",
+        "soy sauce",
+        "rice",
+        "sugar"
+      ],
+      "split": {
+        "person_a": "Steams rice, veg",
+        "person_b": "Sears marinated beef"
+      },
+      "secret_ingredients": [
+        "sesame",
+        "scallion",
+        "gochujang",
+        "kimchi"
+      ],
+      "couple_states": [
+        "up",
+        "wired"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "beef"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chana Masala (quick)",
+      "format": "two-components",
+      "pantry_core": [
+        "canned chickpeas",
+        "canned tomato",
+        "rice/naan",
+        "spices"
+      ],
+      "split": {
+        "person_a": "Warms rice/naan",
+        "person_b": "Simmers spiced chickpeas"
+      },
+      "secret_ingredients": [
+        "cilantro",
+        "ginger",
+        "garam masala",
+        "chili"
+      ],
+      "couple_states": [
+        "down",
+        "repair",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Halloumi Fajita Bowl",
+      "format": "two-components",
+      "pantry_core": [
+        "halloumi",
+        "peppers",
+        "rice",
+        "spices"
+      ],
+      "split": {
+        "person_a": "Slices peppers, rice",
+        "person_b": "Sears halloumi, spices"
+      },
+      "secret_ingredients": [
+        "lime",
+        "cumin",
+        "chili",
+        "cilantro"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Bruschetta Trio",
+      "format": "no-cook",
+      "pantry_core": [
+        "bread",
+        "tomatoes",
+        "ricotta"
+      ],
+      "split": {
+        "person_a": "Toasts bread",
+        "person_b": "Tops tomato, ricotta, pesto"
+      },
+      "secret_ingredients": [
+        "balsamic",
+        "basil",
+        "chili oil",
+        "flaky salt"
+      ],
+      "couple_states": [
+        "new-pair",
+        "up",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Shrimp Cocktail Plate",
+      "format": "no-cook",
+      "pantry_core": [
+        "shrimp",
+        "ketchup",
+        "lemon"
+      ],
+      "split": {
+        "person_a": "Makes cocktail sauce",
+        "person_b": "Poaches/chills shrimp, plates"
+      },
+      "secret_ingredients": [
+        "lemon",
+        "horseradish",
+        "chili",
+        "parsley"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "seafood"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Whipped Feta & Veg",
+      "format": "no-cook",
+      "pantry_core": [
+        "feta",
+        "yogurt",
+        "veg/bread"
+      ],
+      "split": {
+        "person_a": "Preps crudite, bread",
+        "person_b": "Whips feta, drizzles"
+      },
+      "secret_ingredients": [
+        "honey",
+        "chili",
+        "za'atar",
+        "lemon"
+      ],
+      "couple_states": [
+        "new-pair",
+        "up",
+        "wiped"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Caprese Skewers",
+      "format": "no-cook",
+      "pantry_core": [
+        "tomatoes",
+        "mozzarella",
+        "basil"
+      ],
+      "split": {
+        "person_a": "Threads tomato, mozzarella",
+        "person_b": "Adds basil, glaze"
+      },
+      "secret_ingredients": [
+        "balsamic",
+        "pesto",
+        "flaky salt",
+        "chili"
+      ],
+      "couple_states": [
+        "new-pair",
+        "wiped",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Berry Mascarpone Cups",
+      "format": "no-cook",
+      "pantry_core": [
+        "berries",
+        "mascarpone",
+        "biscuit"
+      ],
+      "split": {
+        "person_a": "Macerates berries",
+        "person_b": "Whips mascarpone, layers"
+      },
+      "secret_ingredients": [
+        "honey",
+        "lemon zest",
+        "crushed biscuit",
+        "mint"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "repair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Nutella Banana Crepes",
+      "format": "two-roles",
+      "pantry_core": [
+        "flour",
+        "egg",
+        "milk",
+        "nutella",
+        "banana"
+      ],
+      "split": {
+        "person_a": "Makes batter",
+        "person_b": "Cooks/fills crepes"
+      },
+      "secret_ingredients": [
+        "strawberry",
+        "toasted hazelnut",
+        "powdered sugar",
+        "sea salt"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "repair"
+      ],
+      "difficulty": "medium",
+      "diet_tags": [
+        "vegetarian",
+        "dairy",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Affogato-Style Sundae",
+      "format": "no-cook",
+      "pantry_core": [
+        "ice cream",
+        "espresso/strong coffee"
+      ],
+      "split": {
+        "person_a": "Scoops ice cream",
+        "person_b": "Pours hot espresso, tops"
+      },
+      "secret_ingredients": [
+        "cocoa nib",
+        "biscotti",
+        "hazelnut",
+        "flaky salt"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Grilled Peaches & Cream",
+      "format": "two-roles",
+      "pantry_core": [
+        "peaches",
+        "cream",
+        "honey"
+      ],
+      "split": {
+        "person_a": "Halves peaches",
+        "person_b": "Sears, adds cream"
+      },
+      "secret_ingredients": [
+        "honey",
+        "cinnamon",
+        "toasted almond",
+        "mint"
+      ],
+      "couple_states": [
+        "up",
+        "repair",
+        "new-pair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Chocolate Mug Cakes",
+      "format": "two-roles",
+      "pantry_core": [
+        "flour",
+        "cocoa",
+        "egg",
+        "milk",
+        "sugar"
+      ],
+      "split": {
+        "person_a": "Mixes batter x2",
+        "person_b": "Microwaves, tops"
+      },
+      "secret_ingredients": [
+        "sea salt",
+        "raspberry",
+        "hazelnut",
+        "cocoa"
+      ],
+      "couple_states": [
+        "up",
+        "new-pair",
+        "repair",
+        "down"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy",
+        "egg"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    },
+    {
+      "name": "Yogurt Honey Parfait",
+      "format": "no-cook",
+      "pantry_core": [
+        "yogurt",
+        "fruit",
+        "granola",
+        "honey"
+      ],
+      "split": {
+        "person_a": "Layers yogurt, fruit",
+        "person_b": "Adds granola, honey"
+      },
+      "secret_ingredients": [
+        "cinnamon",
+        "toasted nut",
+        "berry",
+        "lemon"
+      ],
+      "couple_states": [
+        "wiped",
+        "new-pair",
+        "repair"
+      ],
+      "difficulty": "easy",
+      "diet_tags": [
+        "vegetarian",
+        "dairy"
+      ],
+      "time_check": "doable in 15 min, one home stove"
+    }
+  ]
+}

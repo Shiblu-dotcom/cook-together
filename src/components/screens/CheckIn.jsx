@@ -53,6 +53,8 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
     p1Skill: 3,
     p2Skill: 3,
     relationshipLength: "",
+    // First/second date, a new person, friends — deep features off, warmth up.
+    newPair: false,
     celebration: "",
     combinedDay: "",
     // The night signal — valence (how the day went) and energy (what's left
@@ -75,7 +77,7 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
 
   const canProceed = () => {
     if (screen === 0) {
-      if (isReturning) return data.craving.length > 0 && data.vibe;
+      if (isReturning || data.newPair) return data.craving.length > 0 && data.vibe;
       return data.craving.length > 0 && data.vibe && data.relationshipLength;
     }
     return true;
@@ -109,15 +111,31 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
         <ChipGroup items={VIBES} selected={[data.vibe]} onToggle={(v) => set("vibe", v)} />
       </Section>
 
+      {/* Tonight's company — available every night (a returning profile can
+          still host a friend-night). "Still new" quietly turns the deep
+          features off and the warmth up. No relationship framing after this. */}
+      <Section label="Tonight we're…">
+        <ChipGroup
+          items={[
+            { label: "Us, as usual", emoji: "🍳" },
+            { label: "Still new to each other", emoji: "🌱" },
+          ]}
+          selected={[data.newPair ? "Still new to each other 🌱" : "Us, as usual 🍳"]}
+          onToggle={(v) => set("newPair", v.startsWith("Still new"))}
+        />
+      </Section>
+
       {!isReturning && (
         <>
-          <Section label="How long have you been together?">
-            <ChipGroup
-              items={RELATIONSHIP_LENGTHS}
-              selected={[data.relationshipLength]}
-              onToggle={(v) => set("relationshipLength", v)}
-            />
-          </Section>
+          {!data.newPair && (
+            <Section label="How long have you been together?">
+              <ChipGroup
+                items={RELATIONSHIP_LENGTHS}
+                selected={[data.relationshipLength]}
+                onToggle={(v) => set("relationshipLength", v)}
+              />
+            </Section>
+          )}
 
           <Section label={`${p1Name}'s cooking skill`}>
             <SliderInput

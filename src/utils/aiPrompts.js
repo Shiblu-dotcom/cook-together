@@ -14,7 +14,7 @@ Based on this couple's check-in data, decide the following for their cooking cha
 Return ONLY valid JSON, no markdown, no explanation.
 
 ${DIETARY_RULE}
-${describeNightForAI(gameState.night, p1Name, p2Name)}
+${checkIn?.newPair ? NEW_PAIR_RULE : describeNightForAI(gameState.night, p1Name, p2Name)}
 
 THEME GUIDANCE BY NIGHT: celebration → ambitious, go-big themes. comfort → warm, nostalgic, familiar. gentle → easy, low-effort. divergent → warm and low-stakes (never high-pressure). balanced → whatever fits their vibe.
 
@@ -40,6 +40,15 @@ Return this JSON:
 `.trim();
 };
 
+// New-pair nights (first date, someone new, friends): the Conductor with the
+// deep features off and the warmth up. Injected into context + judgment.
+export const NEW_PAIR_RULE = `
+TONIGHT IS A NEW-PAIR NIGHT — two people still new to each other (maybe a first date, maybe friends).
+HARD RULES: keep everything light, playful, and low-pressure. No relationship language, no intimacy,
+no "you two are meant to be", no compatibility talk, no shared-history callbacks of any kind.
+Set compatibilityScore to 0 and compatibilityReason to an empty string.
+The Word is one light word for the night's energy — never romantic, never about "them as a couple".`;
+
 export const buildJudgmentPrompt = (gameState) => {
   const { p1Name, p2Name, checkIn, aiContext, twist, secret1, secret2,
     usedSecret1, usedSecret2, plateName, p1Part, p2Part,
@@ -51,7 +60,7 @@ export const buildJudgmentPrompt = (gameState) => {
 You are a world-class cooking show judge for a couples cooking challenge app called "Cook Together, Stay Together."
 
 ${DIETARY_RULE}
-${describeNightForAI(gameState.night, p1Name, p2Name)}
+${checkIn?.newPair ? NEW_PAIR_RULE : describeNightForAI(gameState.night, p1Name, p2Name)}
 
 THE WORD should capture tonight's ARC — where they started versus where they ended. If they came in split or drained and cooked their way back to each other, reach for repair words (steadied, mended, held) over generic praise words.
 

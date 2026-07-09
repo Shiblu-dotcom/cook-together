@@ -172,8 +172,13 @@ export const useAI = () => {
             ? "Neither part outshone the other — the plate carried itself."
             : "One fingerprint stood out tonight, just barely."),
         coupleTitle: result.coupleTitle || "The Adventurous Duo",
-        compatibilityScore: typeof result.compatibilityScore === "number" ? result.compatibilityScore : 85,
-        compatibilityReason: result.compatibilityReason || "You work together like salt and pepper.",
+        // New pairs are never scored as a couple — no matter what the AI said.
+        compatibilityScore: gameState.checkIn?.newPair
+          ? 0
+          : typeof result.compatibilityScore === "number" ? result.compatibilityScore : 85,
+        compatibilityReason: gameState.checkIn?.newPair
+          ? ""
+          : result.compatibilityReason || "You work together like salt and pepper.",
         futurePrediction: result.futurePrediction || "You'll accidentally invent a new cuisine together.",
         secretIngredientComment: result.secretIngredientComment || "Bold choices were made in this kitchen.",
         theWord: result.theWord || getFallbackWord(),
@@ -205,8 +210,8 @@ export const useAI = () => {
           ? "Dead even — tonight, the plate wins."
           : "One secret ingredient made it home, and it made the difference.",
         coupleTitle: "The Beautifully Chaotic Duo",
-        compatibilityScore: 82,
-        compatibilityReason: "You fill each other's gaps like the best ingredients do.",
+        compatibilityScore: gameState.checkIn?.newPair ? 0 : 82,
+        compatibilityReason: gameState.checkIn?.newPair ? "" : "You fill each other's gaps like the best ingredients do.",
         futurePrediction: "You'll open a pop-up restaurant by accident on a Tuesday.",
         secretIngredientComment: "The secret ingredients were handled with varying levels of confidence.",
         theWord: getFallbackWord(),

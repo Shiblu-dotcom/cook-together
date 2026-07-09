@@ -8,6 +8,7 @@ import {
   CALM_THEMES, CALM_MOMENTS, CALM_QUESTIONS, CALM_WORDS, CALM_WITNESS_FALLBACKS,
   getCalmTheme, getCalmMoment, getCalmQuestion, getCalmWord, getCalmWitnessFallback,
 } from "./calm";
+import { DISHES, suggestDish } from "./dishes";
 import { DIETARY_RULE, buildContextPrompt, buildJudgmentPrompt, buildWitnessPrompt } from "../utils/aiPrompts";
 
 // Hard content rule: no pork or alcohol anywhere — static data or AI prompts.
@@ -33,6 +34,7 @@ describe("dietary content rules", () => {
   scanText("calm questions", JSON.stringify(CALM_QUESTIONS));
   scanText("calm words", JSON.stringify(CALM_WORDS));
   scanText("calm witness fallbacks", JSON.stringify(CALM_WITNESS_FALLBACKS));
+  scanText("dish book", JSON.stringify(DISHES));
 
   it("DIETARY_RULE is injected into both AI prompts", () => {
     const fakeState = {
@@ -91,6 +93,47 @@ describe("calm night rules", () => {
   it("calm words are single quiet words, not phrases", () => {
     for (const w of CALM_WORDS) {
       expect(w).toMatch(/^[A-Z][a-z]+$/);
+    }
+  });
+});
+
+describe("dish book", () => {
+  it("every dish has a name, format, split, secrets, and couple states", () => {
+    expect(DISHES.length).toBeGreaterThan(50);
+    for (const d of DISHES) {
+      expect(d.name).toBeTruthy();
+      expect(["no-cook", "two-roles", "two-components"]).toContain(d.format);
+      expect(d.split.person_a).toBeTruthy();
+      expect(d.split.person_b).toBeTruthy();
+      expect(d.secret_ingredients.length).toBeGreaterThan(0);
+      expect(d.couple_states.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("suggestDish respects the format", () => {
+    for (let i = 0; i < 20; i++) {
+      expect(suggestDish("celebration", "two-component").format).toBe("two-components");
+      expect(["two-roles", "no-cook"]).toContain(suggestDish("comfort", "one-dish").format);
+    }
+  });
+
+  it("new pairs only draw new-pair dishes", () => {
+    for (let i = 0; i < 20; i++) {
+      const d = suggestDish("celebration", "one-dish", { newPair: true });
+      expect(d.couple_states).toContain("new-pair");
+    }
+  });
+
+  it("reshuffling never repeats the excluded dish", () => {
+    const first = suggestDish("comfort", "one-dish");
+    for (let i = 0; i < 15; i++) {
+      expect(suggestDish("comfort", "one-dish", { exclude: [first.name] }).name).not.toBe(first.name);
+    }
+  });
+
+  it("every couple state has one-dish options to fall back on", () => {
+    for (const state of ["celebration", "comfort", "gentle", "divergent", "balanced"]) {
+      expect(suggestDish(state, "one-dish")).toBeTruthy();
     }
   });
 });

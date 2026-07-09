@@ -54,7 +54,7 @@ function Confetti() {
 
 export default function WinnerAnnouncement({
   p1Name, p2Name, judgment, stakes, newBadges = [], existingBadges = [],
-  onContinue,
+  newPair = false, onContinue,
 }) {
   // Fanfare as the winner flies in.
   useEffect(() => {
@@ -85,7 +85,9 @@ export default function WinnerAnnouncement({
   // The judge's longest memory: the couple's very first dish. gamesPlayed
   // hasn't counted tonight yet while this screen is up, so tonight is
   // night gamesPlayed + 1 — and the note only exists from night two on.
+  // New-pair nights never see it: no shared-history callbacks of any kind.
   const [marginNote] = useState(() => {
+    if (newPair) return null;
     const profile = getProfile();
     const first =
       profile?.firstDish?.name ||
@@ -263,7 +265,9 @@ export default function WinnerAnnouncement({
           </p>
         </div>
 
-        {/* Compatibility */}
+        {/* Compatibility — never shown on new-pair nights: two people still
+            new to each other don't get scored as a couple. */}
+        {compatibilityScore > 0 && (
         <div
           className="card-sm animate-fade-in-up delay-400"
           style={{ marginBottom: 16, animationFillMode: "forwards" }}
@@ -299,6 +303,7 @@ export default function WinnerAnnouncement({
           </div>
           <p style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.5 }}>{compatibilityReason}</p>
         </div>
+        )}
 
         {/* Future prediction */}
         {futurePrediction ? (
