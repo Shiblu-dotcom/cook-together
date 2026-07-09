@@ -50,6 +50,7 @@ export default function ExitButton({ onExit, confirmText = "Quit this session an
           role="dialog"
           aria-modal="true"
           aria-labelledby="exit-confirm-title"
+          className="overlay-in"
           onClick={() => setConfirming(false)}
           style={{
             position: "fixed",
@@ -65,7 +66,7 @@ export default function ExitButton({ onExit, confirmText = "Quit this session an
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="card"
+            className="card animate-scale-in"
             style={{ maxWidth: 360, textAlign: "center" }}
           >
             <div style={{ fontSize: 40, marginBottom: 12 }} aria-hidden="true">🚪</div>

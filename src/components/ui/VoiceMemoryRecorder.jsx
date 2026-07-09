@@ -97,6 +97,7 @@ export default function VoiceMemoryRecorder({ open, onClose, onCapture }) {
       role="dialog"
       aria-modal="true"
       aria-label="Record a voice memory"
+      className="overlay-in"
       style={{
         position: "fixed",
         inset: 0,

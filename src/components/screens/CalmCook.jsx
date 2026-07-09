@@ -169,6 +169,7 @@ export default function CalmCook({ theme, memories, onAddMemory, onDone }) {
         <div
           role="dialog"
           aria-modal="true"
+          className="overlay-in"
           onClick={() => setMoment(null)}
           style={{
             position: "fixed",
@@ -197,6 +198,7 @@ export default function CalmCook({ theme, memories, onAddMemory, onDone }) {
         <div
           role="dialog"
           aria-modal="true"
+          className="overlay-in"
           onClick={() => setQuestion(null)}
           style={{
             position: "fixed",

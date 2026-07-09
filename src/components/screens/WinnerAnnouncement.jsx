@@ -306,7 +306,7 @@ export default function WinnerAnnouncement({
               role="dialog"
               aria-modal="true"
               aria-labelledby="new-badge-title"
-              className="animate-scale-bounce"
+              className="overlay-in"
               onClick={() => setShowBadge(false)}
               onKeyDown={(e) => (e.key === "Escape" || e.key === "Enter") && setShowBadge(false)}
               tabIndex={0}
@@ -322,7 +322,7 @@ export default function WinnerAnnouncement({
                 cursor: "pointer",
               }}
             >
-              <div className="card" style={{ textAlign: "center", maxWidth: 320 }}>
+              <div className="card animate-badge-reveal" style={{ textAlign: "center", maxWidth: 320 }}>
                 <div style={{ fontSize: 72, marginBottom: 12 }} aria-hidden="true">
                   {badge?.emoji || "🏅"}
                 </div>

@@ -47,7 +47,7 @@ export default function QuestionCard({ question, p1Name, p2Name, onSubmit, onDis
         width: "calc(100% - 32px)",
         maxWidth: "440px",
         zIndex: 50,
-        animation: "slideUp 0.4s ease forwards",
+        animation: "slideUp 0.5s var(--ease-out) backwards",
       }}
     >
       <div className="card" style={{ padding: "24px", position: "relative" }}>

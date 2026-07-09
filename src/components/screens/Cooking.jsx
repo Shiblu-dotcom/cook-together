@@ -269,6 +269,7 @@ export default function Cooking({
         <div
           role="dialog"
           aria-modal="true"
+          className="overlay-in"
           onClick={() => peeking !== "choose" && setPeeking(null)}
           style={{
             position: "fixed",
@@ -284,6 +285,12 @@ export default function Cooking({
             textAlign: "center",
           }}
         >
+          {/* Keyed so the choose → reveal handoff plays its own entrance */}
+          <div
+            key={peeking}
+            className="animate-step-in"
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}
+          >
           {peeking === "choose" ? (
             <>
               <p style={{ fontSize: 15, color: "var(--text-secondary)", marginBottom: 28 }}>
@@ -324,6 +331,7 @@ export default function Cooking({
               </p>
             </>
           )}
+          </div>
         </div>
       )}
 
@@ -333,6 +341,7 @@ export default function Cooking({
           role="dialog"
           aria-modal="true"
           aria-labelledby="coop-title"
+          className="overlay-in"
           onClick={() => setShowCoop(false)}
           style={{
             position: "fixed",
@@ -372,6 +381,7 @@ export default function Cooking({
           role="dialog"
           aria-modal="true"
           aria-labelledby="twist-title"
+          className="overlay-in"
           style={{
             position: "fixed",
             inset: 0,

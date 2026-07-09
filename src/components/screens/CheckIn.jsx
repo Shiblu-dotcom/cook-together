@@ -344,7 +344,9 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
       </div>
 
       <div style={{ width: "100%", maxWidth: 440, padding: "0 4px" }} className="animate-fade-in-up">
-        {screen === 0 ? renderEssentials() : renderPersonal()}
+        <div key={screen} className="animate-step-in">
+          {screen === 0 ? renderEssentials() : renderPersonal()}
+        </div>
 
         <button
           className="btn-primary"

@@ -87,7 +87,8 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
 
   return (
     <div className="screen bg-mesh" style={{ paddingTop: 24 }}>
-      <div style={{ width: "100%", maxWidth: 440, padding: "0 4px" }}>
+      {/* Keyed on the player so the handoff plays a fresh entrance. */}
+      <div key={playerStep} className="animate-step-in" style={{ width: "100%", maxWidth: 440, padding: "0 4px" }}>
         {/* Header */}
         <div style={{ marginBottom: 32, textAlign: "center" }}>
           <div className="label" style={{ color: "var(--accent-gold)", marginBottom: 8 }}>
@@ -260,6 +261,7 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
           role="dialog"
           aria-modal="true"
           aria-label="Take a dish photo"
+          className="overlay-in"
           style={{
             position: "fixed",
             inset: 0,

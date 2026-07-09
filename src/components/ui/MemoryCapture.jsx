@@ -166,6 +166,7 @@ export default function MemoryCapture({ memoriesCount, maxMemories = 5, onCaptur
           role="dialog"
           aria-modal="true"
           aria-label="Capture a memory"
+          className="overlay-in"
           style={{
             position: "fixed",
             inset: 0,

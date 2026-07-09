@@ -147,6 +147,7 @@ export default function CookingAssistant({ ctx = {} }) {
           aria-modal="true"
           aria-label="Chef cooking assistant"
           style={{
+            animation: "slideUp 0.45s var(--ease-out) backwards",
             position: "fixed",
             bottom: "max(160px, env(safe-area-inset-bottom, 0px) + 152px)",
             right: "max(20px, env(safe-area-inset-right, 0px) + 12px)",

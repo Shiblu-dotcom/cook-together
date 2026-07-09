@@ -137,7 +137,7 @@ export default function Profile({ profile, onBack }) {
 
         {/* Word collection */}
         {displayMode === "words" && (
-          <div>
+          <div className="animate-step-in">
             {wordCollection.length === 0 ? (
               <p style={{ color: "var(--text-secondary)", textAlign: "center", padding: "32px 0" }}>
                 Your words will collect here — one per night.
@@ -175,7 +175,7 @@ export default function Profile({ profile, onBack }) {
 
         {/* Score history */}
         {displayMode === "scores" && (
-          <div style={{ marginBottom: 24 }}>
+          <div className="animate-step-in" style={{ marginBottom: 24 }}>
             {compatibilityHistory.length === 0 ? (
               <p style={{ color: "var(--text-secondary)", textAlign: "center", padding: "32px 0" }}>
                 No history yet.
