@@ -208,7 +208,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, memories, 
 
           {/* Theme */}
           <p style={{ fontSize: 11, color: tpl.textColor, opacity: 0.35, marginTop: 16, position: "relative" }}>
-            {theme} • cook-together.app
+            {theme} • Cook Together
           </p>
         </div>
 
