@@ -42,20 +42,21 @@ const initialGameState = {
   questionsAnswered: [],
   memories: [],
 
-  dish1Name: "",
-  dish1Description: "",
-  dish1Photo: null,
+  // One plate. The format decides how it's split; the parts are each
+  // person's own contribution to it.
+  format: "one-dish",
+  roles: { p1: "prep", p2: "heat" },
+  plateName: "",
+  platePhoto: null,
+  p1Part: "",
+  p2Part: "",
   usedSecret1: true,
-  dish2Name: "",
-  dish2Description: "",
-  dish2Photo: null,
   usedSecret2: true,
 
   judgment: {
     p1Reaction: "",
     p2Reaction: "",
-    p1Score: 0,
-    p2Score: 0,
+    plateScore: 0,
     winner: "",
     winnerReason: "",
     coupleTitle: "",
@@ -76,8 +77,7 @@ const initialGameState = {
 // questions are what users care about getting back.
 const sanitizeForSave = (state) => ({
   ...state,
-  dish1Photo: null,
-  dish2Photo: null,
+  platePhoto: null,
   memories: (state.memories || []).map((m) => ({
     ...m,
     photo: m.photo ? "[trimmed]" : m.photo,

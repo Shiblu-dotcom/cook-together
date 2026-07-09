@@ -3,10 +3,13 @@ import { Camera } from "lucide-react";
 import { useCamera } from "../../hooks/useCamera";
 import VoiceInput from "../ui/VoiceInput";
 
-export default function Submit({ p1Name, p2Name, onSubmit }) {
+export default function Submit({ p1Name, p2Name, roles, onSubmit }) {
+  // One plate. Each person privately notes their part and confirms their
+  // secret; then, together, they name the plate and photograph it.
   const [playerStep, setPlayerStep] = useState(1); // 1 or 2
-  const [p1Data, setP1Data] = useState({ name: "", description: "", usedSecret: true, photo: null });
-  const [p2Data, setP2Data] = useState({ name: "", description: "", usedSecret: true, photo: null });
+  const [p1Data, setP1Data] = useState({ part: "", usedSecret: true });
+  const [p2Data, setP2Data] = useState({ part: "", usedSecret: true });
+  const [plate, setPlate] = useState({ name: "", photo: null });
 
   const [showCamera, setShowCamera] = useState(false);
   const [cameraPreview, setCameraPreview] = useState(null);
@@ -16,9 +19,11 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
   const currentData = playerStep === 1 ? p1Data : p2Data;
   const setCurrentData = playerStep === 1 ? setP1Data : setP2Data;
   const currentName = playerStep === 1 ? p1Name : p2Name;
-  const otherName = playerStep === 1 ? p2Name : p1Name;
+  const currentRole = playerStep === 1 ? roles?.p1 : roles?.p2;
 
-  const canProceed = currentData.name.trim() && currentData.description.trim();
+  const canProceed = playerStep === 1
+    ? p1Data.part.trim().length > 0
+    : p2Data.part.trim().length > 0 && plate.name.trim().length > 0;
 
   const handleOpenCamera = async () => {
     setShowCamera(true);
@@ -46,7 +51,7 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
   };
 
   const handleUsePhoto = () => {
-    setCurrentData((d) => ({ ...d, photo: cameraPreview }));
+    setPlate((p) => ({ ...p, photo: cameraPreview }));
     setShowCamera(false);
     setCameraPreview(null);
     setCaptureError(null);
@@ -73,14 +78,12 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
       setPlayerStep(2);
     } else {
       onSubmit({
-        dish1Name: p1Data.name,
-        dish1Description: p1Data.description,
+        plateName: plate.name.trim(),
+        platePhoto: plate.photo,
+        p1Part: p1Data.part.trim(),
+        p2Part: p2Data.part.trim(),
         usedSecret1: p1Data.usedSecret,
-        dish1Photo: p1Data.photo,
-        dish2Name: p2Data.name,
-        dish2Description: p2Data.description,
         usedSecret2: p2Data.usedSecret,
-        dish2Photo: p2Data.photo,
       });
     }
   };
@@ -95,8 +98,13 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
             {playerStep === 1 ? "First up" : "And now"}
           </div>
           <h2 className="font-display" style={{ fontSize: 28, fontWeight: 700 }}>
-            {currentName}'s Dish
+            {currentName}'s part
           </h2>
+          {currentRole && (
+            <p style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 6 }}>
+              You were on {currentRole} tonight
+            </p>
+          )}
           {playerStep === 2 && (
             <>
               <p style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 6 }}>
@@ -113,16 +121,17 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
           )}
         </div>
 
-        {/* Photo capture */}
+        {/* Photo of the one plate — shared, so it waits for the second turn */}
+        {playerStep === 2 && (
         <div style={{ marginBottom: 24 }}>
           <label className="label" style={{ display: "block", marginBottom: 10 }}>
-            Final dish photo — optional, but the judge loves evidence
+            One plate photo — optional, but the judge loves evidence
           </label>
-          {currentData.photo ? (
+          {plate.photo ? (
             <div style={{ position: "relative" }}>
               <img
-                src={currentData.photo}
-                alt={`${currentName}'s final dish`}
+                src={plate.photo}
+                alt="The plate you made together"
                 style={{ width: "100%", borderRadius: 16, maxHeight: 220, objectFit: "cover" }}
               />
               <button
@@ -167,50 +176,31 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(245,207,93,0.2)"; e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
             >
               <Camera size={28} aria-hidden="true" />
-              <span style={{ fontSize: 14 }}>Take a photo of your dish</span>
+              <span style={{ fontSize: 14 }}>Take a photo of the plate</span>
               <span style={{ fontSize: 11, opacity: 0.6 }}>(optional)</span>
             </button>
           )}
         </div>
+        )}
 
-        {/* Fields */}
+        {/* Your part — each person's private note on what they contributed */}
         <div style={{ marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
             <label className="label" style={{ flex: 1 }}>
-              Give your dish a dramatic name
+              Your part of the plate
             </label>
             <VoiceInput
-              value={currentData.name}
-              onChange={(v) => setCurrentData((d) => ({ ...d, name: v }))}
-              compact
-            />
-          </div>
-          <input
-            className="input-field"
-            placeholder="e.g. The Midnight Revelation"
-            value={currentData.name}
-            onChange={(e) => setCurrentData((d) => ({ ...d, name: e.target.value }))}
-            maxLength={60}
-          />
-        </div>
-
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
-            <label className="label" style={{ flex: 1 }}>
-              Tell the judge what it is
-            </label>
-            <VoiceInput
-              value={currentData.description}
-              onChange={(v) => setCurrentData((d) => ({ ...d, description: v }))}
+              value={currentData.part}
+              onChange={(v) => setCurrentData((d) => ({ ...d, part: v }))}
               compact
             />
           </div>
           <textarea
             className="input-field"
             rows={2}
-            placeholder="What is it and what makes it special?"
-            value={currentData.description}
-            onChange={(e) => setCurrentData((d) => ({ ...d, description: e.target.value }))}
+            placeholder="What did you take care of, and how did it go?"
+            value={currentData.part}
+            onChange={(e) => setCurrentData((d) => ({ ...d, part: e.target.value }))}
             maxLength={200}
             style={{ resize: "none" }}
           />
@@ -240,10 +230,34 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
           </div>
           {!currentData.usedSecret && (
             <p style={{ fontSize: 12, color: "var(--accent-red)", marginTop: 8 }} role="alert">
-              Heads up — skipping means 0 points for {currentName} this round.
+              Heads up — a skipped secret caps the whole plate at 60.
             </p>
           )}
         </div>
+
+        {/* Together now: name the one plate you both made */}
+        {playerStep === 2 && (
+          <div style={{ marginBottom: 32 }}>
+            <div className="divider" />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 12 }}>
+              <label className="label" style={{ flex: 1 }}>
+                Together now — give the plate a dramatic name
+              </label>
+              <VoiceInput
+                value={plate.name}
+                onChange={(v) => setPlate((p) => ({ ...p, name: v }))}
+                compact
+              />
+            </div>
+            <input
+              className="input-field"
+              placeholder="e.g. The Midnight Revelation"
+              value={plate.name}
+              onChange={(e) => setPlate((p) => ({ ...p, name: e.target.value }))}
+              maxLength={60}
+            />
+          </div>
+        )}
 
         <button
           className="btn-primary"
@@ -251,7 +265,7 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
           disabled={!canProceed}
           aria-disabled={!canProceed}
         >
-          {playerStep === 1 ? `Done → ${otherName}'s turn` : "To the judge →"}
+          {playerStep === 1 ? `Done → ${p2Name}'s turn` : "To the judge →"}
         </button>
       </div>
 

@@ -1,5 +1,56 @@
 import { describe, it, expect } from "vitest";
-import { computeNightSignal, describeNightForAI } from "./nightSignal";
+import { computeNightSignal, describeNightForAI, formatForNight } from "./nightSignal";
+
+describe("formatForNight", () => {
+  it("celebration nights build two components on one plate", () => {
+    const checkIn = { p1Valence: 5, p2Valence: 4, p1Energy: 4, p2Energy: 4 };
+    const { format, roles } = formatForNight(computeNightSignal(checkIn), checkIn, { gamesPlayed: 5 });
+    expect(format).toBe("two-component");
+    expect([roles.p1, roles.p2].sort()).toEqual(["the main", "the sauce & side"]);
+  });
+
+  it("comfort and gentle nights get one dish, two roles", () => {
+    for (const checkIn of [
+      { p1Valence: 2, p2Valence: 1, p1Energy: 3, p2Energy: 3 },
+      { p1Valence: 3, p2Valence: 3, p1Energy: 1, p2Energy: 2 },
+    ]) {
+      const { format, roles } = formatForNight(computeNightSignal(checkIn), checkIn, { gamesPlayed: 9 });
+      expect(format).toBe("one-dish");
+      expect([roles.p1, roles.p2].sort()).toEqual(["heat", "prep"]);
+    }
+  });
+
+  it("divergent nights give prep to the partner having the rough day", () => {
+    const checkIn = { p1Valence: 1, p2Valence: 4, p1Energy: 2, p2Energy: 4 };
+    const signal = computeNightSignal(checkIn);
+    expect(signal.downPartner).toBe("p1");
+    const { format, roles } = formatForNight(signal, checkIn, { gamesPlayed: 9 });
+    expect(format).toBe("one-dish");
+    expect(roles.p1).toBe("prep");
+    expect(roles.p2).toBe("heat");
+  });
+
+  it("new pairs always get the gentle shape, even on a celebration read", () => {
+    const checkIn = { p1Valence: 5, p2Valence: 5, p1Energy: 5, p2Energy: 5 };
+    const { format } = formatForNight(computeNightSignal(checkIn), checkIn, { newPair: true, gamesPlayed: 20 });
+    expect(format).toBe("one-dish");
+  });
+
+  it("balanced nights: easy while the game is new, ambitious after", () => {
+    const checkIn = { p1Valence: 3, p2Valence: 3, p1Energy: 3, p2Energy: 3 };
+    const signal = computeNightSignal(checkIn);
+    expect(formatForNight(signal, checkIn, { gamesPlayed: 0 }).format).toBe("one-dish");
+    expect(formatForNight(signal, checkIn, { gamesPlayed: 4 }).format).toBe("two-component");
+  });
+
+  it("the lighter component goes to whoever has less in the tank", () => {
+    const checkIn = { p1Valence: 4, p2Valence: 4, p1Energy: 2, p2Energy: 4 };
+    const signal = computeNightSignal(checkIn);
+    expect(signal.easyFor).toBe("p1");
+    const { roles } = formatForNight(signal, checkIn, { gamesPlayed: 5 });
+    expect(roles.p1).toBe("the sauce & side");
+  });
+});
 
 describe("computeNightSignal", () => {
   it("defaults to balanced when the check-in was skipped", () => {

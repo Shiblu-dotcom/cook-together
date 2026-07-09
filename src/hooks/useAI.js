@@ -2,7 +2,6 @@ import Anthropic from "@anthropic-ai/sdk";
 import { buildContextPrompt, buildJudgmentPrompt, buildWitnessPrompt, DIETARY_RULE } from "../utils/aiPrompts";
 import { getFallbackWord } from "../utils/wordGenerator";
 import { getCalmWord, getCalmWitnessFallback } from "../data/calm";
-import { calculateScore, resolveWinner } from "../utils/scoring";
 import { THEMES } from "../data/themes";
 
 const MODEL = "claude-opus-4-8";
@@ -148,30 +147,30 @@ export const useAI = () => {
   const getJudgment = async (gameState) => {
     try {
       const prompt = buildJudgmentPrompt(gameState);
-      // Attach the dish photos so the judge reacts to what it actually sees.
-      // Order matters and matches the prompt: P1's dish, then P2's.
-      const images = [gameState.dish1Photo, gameState.dish2Photo]
-        .map(dataUrlToImageBlock)
-        .filter(Boolean);
+      // Attach the plate photo so the judge reacts to what it actually sees.
+      const images = [gameState.platePhoto].map(dataUrlToImageBlock).filter(Boolean);
       const result = images.length
         ? await callClaudeVisionJSON(prompt, images)
         : await callClaudeJSON(prompt);
 
-      // The tie rule (scores within 5 = nobody loses) is a game rule, not a
-      // suggestion — enforce it deterministically on whatever the AI said.
-      const p1Score = typeof result.p1Score === "number" ? result.p1Score : 70;
-      const p2Score = typeof result.p2Score === "number" ? result.p2Score : 65;
-      const verdict = resolveWinner(p1Score, p2Score, gameState.p1Name, gameState.p2Name);
+      // One plate, one score. The winner is whose fingerprint carried it —
+      // the AI decides, but only real names (or "tie") are accepted.
+      const plateScore = typeof result.plateScore === "number"
+        ? Math.max(0, Math.min(100, Math.round(result.plateScore)))
+        : 72;
+      const winner = [gameState.p1Name, gameState.p2Name, "tie"].includes(result.winner)
+        ? result.winner
+        : "tie";
 
       return {
-        p1Reaction: result.p1Reaction || `${gameState.p1Name}, you gave it your all tonight.`,
-        p2Reaction: result.p2Reaction || `${gameState.p2Name}, a valiant effort!`,
-        p1Score,
-        p2Score,
-        winner: verdict.winner,
-        winnerReason: verdict.winner === "tie"
-          ? "Too close to call — tonight, the kitchen wins."
-          : result.winnerReason || "A narrow victory decided by passion.",
+        p1Reaction: result.p1Reaction || `${gameState.p1Name}, your part held the plate together.`,
+        p2Reaction: result.p2Reaction || `${gameState.p2Name}, your part gave it its voice.`,
+        plateScore,
+        winner,
+        winnerReason: result.winnerReason ||
+          (winner === "tie"
+            ? "Neither part outshone the other — the plate carried itself."
+            : "One fingerprint stood out tonight, just barely."),
         coupleTitle: result.coupleTitle || "The Adventurous Duo",
         compatibilityScore: typeof result.compatibilityScore === "number" ? result.compatibilityScore : 85,
         compatibilityReason: result.compatibilityReason || "You work together like salt and pepper.",
@@ -181,33 +180,30 @@ export const useAI = () => {
       };
     } catch (err) {
       logApiError("AI judgment", err);
-      // Score the fallback honestly from what actually happened — secret
-      // ingredients, swaps, and memories — instead of hardcoded numbers.
-      const p1Score = calculateScore({
-        usedSecretIngredient: !!gameState.usedSecret1,
-        swappedIngredient: !!gameState.swapped1,
-        memoriesTaken: (gameState.memories || []).length,
-        aiCreativityScore: 35,
-        aiEffortScore: 20,
-      });
-      const p2Score = calculateScore({
-        usedSecretIngredient: !!gameState.usedSecret2,
-        swappedIngredient: !!gameState.swapped2,
-        memoriesTaken: (gameState.memories || []).length,
-        aiCreativityScore: 32,
-        aiEffortScore: 21,
-      });
-      const verdict = resolveWinner(p1Score, p2Score, gameState.p1Name, gameState.p2Name);
+      // Score the plate honestly from what actually happened — secrets
+      // worked in and memories taken — instead of hardcoded numbers.
+      const base = 58;
+      const plateScore = Math.min(100,
+        base +
+        (gameState.usedSecret1 ? 10 : 0) +
+        (gameState.usedSecret2 ? 10 : 0) +
+        Math.min(5, (gameState.memories || []).length) * 2
+      );
+      // Fingerprint fallback: if exactly one of them worked their secret in,
+      // that part carried the plate. Otherwise, tie.
+      const winner =
+        gameState.usedSecret1 && !gameState.usedSecret2 ? gameState.p1Name
+        : gameState.usedSecret2 && !gameState.usedSecret1 ? gameState.p2Name
+        : "tie";
 
       return {
-        p1Reaction: `${gameState.p1Name}, a creative and heartfelt dish. The effort showed.`,
-        p2Reaction: `${gameState.p2Name}, you brought real imagination to the plate tonight.`,
-        p1Score,
-        p2Score,
-        winner: verdict.winner,
-        winnerReason: verdict.winner === "tie"
-          ? "Dead even — tonight, nobody loses."
-          : "A close battle decided by creativity and courage.",
+        p1Reaction: `${gameState.p1Name}, your part was made with real care. It showed on the plate.`,
+        p2Reaction: `${gameState.p2Name}, your part brought the imagination tonight.`,
+        plateScore,
+        winner,
+        winnerReason: winner === "tie"
+          ? "Dead even — tonight, the plate wins."
+          : "One secret ingredient made it home, and it made the difference.",
         coupleTitle: "The Beautifully Chaotic Duo",
         compatibilityScore: 82,
         compatibilityReason: "You fill each other's gaps like the best ingredients do.",

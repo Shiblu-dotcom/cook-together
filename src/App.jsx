@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from "react";
 import { sfxChime } from "./utils/sfx";
-import { computeNightSignal } from "./utils/nightSignal";
+import { computeNightSignal, formatForNight } from "./utils/nightSignal";
 import { getCalmTheme } from "./data/calm";
 import { useGame, getSavedSession, clearSavedSession } from "./hooks/useGame";
 import { useAI } from "./hooks/useAI";
@@ -303,8 +303,14 @@ export default function App() {
       // is described to the AI for theme + judge tone. Works with or
       // without the AI — the steering is deterministic.
       const night = computeNightSignal(checkInData);
+      // One plate, always — the couple state picks how it's split:
+      // two owned components on ambitious nights, prep/heat roles on easy ones.
+      const shape = formatForNight(night, checkInData, {
+        newPair: !!checkInData.newPair,
+        gamesPlayed: gameState.gamesPlayed || 0,
+      });
       updateCheckIn(checkInData);
-      updateGame({ night });
+      updateGame({ night, format: shape.format, roles: shape.roles });
       setPhase(PHASES.LOADING_AI);
 
       const stateForAI = {
@@ -332,6 +338,11 @@ export default function App() {
     },
     [updateGame]
   );
+
+  // The role split is a suggestion, not an order — one tap trades places.
+  const handleSwapRoles = useCallback(() => {
+    updateGame({ roles: { p1: gameState.roles?.p2, p2: gameState.roles?.p1 } });
+  }, [updateGame, gameState.roles]);
 
   // ─── Cooking ───────────────────────────────────────────────────────────────
   const handleTimeUp = useCallback(
@@ -395,14 +406,12 @@ export default function App() {
 
   const handleRetryJudgment = useCallback(() => {
     handleSubmit({
-      dish1Name: gameState.dish1Name,
-      dish1Description: gameState.dish1Description,
+      plateName: gameState.plateName,
+      platePhoto: gameState.platePhoto,
+      p1Part: gameState.p1Part,
+      p2Part: gameState.p2Part,
       usedSecret1: gameState.usedSecret1,
-      dish1Photo: gameState.dish1Photo,
-      dish2Name: gameState.dish2Name,
-      dish2Description: gameState.dish2Description,
       usedSecret2: gameState.usedSecret2,
-      dish2Photo: gameState.dish2Photo,
     });
   }, [handleSubmit, gameState]);
 
@@ -414,9 +423,10 @@ export default function App() {
   // ─── Winner → The Word ─────────────────────────────────────────────────────
   const handleWinnerContinue = useCallback(() => {
     // Persist to profile
+    // One plate: both partners bank the same plate score — they rose together.
     updateProfileAfterGame({
-      p1Points: gameState.judgment.p1Score,
-      p2Points: gameState.judgment.p2Score,
+      p1Points: gameState.judgment.plateScore,
+      p2Points: gameState.judgment.plateScore,
       coupleTitle: gameState.judgment.coupleTitle,
       compatibilityScore: gameState.judgment.compatibilityScore,
       theme: gameState.aiContext.theme,
@@ -424,8 +434,7 @@ export default function App() {
       newBadges: gameState.newBadges || [],
       memories: gameState.memories,
       questionAnswers: gameState.questionsAnswered,
-      dish1Name: gameState.dish1Name,
-      dish2Name: gameState.dish2Name,
+      dish1Name: gameState.plateName,
       winner: gameState.judgment.winner,
     });
     setPhase(PHASES.THE_WORD);
@@ -562,6 +571,9 @@ export default function App() {
           cookingTip={gameState.aiContext.cookingTip}
           openingMessage={gameState.aiContext.openingMessage}
           easyFor={gameState.night?.easyFor}
+          format={gameState.format}
+          roles={gameState.roles}
+          onSwapRoles={handleSwapRoles}
           onReady={handleIngredientsReady}
         />
       )}
@@ -579,6 +591,7 @@ export default function App() {
           gamesPlayed={gameState.gamesPlayed}
           secret1={gameState.secret1}
           secret2={gameState.secret2}
+          roles={gameState.roles}
           memories={gameState.memories}
           onAddMemory={addMemory}
           onQuestionAnswer={addQuestionAnswer}
@@ -596,6 +609,7 @@ export default function App() {
         <Submit
           p1Name={gameState.p1Name}
           p2Name={gameState.p2Name}
+          roles={gameState.roles}
           onSubmit={handleSubmit}
         />
       )}

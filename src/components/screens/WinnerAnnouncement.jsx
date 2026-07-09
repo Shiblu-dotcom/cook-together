@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import PointsDisplay from "../ui/PointsDisplay";
 import BadgeDisplay from "../ui/BadgeDisplay";
 import VoiceControl from "../ui/VoiceControl";
 import { BADGES } from "../../data/badges";
@@ -74,8 +73,7 @@ export default function WinnerAnnouncement({
     p1Reaction = "",
     p2Reaction = "",
     secretIngredientComment = "",
-    p1Score = 0,
-    p2Score = 0,
+    plateScore = 0,
   } = safeJudgment;
   const isTie = winner === "tie";
   const [showBadge, setShowBadge] = useState(false);
@@ -203,9 +201,18 @@ export default function WinnerAnnouncement({
           </div>
         )}
 
-        {/* Scores */}
-        <div className="card animate-fade-in-up delay-200" style={{ marginBottom: 20, animationFillMode: "forwards" }}>
-          <PointsDisplay p1Name={p1Name} p2Name={p2Name} p1Points={p1Score} p2Points={p2Score} />
+        {/* One plate, one score — they rise and fall together */}
+        <div className="card animate-fade-in-up delay-200" style={{ marginBottom: 20, textAlign: "center", animationFillMode: "forwards" }}>
+          <div className="label" style={{ marginBottom: 6 }}>The plate</div>
+          <div
+            className="font-display text-gold"
+            style={{ fontSize: 56, fontWeight: 900, lineHeight: 1 }}
+          >
+            {plateScore}
+          </div>
+          <div style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 6 }}>
+            out of 100 — earned together
+          </div>
         </div>
 
         {/* The Judge's Verdict — the AI's personal reaction to each dish */}

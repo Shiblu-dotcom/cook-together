@@ -4,7 +4,7 @@ import { RefreshCw } from "lucide-react";
 import { useVoice } from "../../hooks/useVoice";
 import VoiceControl from "../ui/VoiceControl";
 
-export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, openingMessage, easyFor, onReady }) {
+export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, openingMessage, easyFor, format, roles, onSwapRoles, onReady }) {
   const [step, setStep] = useState(0); // 0=theme, 1=p1 secret, 2=p2 secret
   // Ingredients are drawn from the pool that fits tonight's theme — dessert
   // nights get dessert-compatible picks, savory nights never get matcha.
@@ -30,7 +30,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
     if (step === 0) {
       const opener = (openingMessage || "").trim();
       const themeLine = `Tonight's theme is ${theme}.`;
-      const reminder = "You've got 15 minutes. Cook anything you want.";
+      const reminder = "You've got 15 minutes. One plate, made together.";
       utter = opener
         ? `${opener} ${themeLine} ${reminder}`
         : `${themeLine} ${reminder}`;
@@ -117,9 +117,36 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
             <h1 className="font-display text-gold" style={{ fontSize: 40, fontWeight: 900, marginBottom: 12, lineHeight: 1.2 }}>
               {theme}
             </h1>
-            <p style={{ color: "var(--text-secondary)", fontSize: 16, marginBottom: 40 }}>
-              <strong style={{ color: "var(--text-primary)" }}>15 minutes</strong> · any dish · one secret ingredient
+            <p style={{ color: "var(--text-secondary)", fontSize: 16, marginBottom: 28 }}>
+              <strong style={{ color: "var(--text-primary)" }}>15 minutes</strong> · one plate · two secret ingredients
             </p>
+
+            {/* Tonight's shape — who's on what. A suggestion, not an order. */}
+            {roles && (
+              <div
+                style={{
+                  background: "rgba(245,207,93,0.06)",
+                  border: "1px solid var(--border-subtle)",
+                  borderRadius: 14,
+                  padding: "14px 18px",
+                  marginBottom: 28,
+                }}
+              >
+                <span className="label" style={{ color: "var(--accent-gold)", display: "block", marginBottom: 8 }}>
+                  {format === "two-component" ? "One plate, two parts" : "One dish, two pairs of hands"}
+                </span>
+                <p style={{ fontSize: 14, color: "var(--text-primary)", lineHeight: 1.6 }}>
+                  <strong>{p1Name}</strong> — {roles.p1}
+                  <span style={{ color: "var(--text-secondary)" }}> · </span>
+                  <strong>{p2Name}</strong> — {roles.p2}
+                </p>
+                {onSwapRoles && (
+                  <button className="btn-ghost" onClick={onSwapRoles} style={{ marginTop: 6, fontSize: 12 }}>
+                    ⇄ Trade places
+                  </button>
+                )}
+              </div>
+            )}
 
             {cookingTip && (
               <div
@@ -176,7 +203,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                 color: "var(--text-secondary)",
               }}
             >
-              🤫 {p2Name}, look away!
+              {p2Name}, look away 🤫
             </div>
 
             <div className="label" style={{ marginBottom: 12, color: "var(--accent-gold)" }}>
@@ -203,7 +230,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
             </h2>
 
             <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 32 }}>
-              Use it or score <strong style={{ color: "var(--accent-red)" }}>0</strong> — and keep it secret 🤫
+              Work it into your part — skipping caps the plate at <strong style={{ color: "var(--accent-red)" }}>60</strong>. Keep it secret 🤫
             </p>
 
             {showSwapOptions === "p1" ? (
@@ -256,7 +283,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                 color: "var(--text-secondary)",
               }}
             >
-              🤫 {p1Name}, look away!
+              {p1Name}, look away 🤫
             </div>
 
             <div className="label" style={{ marginBottom: 12, color: "var(--accent-gold)" }}>
@@ -283,7 +310,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
             </h2>
 
             <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 32 }}>
-              Use it or score <strong style={{ color: "var(--accent-red)" }}>0</strong> — and keep it secret 🤫
+              Work it into your part — skipping caps the plate at <strong style={{ color: "var(--accent-red)" }}>60</strong>. Keep it secret 🤫
             </p>
 
             {showSwapOptions === "p2" ? (

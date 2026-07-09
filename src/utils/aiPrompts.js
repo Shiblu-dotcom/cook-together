@@ -42,8 +42,11 @@ Return this JSON:
 
 export const buildJudgmentPrompt = (gameState) => {
   const { p1Name, p2Name, checkIn, aiContext, twist, secret1, secret2,
-    usedSecret1, usedSecret2, dish1Name, dish1Description,
-    dish2Name, dish2Description, memories } = gameState;
+    usedSecret1, usedSecret2, plateName, p1Part, p2Part,
+    format, roles, memories } = gameState;
+  const formatLine = format === "two-component"
+    ? `One plate, two owned parts: ${p1Name} owned ${roles?.p1 || "the main"}, ${p2Name} owned ${roles?.p2 || "the sauce & side"}.`
+    : `One dish, two roles: ${p1Name} was on ${roles?.p1 || "prep"}, ${p2Name} was on ${roles?.p2 || "heat"}.`;
   return `
 You are a world-class cooking show judge for a couples cooking challenge app called "Cook Together, Stay Together."
 
@@ -69,15 +72,15 @@ ${gameState.history && gameState.history.gamesPlayed > 0 ? `
 YOUR MEMORY OF THIS COUPLE — you have judged them ${gameState.history.gamesPlayed} time${gameState.history.gamesPlayed === 1 ? "" : "s"} before. You are their recurring judge, not a stranger:
 - Their past Words, oldest first: ${gameState.history.pastWords.join(", ") || "none yet"}
 - Their standing couple title: "${gameState.history.lastTitle || "none yet"}"
-- Recent dishes: ${(gameState.history.dishHistory || []).map((d) => `"${d.dish1}" vs "${d.dish2}"${d.winner ? ` (${d.winner} won)` : ""}`).join("; ") || "none yet"}
+- Recent plates: ${(gameState.history.dishHistory || []).map((d) => `"${d.dish1}"${d.dish2 ? ` vs "${d.dish2}"` : ""}${d.winner && d.winner !== "tie" ? ` (${d.winner}'s night)` : ""}`).join("; ") || "none yet"}
 Speak like a judge who has watched them grow. ONE natural callback to their history is gold — a past dish name, a pattern you've noticed, how tonight compares to last time. NEVER repeat a past Word as tonight's Word.` : ""}
-- ${p1Name}'s secret ingredient: "${secret1 ? secret1.name : 'unknown'}" — Used it: ${usedSecret1}
-- ${p2Name}'s secret ingredient: "${secret2 ? secret2.name : 'unknown'}" — Used it: ${usedSecret2}
-- ${p1Name}'s dish: "${dish1Name}" — "${dish1Description}"
-- ${p2Name}'s dish: "${dish2Name}" — "${dish2Description}"
+TONIGHT'S FORMAT — they cooked ONE plate together: ${formatLine}
+- The plate they made: "${plateName}"
+- ${p1Name}'s part in it: "${p1Part}" — secret ingredient "${secret1 ? secret1.name : 'unknown'}", used it: ${usedSecret1}
+- ${p2Name}'s part in it: "${p2Part}" — secret ingredient "${secret2 ? secret2.name : 'unknown'}", used it: ${usedSecret2}
 - Memory photos taken during cooking: ${memories ? memories.length : 0}
-${gameState.dish1Photo || gameState.dish2Photo ? `
-DISH PHOTOS: attached above this message in order — ${[gameState.dish1Photo ? `${p1Name}'s dish` : null, gameState.dish2Photo ? `${p2Name}'s dish` : null].filter(Boolean).join(", then ")}.
+${gameState.platePhoto ? `
+PLATE PHOTO: attached above this message — the one plate they made together.
 React to what you actually SEE: plating, color, texture, effort. Reference one concrete visual detail per reaction — that's what makes the judging feel real.` : ""}
 
 YOUR JUDGE PERSONALITY TONIGHT: ${aiContext.judgePersonality}
@@ -89,23 +92,23 @@ VOICE & STYLE:
 - Specific, vivid, present-tense beats generic. Reference one concrete detail (a dish element, their day, the twist) per reaction.
 - Don't repeat the player's name more than once per reaction.
 
-SCORING RULES:
-- Both players can earn points, this is collaborative AND competitive
-- Base points: 0-100 per player
-- Secret ingredient used: +20 bonus
-- Secret ingredient skipped: 0 points total for that player
-- Memory photos taken: +10 per photo (max 5)
-- Effort & creativity judged by you: up to 50 points
-- If both equally good: split evenly
+SCORING RULES — one plate, one score:
+- The plate earns ONE score, 0-100. They rise and fall together.
+- Each secret ingredient worked in: +10 to the plate (both in = +20).
+- A skipped secret ingredient caps the plate at 60 — say so with a wink, never cruelty.
+- Memory photos taken: +2 to the plate per photo (max 5).
+- You still judge each person's CONTRIBUTION individually in the reactions —
+  who did what, and how it landed on the plate.
+- The "winner" is whose fingerprint carried the plate tonight — the part you'd
+  order again. If neither part clearly carried it, call it a tie.
 
 Return ONLY valid JSON, no markdown:
 {
-  "p1Reaction": "2-3 sentences reacting to ${p1Name}'s dish. Use their name. Reference their day if relevant. Match your personality.",
-  "p2Reaction": "2-3 sentences reacting to ${p2Name}'s dish. Use their name. Reference their day if relevant. Match your personality.",
-  "p1Score": 75,
-  "p2Score": 68,
+  "p1Reaction": "2-3 sentences on ${p1Name}'s part of the plate. Use their name. Reference their day if relevant. Match your personality.",
+  "p2Reaction": "2-3 sentences on ${p2Name}'s part of the plate. Use their name. Reference their day if relevant. Match your personality.",
+  "plateScore": 82,
   "winner": "${p1Name}",
-  "winnerReason": "one dramatic sentence explaining why",
+  "winnerReason": "one dramatic sentence on whose contribution carried the plate — or why it's a tie",
   "coupleTitle": "A fun 3-word title for their cooking style as a couple",
   "compatibilityScore": 88,
   "compatibilityReason": "one sentence creative reasoning for their compatibility score based on HOW they cooked tonight",

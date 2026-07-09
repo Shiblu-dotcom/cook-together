@@ -13,7 +13,7 @@ import { startAmbient, stopAmbient, setAmbientMood } from "../../utils/ambient";
 
 export default function Cooking({
   p1Name, p2Name, theme, musicMood: initialMood, questionTone, questionBias,
-  secret1, secret2, twistStyle, gamesPlayed, night,
+  secret1, secret2, twistStyle, gamesPlayed, night, roles,
   memories, onAddMemory, onQuestionAnswer, onTimeUp,
   initialSeconds, onTick,
 }) {
@@ -231,6 +231,11 @@ export default function Cooking({
         {!paused && (
           <p style={{ color: "var(--text-muted, #7a6e66)", fontSize: 12, marginTop: 6 }}>
             Tap the clock if you need a breather
+          </p>
+        )}
+        {roles && (
+          <p style={{ color: "var(--text-muted, #7a6e66)", fontSize: 12, marginTop: 14 }}>
+            {p1Name} on {roles.p1} · {p2Name} on {roles.p2}
           </p>
         )}
 

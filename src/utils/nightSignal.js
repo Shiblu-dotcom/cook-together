@@ -74,6 +74,51 @@ export const computeNightSignal = (checkIn = {}) => {
   return { coupleState, downPartner, easyFor, twistStyle, questionToneOverride };
 };
 
+// ── The shape of the night ──────────────────────────────────────────────────
+// One plate, always — one kitchen can't host two separate dishes. The couple
+// state decides how that plate is split:
+//   "two-component" — ambitious: each person owns a distinct part of one plate
+//   "one-dish"      — easy: one simple dish, two roles (prep / heat)
+// Both keep the secrets, the reveal, and per-person contribution in judging.
+export const formatForNight = (signal = {}, checkIn = {}, { newPair = false, gamesPlayed = 0 } = {}) => {
+  const e1 = Number(checkIn.p1Energy ?? 3);
+  const e2 = Number(checkIn.p2Energy ?? 3);
+
+  // Two components: the sauce & side is the lighter part — it goes, silently,
+  // to whoever has less in the tank tonight.
+  const componentRoles = () =>
+    signal.easyFor === "p1"
+      ? { p1: "the sauce & side", p2: "the main" }
+      : { p1: "the main", p2: "the sauce & side" };
+
+  // One dish: prep is the kinder job — hands busy, mind quiet. The heavier
+  // day gets it; the steadier partner takes the stove and the timing.
+  const kitchenRoles = () => {
+    const restFor = signal.downPartner || signal.easyFor;
+    return restFor === "p2" ? { p1: "heat", p2: "prep" } : { p1: "prep", p2: "heat" };
+  };
+
+  // New pairs always get the gentle shape, whatever the check-in says.
+  if (newPair) return { format: "one-dish", roles: kitchenRoles() };
+
+  switch (signal.coupleState) {
+    case "celebration": // both arrived full — give them something to build
+      return { format: "two-component", roles: componentRoles() };
+    case "comfort":     // heavy day — one simple dish, shoulder to shoulder
+    case "gentle":      // running on empty — same
+    case "divergent":   // one up, one down — the easy shape, tilted kindly
+      return { format: "one-dish", roles: kitchenRoles() };
+    default: {
+      // Balanced: energy decides. Both buzzing → build something; otherwise
+      // ambitious only once they know the game.
+      if (e1 >= 4 && e2 >= 4) return { format: "two-component", roles: componentRoles() };
+      return gamesPlayed < 2
+        ? { format: "one-dish", roles: kitchenRoles() }
+        : { format: "two-component", roles: componentRoles() };
+    }
+  }
+};
+
 /**
  * Renders the night signal as a prompt block for the AI calls (context +
  * judgment). Includes the subtlety guardrail every downstream prompt needs.
