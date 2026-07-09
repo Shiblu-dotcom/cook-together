@@ -4,6 +4,7 @@ import BadgeDisplay from "../ui/BadgeDisplay";
 import VoiceControl from "../ui/VoiceControl";
 import { BADGES } from "../../data/badges";
 import { useVoice } from "../../hooks/useVoice";
+import { useStorage } from "../../hooks/useStorage";
 import { sfxFanfare } from "../../utils/sfx";
 import { hapticSuccess } from "../../utils/haptics";
 
@@ -81,6 +82,21 @@ export default function WinnerAnnouncement({
   const [badgeShown, setBadgeShown] = useState(false);
 
   const { supported, muted, setMuted, speaking, speak, stop, voices, voiceName, setVoice } = useVoice();
+  const { getProfile } = useStorage();
+
+  // The judge's longest memory: the couple's very first dish. gamesPlayed
+  // hasn't counted tonight yet while this screen is up, so tonight is
+  // night gamesPlayed + 1 — and the note only exists from night two on.
+  const [marginNote] = useState(() => {
+    const profile = getProfile();
+    const first =
+      profile?.firstDish?.name ||
+      profile?.dishHistory?.[0]?.dish1 ||
+      profile?.dishHistory?.[0]?.dish2;
+    const night = (profile?.gamesPlayed || 0) + 1;
+    if (!first || night < 2) return null;
+    return `Night ${night}. The first one was "${first}" — still counts.`;
+  });
 
   // Auto-speak the headline judgment a short moment after the screen mounts.
   // Once per mount; user can tap the speaker to mute or replay.
@@ -342,6 +358,25 @@ export default function WinnerAnnouncement({
         <button className="btn-primary animate-fade-in-up delay-700" onClick={onContinue} style={{ animationFillMode: "forwards" }}>
           Reveal The Word →
         </button>
+
+        {/* The margin note. On any night after the first, the judge quietly
+            remembers where this all started. Tiny, late, easy to miss —
+            it's for the couples who read the bottom of the page. */}
+        {marginNote && (
+          <p
+            className="animate-fade-in opacity-0 delay-2000"
+            style={{
+              fontSize: 11.5,
+              color: "var(--text-muted)",
+              fontStyle: "italic",
+              textAlign: "center",
+              marginTop: 18,
+              animationFillMode: "forwards",
+            }}
+          >
+            {marginNote}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -92,6 +92,16 @@ export const useStorage = () => {
       ].slice(-100);
     }
 
+    // The first dish is remembered forever — dishHistory keeps only the last
+    // twenty nights, but the margin note on the winner screen needs night one
+    // no matter how long the couple keeps cooking.
+    if (!profile.firstDish && (gameResult.dish1Name || gameResult.dish2Name)) {
+      updated.firstDish = {
+        name: gameResult.dish1Name || gameResult.dish2Name,
+        date: new Date().toISOString().split("T")[0],
+      };
+    }
+
     // Dish history feeds the judge's memory — it lets night 10's judge say
     // "still chasing the high of The Golden Hour, I see."
     if (gameResult.dish1Name || gameResult.dish2Name) {
