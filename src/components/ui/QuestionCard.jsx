@@ -91,7 +91,7 @@ export default function QuestionCard({ question, p1Name, p2Name, onSubmit, onDis
 
         {step === "done" ? (
           <div style={{ textAlign: "center", color: "var(--accent-gold)", fontSize: 14 }}>
-            Saved for the reveal ✨
+            Saved for the reveal
           </div>
         ) : (
           <>

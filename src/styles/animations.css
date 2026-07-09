@@ -158,19 +158,20 @@
   to { transform: scale(1); }
 }
 
-/* Animation utility classes */
-.animate-fade-in-up { animation: fadeInUp 0.6s ease forwards; }
-.animate-fade-in { animation: fadeIn 0.5s ease forwards; }
-.animate-fade-in-down { animation: fadeInDown 0.5s ease forwards; }
+/* Animation utility classes — entrances ride the app's deceleration curve
+   (--ease-out in index.css) so everything lands with the same weight. */
+.animate-fade-in-up { animation: fadeInUp 0.7s var(--ease-out, ease) forwards; }
+.animate-fade-in { animation: fadeIn 0.5s var(--ease-out, ease) forwards; }
+.animate-fade-in-down { animation: fadeInDown 0.6s var(--ease-out, ease) forwards; }
 .animate-float { animation: floatSlow 4s ease-in-out infinite; }
 .animate-pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
 .animate-shake { animation: shake 0.5s ease; }
 .animate-shake-intense { animation: shakeIntense 0.4s ease infinite; }
-.animate-scale-in { animation: scaleIn 0.4s ease forwards; }
+.animate-scale-in { animation: scaleIn 0.45s var(--ease-out, ease) forwards; }
 .animate-scale-bounce { animation: scaleInBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 .animate-fly-in { animation: flyIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-.animate-word-reveal { animation: wordReveal 1.2s ease forwards; }
-.animate-slide-up { animation: slideUp 0.5s ease forwards; }
+.animate-word-reveal { animation: wordReveal 1.2s var(--ease-out, ease) forwards; }
+.animate-slide-up { animation: slideUp 0.55s var(--ease-out, ease) forwards; }
 .animate-twist-in { animation: twistSlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 .animate-badge-reveal { animation: badgeReveal 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 .animate-heartbeat { animation: heartbeat 1.5s ease infinite; }

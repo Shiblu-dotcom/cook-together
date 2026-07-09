@@ -277,7 +277,7 @@ export default function CookingAssistant({ ctx = {} }) {
               {[
                 "What can I substitute?",
                 "Quick plating idea?",
-                "Help — it's going wrong!",
+                "Help — it's going wrong",
               ].map((q) => (
                 <button
                   key={q}

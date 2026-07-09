@@ -25,7 +25,7 @@ export default function Profile({ profile, onBack }) {
   if (!profile) {
     return (
       <div className="screen-center bg-mesh" style={{ textAlign: "center" }}>
-        <p style={{ color: "var(--text-secondary)" }}>No profile yet. Play your first game!</p>
+        <p style={{ color: "var(--text-secondary)" }}>No profile yet — your first night starts one.</p>
         <button className="btn-ghost" onClick={onBack} style={{ marginTop: 20 }}>
           ← Back
         </button>
@@ -140,7 +140,7 @@ export default function Profile({ profile, onBack }) {
           <div>
             {wordCollection.length === 0 ? (
               <p style={{ color: "var(--text-secondary)", textAlign: "center", padding: "32px 0" }}>
-                No words yet. Play your first game!
+                Your words will collect here — one per night.
               </p>
             ) : (
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 24 }}>

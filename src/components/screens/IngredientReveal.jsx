@@ -317,7 +317,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
             )}
 
             <button className="btn-primary" onClick={handleFinish}>
-              We're ready. START COOKING! 🔥
+              We're ready — start cooking
             </button>
           </div>
         )}

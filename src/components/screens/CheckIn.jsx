@@ -93,7 +93,7 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
   const renderEssentials = () => (
     <>
       <h2 className="font-display" style={{ fontSize: 26, marginBottom: 8 }}>
-        {isReturning ? "Welcome back 👋" : "Set the scene 🕯️"}
+        {isReturning ? "Welcome back" : "Set the scene"}
       </h2>
       <p style={{ color: "var(--text-secondary)", fontSize: 15, marginBottom: 28, lineHeight: 1.5 }}>
         {isReturning
@@ -353,7 +353,7 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
           aria-disabled={!canProceed()}
           style={{ marginTop: 12 }}
         >
-          {screen < totalScreens - 1 ? "Next →" : "Let's cook 🔥"}
+          {screen < totalScreens - 1 ? "Next →" : "Start the night"}
         </button>
 
         {screen === totalScreens - 1 && (

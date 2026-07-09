@@ -27,6 +27,11 @@
   --border-strong: rgba(245, 207, 93, 0.38);
   --glow-gold: rgba(245, 207, 93, 0.18);
   --focus-ring: 0 0 0 3px rgba(245, 207, 93, 0.5);
+
+  /* Motion language: everything decelerates like it has weight.
+     Fast start, long settle — never the browser's default ease. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 * {
@@ -118,6 +123,17 @@ body::before {
 /* Typography */
 .font-display {
   font-family: 'Playfair Display', serif;
+  /* Optical tightening — large serif display type wants to sit closer than
+     the font's default tracking. Inline letter-spacing still overrides. */
+  letter-spacing: -0.015em;
+}
+
+/* No orphan words in headings; no awkward rag in body text. */
+h1, h2, h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
 }
 
 /* Card — layered glass: cream tint, saturated backdrop, inner top highlight
@@ -165,7 +181,7 @@ body::before {
   min-height: 48px; /* WCAG minimum touch target */
   position: relative;
   overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out), filter 0.2s ease, opacity 0.2s ease;
   animation: pulseGlow 3s ease-in-out infinite;
   box-shadow: 0 4px 18px rgba(245, 207, 93, 0.18);
 }
@@ -219,7 +235,7 @@ body::before {
   cursor: pointer;
   width: 100%;
   min-height: 44px;
-  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+  transition: background 0.2s var(--ease-out), transform 0.22s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .btn-secondary:hover:not(:disabled) {
@@ -324,7 +340,7 @@ body::before {
   font-family: 'DM Sans', sans-serif;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.12s ease;
+  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out), color 0.2s var(--ease-out), transform 0.18s var(--ease-out);
   user-select: none;
   min-height: 40px;
   -webkit-tap-highlight-color: transparent;
@@ -441,7 +457,7 @@ body::before {
 }
 
 .phase-transition {
-  animation: phaseIn 0.45s ease both;
+  animation: phaseIn 0.5s var(--ease-out) both;
   width: 100%;
 }
 

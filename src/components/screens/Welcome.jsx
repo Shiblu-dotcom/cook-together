@@ -224,7 +224,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
             }}
           >
             <p style={{ fontSize: 14, color: "var(--text-primary)", marginBottom: 4 }}>
-              🍳 You have an unfinished night
+              Still simmering from last time
             </p>
             <p style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 14 }}>
               {resumeSlot.state.aiContext?.theme
@@ -255,8 +255,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
               Welcome back,{" "}
               <span style={{ color: "var(--accent-gold)", fontWeight: 600 }}>
                 {returning.p1Name} &amp; {returning.p2Name}
-              </span>{" "}
-              👋
+              </span>
             </p>
             <p style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 4 }}>
               Ready for round {roundNum}?
@@ -322,7 +321,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
             disabled={!p1Name.trim() || !p2Name.trim()}
             aria-disabled={!p1Name.trim() || !p2Name.trim()}
           >
-            Let's Cook 🍳
+            Let's cook
           </button>
         </div>
 

@@ -25,7 +25,7 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
             No questions answered
           </h2>
           <p style={{ color: "var(--text-secondary)", marginBottom: 40 }}>
-            You were too busy cooking! That's valid.
+            Too busy cooking to answer. Honestly, fair.
           </p>
           <button className="btn-primary" onClick={onComplete} style={{ maxWidth: 300, margin: "0 auto" }}>
             See the winner →

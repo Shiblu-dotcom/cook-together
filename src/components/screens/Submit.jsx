@@ -99,7 +99,7 @@ export default function Submit({ p1Name, p2Name, onSubmit }) {
           {playerStep === 2 && (
             <>
               <p style={{ fontSize: 13, color: "var(--text-secondary)", marginTop: 6 }}>
-                {p1Name}, look away! 🤫
+                {p1Name}, look away 🤫
               </p>
               <button
                 className="btn-ghost"

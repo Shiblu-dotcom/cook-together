@@ -116,7 +116,7 @@ export default function TheWord({ word, onContinue }) {
             animation: "fadeIn 0.8s ease forwards",
           }}
         >
-          Added to your collection ✨
+          Added to your collection
         </p>
       )}
 

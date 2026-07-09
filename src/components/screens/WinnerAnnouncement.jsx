@@ -324,7 +324,7 @@ export default function WinnerAnnouncement({
                 <div style={{ fontSize: 72, marginBottom: 12 }} aria-hidden="true">
                   {badge?.emoji || "🏅"}
                 </div>
-                <div className="label" style={{ color: "var(--accent-gold)", marginBottom: 8 }}>New Badge Unlocked!</div>
+                <div className="label" style={{ color: "var(--accent-gold)", marginBottom: 8 }}>New badge earned</div>
                 <h2 id="new-badge-title" className="font-display" style={{ fontSize: 28, marginBottom: 8 }}>
                   {badge?.name || "Mystery Badge"}
                 </h2>
