@@ -166,7 +166,7 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
             : revealStep === 1
             ? `${p2Name}'s answer →`
             : isLast
-            ? "See the winner 🏆"
+            ? "See the winner →"
             : "Next question →"}
         </button>
       </div>

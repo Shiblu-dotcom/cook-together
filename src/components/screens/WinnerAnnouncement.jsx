@@ -5,6 +5,7 @@ import VoiceControl from "../ui/VoiceControl";
 import { BADGES } from "../../data/badges";
 import { useVoice } from "../../hooks/useVoice";
 import { sfxFanfare } from "../../utils/sfx";
+import { hapticSuccess } from "../../utils/haptics";
 
 const CONFETTI_COLORS = ["#ffe27a", "#f5cf5d", "#ff8a3d", "#e87a8d", "#7dd3a8", "#b48cd6"];
 
@@ -58,6 +59,7 @@ export default function WinnerAnnouncement({
   // Fanfare as the winner flies in.
   useEffect(() => {
     sfxFanfare();
+    hapticSuccess();
   }, []);
 
   const safeJudgment = judgment || {};
@@ -164,7 +166,7 @@ export default function WinnerAnnouncement({
             className="card-sm animate-fade-in-up delay-200"
             style={{ textAlign: "center", marginBottom: 16, animationFillMode: "forwards", borderColor: "var(--border-strong)" }}
           >
-            <div className="label" style={{ marginBottom: 6, color: "var(--accent-gold)" }}>⚖️ The Stakes</div>
+            <div className="label" style={{ marginBottom: 6, color: "var(--accent-gold)" }}>The stakes</div>
             <p style={{ fontSize: 15, color: "var(--text-primary)" }}>
               {stakes} —{" "}
               <strong style={{ color: "var(--accent-gold)" }}>
@@ -180,7 +182,7 @@ export default function WinnerAnnouncement({
             style={{ textAlign: "center", marginBottom: 16, animationFillMode: "forwards" }}
           >
             <p style={{ fontSize: 14, color: "var(--text-secondary)" }}>
-              ⚖️ A tie — you do the stakes <em>together</em>. {stakes.replace(/^(Loser|Winner)/, "Both of you")}
+              A tie — you do the stakes <em>together</em>. {stakes.replace(/^(Loser|Winner)/, "Both of you")}
             </p>
           </div>
         )}
@@ -197,7 +199,7 @@ export default function WinnerAnnouncement({
             style={{ marginBottom: 16, animationFillMode: "forwards" }}
           >
             <div className="label" style={{ marginBottom: 12, color: "var(--accent-gold)" }}>
-              👨‍⚖️ The Judge's Verdict
+              The judge's verdict
             </div>
             {p1Reaction && (
               <div style={{ marginBottom: p2Reaction ? 14 : 0 }}>
@@ -221,7 +223,7 @@ export default function WinnerAnnouncement({
             )}
             {secretIngredientComment && (
               <p style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.5, marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--border-subtle)" }}>
-                🤫 {secretIngredientComment}
+                {secretIngredientComment}
               </p>
             )}
           </div>
@@ -281,7 +283,7 @@ export default function WinnerAnnouncement({
             className="card-sm animate-fade-in-up delay-500"
             style={{ marginBottom: 24, animationFillMode: "forwards" }}
           >
-            <div className="label" style={{ marginBottom: 6, color: "var(--accent-gold)" }}>🔮 The Prediction</div>
+            <div className="label" style={{ marginBottom: 6, color: "var(--accent-gold)" }}>The prediction</div>
             <p style={{ fontSize: 15, color: "var(--text-primary)", lineHeight: 1.6, fontStyle: "italic" }}>
               "{futurePrediction}"
             </p>

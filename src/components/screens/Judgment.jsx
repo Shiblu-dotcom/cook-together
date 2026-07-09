@@ -86,7 +86,7 @@ export default function Judgment({ isLoading, error, onRetry }) {
               </p>
             )}
             <button className="btn-primary" onClick={onRetry} style={{ maxWidth: 240, margin: "0 auto" }}>
-              Retry Judgment
+              Try again
             </button>
           </div>
         )}

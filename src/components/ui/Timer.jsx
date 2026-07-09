@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { sfxTick, sfxTimesUp, sfxChime } from "../../utils/sfx";
+import { hapticTap, hapticTimeUp } from "../../utils/haptics";
 
 const TOTAL = 15 * 60;
 
@@ -46,6 +47,7 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
     // when both dishes exist enough to cooperate over.
     if (seconds <= 9 * 60 && seconds > 0 && !coopFired.current) {
       coopFired.current = true;
+      hapticTap();
       if (cb.onCoopTime) cb.onCoopTime();
     }
 
@@ -53,6 +55,7 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
     // so the 60x demo step and resumed sessions can't skip over it).
     if (seconds <= 4 * 60 && seconds > 0 && !twistFired.current) {
       twistFired.current = true;
+      hapticTap();
       if (cb.onTwistTime) cb.onTwistTime();
     }
 
@@ -63,8 +66,14 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
     if (seconds <= 0 && !timeUpFired.current) {
       timeUpFired.current = true;
       setRunning(false);
-      if (calm) sfxChime();
-      else sfxTimesUp();
+      // Calm nights end with a single soft tap, game nights with the full buzz.
+      if (calm) {
+        sfxChime();
+        hapticTap();
+      } else {
+        sfxTimesUp();
+        hapticTimeUp();
+      }
       if (cb.onTimeUp) cb.onTimeUp();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

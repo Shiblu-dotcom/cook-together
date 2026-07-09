@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import VoiceControl from "../ui/VoiceControl";
 import { useVoice } from "../../hooks/useVoice";
 import { sfxWord } from "../../utils/sfx";
+import { hapticSuccess } from "../../utils/haptics";
 
 export default function TheWord({ word, onContinue }) {
   const [phase, setPhase] = useState(0); // 0=black, 1=word, 2=subtitle, 3=saved, 4=button
@@ -17,7 +18,10 @@ export default function TheWord({ word, onContinue }) {
       setTimeout(() => setPhase((p) => Math.max(p, 4)), 6400),
     ];
     // Warm chord swells as the word fades in.
-    const swell = setTimeout(sfxWord, 1800);
+    const swell = setTimeout(() => {
+      sfxWord();
+      hapticSuccess();
+    }, 1800);
     return () => {
       timers.forEach(clearTimeout);
       clearTimeout(swell);

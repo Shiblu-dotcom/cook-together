@@ -350,7 +350,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
             onClick={onViewProfile}
             style={{ marginTop: 20, animationFillMode: "forwards" }}
           >
-            View Profile →
+            View profile →
           </button>
         )}
 

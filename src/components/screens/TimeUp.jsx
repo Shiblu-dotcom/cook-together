@@ -59,7 +59,7 @@ export default function TimeUp({ onContinue }) {
         {phase >= 2 && (
           <div className="animate-fade-in-up" style={{ animationFillMode: "forwards", marginTop: 48 }}>
             <p style={{ fontSize: 22, color: "var(--text-primary)", marginBottom: 40 }}>
-              Now let's see what you've made 👀
+              Now let's see what you've made.
             </p>
             <button className="btn-primary" onClick={onContinue} style={{ maxWidth: 300, margin: "0 auto" }}>
               We're ready →
