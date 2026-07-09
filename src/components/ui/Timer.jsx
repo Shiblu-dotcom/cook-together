@@ -96,12 +96,12 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
   // Urgency colors track the candlelit palette:
   // calm → champagne → terracotta → coral → fire-coral as time runs out.
   // On calm nights the clock stays champagne gold the whole way.
+  // One accent: terracotta. Urgency shifts toward red only at the end.
   const getColor = () => {
-    if (calm) return "#f5cf5d";
-    if (seconds > 10 * 60) return "#f5cf5d";  // champagne gold
-    if (seconds > 5 * 60) return "#ff8a3d";   // terracotta
-    if (seconds > 60) return "#ff6b8a";       // coral
-    return "#ff3d68";                          // intense coral-red
+    if (calm) return "#E8703A";
+    if (seconds > 5 * 60) return "#E8703A";
+    if (seconds > 60) return "#e05c5c";
+    return "#d94f4f";
   };
 
   const getAnimation = () => {

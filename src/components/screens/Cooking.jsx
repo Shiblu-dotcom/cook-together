@@ -224,6 +224,16 @@ export default function Cooking({
           </p>
         )}
 
+        {/* The early-finish door — a couple that plates at minute 7 shouldn't
+            sit watching a clock. Quiet on purpose; the timer stays the hero. */}
+        <button
+          className="btn-ghost"
+          onClick={handleTimeUp}
+          style={{ marginTop: 18, fontSize: 13, color: "var(--text-secondary)" }}
+        >
+          We're done early →
+        </button>
+
         {/* One quiet entry point for secret re-checks. */}
         {(secret1 || secret2) && (
           <button
@@ -284,7 +294,7 @@ export default function Cooking({
           {peeking === "choose" ? (
             <>
               <p style={{ fontSize: 15, color: "var(--text-secondary)", marginBottom: 28 }}>
-                Whose secret? The other one looks away 🤫
+                Whose secret? The other one looks away
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 12, width: "100%", maxWidth: 280 }}>
                 {secret1 && (
@@ -305,7 +315,7 @@ export default function Cooking({
           ) : (
             <>
               <p style={{ fontSize: 14, color: "var(--text-secondary)", marginBottom: 28 }}>
-                {peeking === "p1" ? p2Name : p1Name}, look away 🤫
+                {peeking === "p1" ? p2Name : p1Name}, look away
               </p>
               <div style={{ fontSize: 80, marginBottom: 12 }} aria-hidden="true">
                 {(peeking === "p1" ? secret1 : secret2)?.emoji}

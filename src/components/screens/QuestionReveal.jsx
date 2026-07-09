@@ -22,7 +22,6 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
     return (
       <div className="screen-center bg-mesh" style={{ textAlign: "center" }}>
         <div style={{ padding: "0 24px" }}>
-          <div style={{ fontSize: 48, marginBottom: 20 }}>💬</div>
           <h2 className="font-display" style={{ fontSize: 28, marginBottom: 12 }}>
             Nothing to reveal tonight
           </h2>

@@ -200,7 +200,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName,
             >
               <div style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5, marginBottom: 4 }}>Winner</div>
               <div style={{ fontSize: 16, fontFamily: "'Fraunces', serif", fontWeight: 700, color: tpl.accentColor }}>
-                {winner === "tie" ? "Tie 🤝" : winner}
+                {winner === "tie" ? "Tie" : winner}
               </div>
             </div>
           </div>

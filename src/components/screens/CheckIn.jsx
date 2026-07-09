@@ -444,7 +444,7 @@ function ChipGroup({ items, selected, onToggle, multi = false }) {
             role={multi ? "checkbox" : "radio"}
             aria-checked={isSelected}
           >
-            <span aria-hidden="true">{item.emoji}</span> {item.label}
+            {item.label}
           </button>
         );
       })}

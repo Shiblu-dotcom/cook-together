@@ -40,7 +40,7 @@ export default function CalmClose({ witness, word, onGoodnight }) {
       className="calm-scene"
       style={{
         minHeight: "100vh",
-        background: "#000",
+        background: "var(--bg-primary)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -85,7 +85,7 @@ export default function CalmClose({ witness, word, onGoodnight }) {
       {stage >= 2 && (
         <p
           className="animate-calm-in"
-          style={{ fontSize: 14, color: "rgba(240,234,214,0.45)", marginTop: 24 }}
+          style={{ fontSize: 14, color: "rgba(244,239,233,0.6)", marginTop: 24 }}
         >
           That counts.
         </p>

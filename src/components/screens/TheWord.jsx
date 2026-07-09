@@ -50,7 +50,7 @@ export default function TheWord({ word, onContinue }) {
       onClick={handleSkip}
       style={{
         minHeight: "100vh",
-        background: "#000000",
+        background: "var(--bg-primary)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -91,7 +91,7 @@ export default function TheWord({ word, onContinue }) {
           style={{
             fontSize: 19,
             fontStyle: "italic",
-            color: "rgba(240,234,214,0.55)",
+            color: "rgba(244,239,233,0.72)",
             marginTop: 28,
             letterSpacing: "0.08em",
             animation: "fadeIn 1.2s var(--ease-out) forwards",
@@ -105,7 +105,7 @@ export default function TheWord({ word, onContinue }) {
         <p
           style={{
             fontSize: 14,
-            color: "rgba(240,234,214,0.32)",
+            color: "rgba(244,239,233,0.5)",
             marginTop: 14,
             animation: "fadeIn 1s var(--ease-out) forwards",
           }}

@@ -75,9 +75,9 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
   };
 
   const STAKES = [
-    "Loser does the dishes 🧽",
-    "Winner picks the next movie 🎬",
-    "Loser writes a love note 💌",
+    "Loser does the dishes",
+    "Winner picks the next movie",
+    "Loser writes a love note",
   ];
 
   return (
@@ -118,7 +118,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
             <div className="label" style={{ marginBottom: 16, color: "var(--accent-gold)" }}>
               Tonight's Theme
             </div>
-            <h1 className="font-display text-gold" style={{ fontSize: 40, fontWeight: 900, marginBottom: 12, lineHeight: 1.2 }}>
+            <h1 className="font-display" style={{ fontSize: 40, fontWeight: 600, letterSpacing: "-0.02em", color: "var(--text-primary)", marginBottom: 12, lineHeight: 1.15 }}>
               {theme}
             </h1>
             <p style={{ color: "var(--text-secondary)", fontSize: 16, marginBottom: 28 }}>
@@ -244,7 +244,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                 color: "var(--text-secondary)",
               }}
             >
-              {p2Name}, look away 🤫
+              {p2Name}, look away
             </div>
 
             <div className="label" style={{ marginBottom: 12, color: "var(--accent-gold)" }}>
@@ -271,7 +271,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
             </h2>
 
             <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 32 }}>
-              Work it into your part — skipping caps the plate at <strong style={{ color: "var(--accent-red)" }}>60</strong>. Keep it secret 🤫
+              Work it into your part — skipping caps the plate at <strong style={{ color: "var(--accent-red)" }}>60</strong>. Keep it secret.
             </p>
 
             {showSwapOptions === "p1" ? (
@@ -324,7 +324,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                 color: "var(--text-secondary)",
               }}
             >
-              {p1Name}, look away 🤫
+              {p1Name}, look away
             </div>
 
             <div className="label" style={{ marginBottom: 12, color: "var(--accent-gold)" }}>
@@ -351,7 +351,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
             </h2>
 
             <p style={{ color: "var(--text-secondary)", fontSize: 14, marginBottom: 32 }}>
-              Work it into your part — skipping caps the plate at <strong style={{ color: "var(--accent-red)" }}>60</strong>. Keep it secret 🤫
+              Work it into your part — skipping caps the plate at <strong style={{ color: "var(--accent-red)" }}>60</strong>. Keep it secret.
             </p>
 
             {showSwapOptions === "p2" ? (

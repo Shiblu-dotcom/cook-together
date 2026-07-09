@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import BadgeDisplay from "../ui/BadgeDisplay";
 import VoiceControl from "../ui/VoiceControl";
 import { BADGES } from "../../data/badges";
@@ -6,51 +6,6 @@ import { useVoice } from "../../hooks/useVoice";
 import { useStorage } from "../../hooks/useStorage";
 import { sfxFanfare } from "../../utils/sfx";
 import { hapticSuccess } from "../../utils/haptics";
-
-const CONFETTI_COLORS = ["#ffe27a", "#f5cf5d", "#ff8a3d", "#e87a8d", "#7dd3a8", "#b48cd6"];
-
-// Deterministic pseudo-random — keeps the render pure under react-hooks/purity.
-const cRand = (seed) => {
-  const x = Math.sin(seed * 9999) * 10000;
-  return x - Math.floor(x);
-};
-
-function Confetti() {
-  const pieces = useMemo(
-    () =>
-      Array.from({ length: 40 }, (_, i) => ({
-        id: i,
-        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-        left: `${cRand(i + 1) * 100}%`,
-        delay: `${cRand(i + 2) * 2}s`,
-        duration: `${cRand(i + 3) * 2 + 2}s`,
-        size: cRand(i + 4) * 8 + 6,
-        shape: i % 3 === 0 ? "circle" : "square",
-      })),
-    []
-  );
-
-  return (
-    <div aria-hidden="true" style={{ position: "fixed", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 50 }}>
-      {pieces.map((p) => (
-        <div
-          key={p.id}
-          style={{
-            position: "absolute",
-            top: "-20px",
-            left: p.left,
-            width: p.size,
-            height: p.size,
-            background: p.color,
-            borderRadius: p.shape === "circle" ? "50%" : "2px",
-            animation: `confettiSway ${p.duration} ${p.delay} ease-in forwards`,
-            opacity: 0.9,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 export default function WinnerAnnouncement({
   p1Name, p2Name, judgment, stakes, newBadges = [], existingBadges = [],
@@ -76,8 +31,6 @@ export default function WinnerAnnouncement({
     plateScore = 0,
   } = safeJudgment;
   const isTie = winner === "tie";
-  const [showBadge, setShowBadge] = useState(false);
-  const [badgeShown, setBadgeShown] = useState(false);
 
   const { supported, muted, setMuted, speaking, speak, stop, voices, voiceName, setVoice } = useVoice();
   const { getProfile } = useStorage();
@@ -117,13 +70,6 @@ export default function WinnerAnnouncement({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [winner, winnerReason, coupleTitle, futurePrediction, supported, muted]);
 
-  useEffect(() => {
-    if (newBadges.length > 0 && !badgeShown) {
-      const t = setTimeout(() => { setShowBadge(true); setBadgeShown(true); }, 2500);
-      return () => clearTimeout(t);
-    }
-  }, [newBadges, badgeShown]);
-
   // Deduplicate badge ids so any badge that lives in both existing and new lists
   // only renders once.
   const allBadgeIds = Array.from(new Set([...existingBadges, ...newBadges]));
@@ -133,7 +79,6 @@ export default function WinnerAnnouncement({
 
   return (
     <div className="screen bg-deep" style={{ paddingTop: 48, paddingBottom: 48 }}>
-      <Confetti />
       <VoiceControl
         supported={supported}
         muted={muted}
@@ -146,33 +91,30 @@ export default function WinnerAnnouncement({
       />
 
       <div style={{ width: "100%", maxWidth: 440, padding: "0 20px", position: "relative", zIndex: 2 }}>
-        {/* Winner */}
-        <div className="animate-fly-in" style={{ textAlign: "center", marginBottom: 40 }}>
+        {/* The hero — typography only, one loud statement. Everything after
+            this is deliberately quieter (the model is the Word screen). */}
+        <div className="animate-fly-in" style={{ textAlign: "center", marginBottom: 48, marginTop: 24 }}>
           {isTie ? (
-            <>
-              <div style={{ fontSize: 64, marginBottom: 12 }}>🤝</div>
-              <h1 className="font-display text-gold" style={{ fontSize: 40, fontWeight: 900, marginBottom: 8 }}>
-                TONIGHT, NOBODY LOSES
-              </h1>
-            </>
+            <h1 className="font-display" style={{ fontSize: 44, fontWeight: 600, lineHeight: 1.08, letterSpacing: "-0.02em", color: "var(--text-primary)", marginBottom: 12 }}>
+              Tonight,<br />nobody loses
+            </h1>
           ) : (
             <>
-              <div style={{ fontSize: 64, marginBottom: 12, animation: "heartbeat 1.5s ease infinite", display: "inline-block" }}>
-                🏆
-              </div>
-              <div className="label" style={{ color: "var(--accent-gold)", marginBottom: 8 }}>
+              <div className="label" style={{ marginBottom: 10 }}>
                 Tonight's Winner
               </div>
               <h1
-                className="font-display text-gold"
-                style={{ fontSize: 48, fontWeight: 900, marginBottom: 12, letterSpacing: "-1px" }}
+                className="font-display"
+                style={{ fontSize: 56, fontWeight: 600, letterSpacing: "-0.02em", color: "var(--accent-gold)", marginBottom: 12 }}
               >
                 {winner}
               </h1>
-              <p style={{ fontSize: 15, color: "var(--text-secondary)", fontStyle: "italic", lineHeight: 1.5 }}>
-                {winnerReason}
-              </p>
             </>
+          )}
+          {(winnerReason || isTie) && (
+            <p style={{ fontSize: 15, color: "var(--text-secondary)", fontStyle: "italic", lineHeight: 1.5, maxWidth: 340, margin: "0 auto" }}>
+              {winnerReason}
+            </p>
           )}
         </div>
 
@@ -182,7 +124,7 @@ export default function WinnerAnnouncement({
             className="card-sm animate-fade-in-up delay-200"
             style={{ textAlign: "center", marginBottom: 16, animationFillMode: "forwards", borderColor: "var(--border-strong)" }}
           >
-            <div className="label" style={{ marginBottom: 6, color: "var(--accent-gold)" }}>The stakes</div>
+            <div className="label" style={{ marginBottom: 6 }}>The stakes</div>
             <p style={{ fontSize: 15, color: "var(--text-primary)" }}>
               {stakes} —{" "}
               <strong style={{ color: "var(--accent-gold)" }}>
@@ -198,7 +140,10 @@ export default function WinnerAnnouncement({
             style={{ textAlign: "center", marginBottom: 16, animationFillMode: "forwards" }}
           >
             <p style={{ fontSize: 14, color: "var(--text-secondary)" }}>
-              A tie — you do the stakes <em>together</em>. {stakes.replace(/^(Loser|Winner)/, "Both of you")}
+              A tie — you do the stakes <em>together</em>.{" "}
+              {stakes.replace(/^(Loser|Winner) (does|writes|picks)/, (m, who, verb) =>
+                `Both of you ${{ does: "do", writes: "write", picks: "pick" }[verb]}`
+              )}
             </p>
           </div>
         )}
@@ -207,8 +152,8 @@ export default function WinnerAnnouncement({
         <div className="card animate-fade-in-up delay-200" style={{ marginBottom: 20, textAlign: "center", animationFillMode: "forwards" }}>
           <div className="label" style={{ marginBottom: 6 }}>The plate</div>
           <div
-            className="font-display text-gold"
-            style={{ fontSize: 56, fontWeight: 900, lineHeight: 1 }}
+            className="font-display"
+            style={{ fontSize: 56, fontWeight: 600, lineHeight: 1, color: "var(--text-primary)" }}
           >
             {plateScore}
           </div>
@@ -223,7 +168,7 @@ export default function WinnerAnnouncement({
             className="card-sm animate-fade-in-up delay-300"
             style={{ marginBottom: 16, animationFillMode: "forwards" }}
           >
-            <div className="label" style={{ marginBottom: 12, color: "var(--accent-gold)" }}>
+            <div className="label" style={{ marginBottom: 12 }}>
               The judge's verdict
             </div>
             {p1Reaction && (
@@ -259,7 +204,7 @@ export default function WinnerAnnouncement({
           className="card-sm animate-fade-in-up delay-300"
           style={{ textAlign: "center", marginBottom: 16, animationFillMode: "forwards" }}
         >
-          <div className="label" style={{ marginBottom: 6, color: "var(--accent-gold)" }}>You Are</div>
+          <div className="label" style={{ marginBottom: 6 }}>You Are</div>
           <p className="font-display" style={{ fontSize: 22, fontWeight: 700, color: "var(--text-primary)" }}>
             {coupleTitle}
           </p>
@@ -273,8 +218,8 @@ export default function WinnerAnnouncement({
           style={{ marginBottom: 16, animationFillMode: "forwards" }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-            <div className="label" style={{ color: "var(--accent-gold)" }}>Compatibility</div>
-            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 700, color: "var(--accent-gold)" }}>
+            <div className="label">Compatibility</div>
+            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 600, color: "var(--text-primary)" }}>
               {compatibilityScore}%
             </div>
           </div>
@@ -311,7 +256,7 @@ export default function WinnerAnnouncement({
             className="card-sm animate-fade-in-up delay-500"
             style={{ marginBottom: 24, animationFillMode: "forwards" }}
           >
-            <div className="label" style={{ marginBottom: 6, color: "var(--accent-gold)" }}>The prediction</div>
+            <div className="label" style={{ marginBottom: 6 }}>The prediction</div>
             <p style={{ fontSize: 15, color: "var(--text-primary)", lineHeight: 1.6, fontStyle: "italic" }}>
               "{futurePrediction}"
             </p>
@@ -325,47 +270,6 @@ export default function WinnerAnnouncement({
             <BadgeDisplay badges={allBadgeObjects} newBadges={newBadges.map((id) => ({ id }))} />
           </div>
         )}
-
-        {/* Badge popup */}
-        {showBadge && newBadges.length > 0 && (() => {
-          const badge = BADGES.find((b) => b.id === newBadges[0]);
-          return (
-            <div
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="new-badge-title"
-              className="overlay-in"
-              onClick={() => setShowBadge(false)}
-              onKeyDown={(e) => (e.key === "Escape" || e.key === "Enter") && setShowBadge(false)}
-              tabIndex={0}
-              style={{
-                position: "fixed",
-                inset: 0,
-                background: "rgba(0,0,0,0.85)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 80,
-                padding: 24,
-                cursor: "pointer",
-              }}
-            >
-              <div className="card animate-badge-reveal" style={{ textAlign: "center", maxWidth: 320 }}>
-                <div style={{ fontSize: 72, marginBottom: 12 }} aria-hidden="true">
-                  {badge?.emoji || "🏅"}
-                </div>
-                <div className="label" style={{ color: "var(--accent-gold)", marginBottom: 8 }}>New badge earned</div>
-                <h2 id="new-badge-title" className="font-display" style={{ fontSize: 28, marginBottom: 8 }}>
-                  {badge?.name || "Mystery Badge"}
-                </h2>
-                <p style={{ fontSize: 14, color: "var(--text-secondary)" }}>
-                  {badge?.description || ""}
-                </p>
-                <p style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 16 }}>Tap to continue</p>
-              </div>
-            </div>
-          );
-        })()}
 
         <button className="btn-primary animate-fade-in-up delay-700" onClick={onContinue} style={{ animationFillMode: "forwards" }}>
           Reveal The Word →

@@ -3,31 +3,31 @@
 // the descriptions here describe what that engine really plays.
 export const MUSIC_MOODS = {
   romantic: {
-    label: "Romantic 🕯️",
+    label: "Romantic",
     description: "Warm pads, dreamy harp notes",
     bpm: 70,
     color: "#ff6b8a",
   },
   hype: {
-    label: "Hype 🔥",
+    label: "Hype",
     description: "Driving beat, energetic plucks",
     bpm: 104,
     color: "#ff8a3d",
   },
   chill: {
-    label: "Chill 😌",
+    label: "Chill",
     description: "Sparse lo-fi, barely there",
     bpm: 85,
     color: "#82b8e0",
   },
   intense: {
-    label: "Intense ⚡",
+    label: "Intense",
     description: "Dark drone, deep heartbeat",
     bpm: 72,
     color: "#b48cd6",
   },
   playful: {
-    label: "Playful 🎵",
+    label: "Playful",
     description: "Bouncy staccato, light tick",
     bpm: 120,
     color: "#7dd3a8",
