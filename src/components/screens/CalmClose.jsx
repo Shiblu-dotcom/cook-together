@@ -98,8 +98,10 @@ export default function CalmClose({ witness, word, onGoodnight }) {
           style={{
             position: "absolute",
             bottom: 48,
-            left: "50%",
-            transform: "translateX(-50%)",
+            // Inset centering — calmIn's transform would clobber translateX.
+            left: 0,
+            right: 0,
+            margin: "0 auto",
             width: "calc(100% - 56px)",
             maxWidth: 320,
           }}

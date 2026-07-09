@@ -42,8 +42,11 @@ export default function QuestionCard({ question, p1Name, p2Name, onSubmit, onDis
       style={{
         position: "fixed",
         bottom: 80,
-        left: "50%",
-        transform: "translateX(-50%)",
+        // Centered with insets, not a transform — the entrance animation
+        // owns `transform`, and a keyframe would clobber translateX(-50%).
+        left: 0,
+        right: 0,
+        margin: "0 auto",
         width: "calc(100% - 32px)",
         maxWidth: "440px",
         zIndex: 50,

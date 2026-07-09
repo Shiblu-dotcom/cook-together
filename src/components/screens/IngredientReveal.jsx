@@ -305,7 +305,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
             )}
 
             <button className="btn-primary" onClick={() => setStep(2)}>
-              I've got it, show {p2Name}'s secret →
+              Got it — {p2Name}'s turn →
             </button>
           </div>
         )}

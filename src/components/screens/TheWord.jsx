@@ -133,8 +133,11 @@ export default function TheWord({ word, onContinue }) {
           style={{
             position: "absolute",
             bottom: 48,
-            left: "50%",
-            transform: "translateX(-50%)",
+            // Inset centering — fadeInUp's final transform would clobber
+            // a translateX(-50%) and shove the button off-center.
+            left: 0,
+            right: 0,
+            margin: "0 auto",
             width: "calc(100% - 48px)",
             maxWidth: 360,
             animation: "fadeInUp 0.7s var(--ease-out) forwards",
