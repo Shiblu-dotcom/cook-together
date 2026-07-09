@@ -123,7 +123,7 @@ export default function QuestionCard({ question, p1Name, p2Name, onSubmit, onDis
                 border: "1px solid rgba(245,207,93,0.2)",
                 borderRadius: 12,
                 color: "var(--text-primary)",
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "'Inter', sans-serif",
                 fontSize: 15,
                 padding: "12px 14px",
                 outline: "none",

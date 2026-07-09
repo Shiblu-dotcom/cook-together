@@ -121,9 +121,7 @@ export default function CookingAssistant({ ctx = {} }) {
           width: 56,
           height: 56,
           borderRadius: "50%",
-          background: open
-            ? "rgba(245,207,93,0.15)"
-            : "linear-gradient(135deg, var(--accent-gold), var(--accent-orange))",
+          background: open ? "var(--bg-card)" : "#E8703A",
           border: open ? "1px solid var(--border-subtle)" : "none",
           color: open ? "var(--accent-gold)" : "#0d0d0d",
           cursor: "pointer",
@@ -154,10 +152,9 @@ export default function CookingAssistant({ ctx = {} }) {
             left: "max(20px, env(safe-area-inset-left, 0px) + 12px)",
             maxWidth: 400,
             marginLeft: "auto",
-            background: "rgba(13,13,13,0.96)",
+            background: "var(--bg-card)",
             border: "1px solid var(--border-subtle)",
-            borderRadius: 18,
-            backdropFilter: "blur(14px)",
+            borderRadius: 14,
             zIndex: 41,
             display: "flex",
             flexDirection: "column",
@@ -314,9 +311,7 @@ export default function CookingAssistant({ ctx = {} }) {
                   width: 36,
                   height: 36,
                   borderRadius: "50%",
-                  background: stt.listening
-                    ? "linear-gradient(135deg, #ff6b8a, #ff9b6b)"
-                    : "rgba(245,207,93,0.12)",
+                  background: stt.listening ? "#e05c5c" : "var(--bg-card-strong)",
                   border: "1px solid var(--border-subtle)",
                   color: stt.listening ? "#0d0d0d" : "var(--accent-gold)",
                   cursor: "pointer",
@@ -347,9 +342,7 @@ export default function CookingAssistant({ ctx = {} }) {
                 width: 36,
                 height: 36,
                 borderRadius: "50%",
-                background: !draft.trim() || busy
-                  ? "rgba(255,255,255,0.05)"
-                  : "linear-gradient(135deg, var(--accent-gold), var(--accent-orange))",
+                background: !draft.trim() || busy ? "rgba(255,255,255,0.05)" : "#E8703A",
                 border: "none",
                 color: !draft.trim() || busy ? "var(--text-secondary)" : "#0d0d0d",
                 cursor: !draft.trim() || busy ? "not-allowed" : "pointer",

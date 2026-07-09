@@ -38,13 +38,12 @@ export default function VoiceControl({
     width: 40,
     height: 40,
     borderRadius: "50%",
-    background: "rgba(0,0,0,0.55)",
+    background: "var(--bg-card)",
     border: "1px solid var(--border-subtle)",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backdropFilter: "blur(10px)",
     transition: "background 0.2s ease, color 0.2s ease, transform 0.15s ease",
   };
 
@@ -98,11 +97,10 @@ export default function VoiceControl({
           role="listbox"
           aria-label="Available voices"
           style={{
-            background: "rgba(13,13,13,0.95)",
+            background: "var(--bg-card)",
             border: "1px solid var(--border-subtle)",
-            borderRadius: 14,
+            borderRadius: 10,
             padding: 8,
-            backdropFilter: "blur(14px)",
             maxWidth: 240,
             maxHeight: "50vh",
             overflowY: "auto",
@@ -143,7 +141,7 @@ export default function VoiceControl({
                   borderRadius: 8,
                   padding: "8px 10px",
                   fontSize: 13,
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   color: active ? "var(--accent-gold)" : "var(--text-primary)",
                   cursor: "pointer",
                 }}

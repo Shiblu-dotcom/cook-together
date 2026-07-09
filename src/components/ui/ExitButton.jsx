@@ -23,14 +23,13 @@ export default function ExitButton({ onExit, confirmText = "Quit this session an
           width: 40,
           height: 40,
           borderRadius: "50%",
-          background: "rgba(0,0,0,0.55)",
+          background: "var(--bg-card)",
           border: "1px solid var(--border-subtle)",
           color: "var(--text-secondary)",
           cursor: "pointer",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backdropFilter: "blur(10px)",
           transition: "color 0.15s ease, transform 0.15s ease",
         }}
         onMouseEnter={(e) => {
@@ -61,7 +60,6 @@ export default function ExitButton({ onExit, confirmText = "Quit this session an
             alignItems: "center",
             justifyContent: "center",
             padding: 24,
-            backdropFilter: "blur(4px)",
           }}
         >
           <div

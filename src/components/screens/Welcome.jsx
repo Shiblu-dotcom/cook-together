@@ -99,26 +99,28 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
               width: 72,
               height: 72,
               borderRadius: "50%",
-              background: "rgba(245,207,93,0.10)",
+              background: "var(--bg-card)",
               border: "1px solid var(--border-strong)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <ChefHat size={32} color="var(--accent-gold)" aria-hidden="true" />
+            <ChefHat size={32} color="#E8703A" aria-hidden="true" />
           </div>
         </div>
 
         {/* Title */}
         <h1
-          className="font-display text-gold animate-fade-in-up opacity-0 delay-100"
+          className="font-display animate-fade-in-up opacity-0 delay-100"
           style={{
-            fontSize: 48,
-            fontWeight: 900,
-            lineHeight: 1.1,
+            fontSize: 52,
+            fontWeight: 600,
+            lineHeight: 1.02,
+            letterSpacing: "-0.02em",
+            color: "var(--text-primary)",
             textAlign: "center",
-            marginBottom: 4,
+            marginBottom: 6,
             animationFillMode: "forwards",
           }}
         >
@@ -131,7 +133,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
             fontStyle: "italic",
             color: "var(--text-secondary)",
             marginBottom: returning ? 40 : 18,
-            letterSpacing: "0.06em",
+            letterSpacing: "0.02em",
             textAlign: "center",
             animationFillMode: "forwards",
           }}
@@ -240,7 +242,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
           <div
             className="animate-fade-in opacity-0 delay-200"
             style={{
-              background: "rgba(245,207,93,0.06)",
+              background: "var(--bg-card)",
               border: "1px solid var(--border-subtle)",
               borderRadius: 14,
               padding: "12px 20px",

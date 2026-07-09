@@ -58,9 +58,7 @@ export default function VoiceInput({
           width: size,
           height: size,
           borderRadius: "50%",
-          background: listening
-            ? "linear-gradient(135deg, var(--accent-red, #ff6b8a), #ff9b6b)"
-            : "rgba(245,207,93,0.12)",
+          background: listening ? "#e05c5c" : "var(--bg-card-strong)",
           border: listening
             ? "1px solid rgba(255,107,138,0.6)"
             : "1px solid var(--border-subtle)",

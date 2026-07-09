@@ -329,7 +329,6 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
           maxWidth: 480,
           zIndex: 20,
           background: "rgba(13,13,13,0.9)",
-          backdropFilter: "blur(10px)",
           padding: "12px 20px",
           borderBottom: "1px solid var(--border-subtle)",
         }}

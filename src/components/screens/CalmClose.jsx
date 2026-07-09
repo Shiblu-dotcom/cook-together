@@ -71,10 +71,9 @@ export default function CalmClose({ witness, word, onGoodnight }) {
           className="font-display animate-word-reveal"
           style={{
             fontSize: 64,
-            fontWeight: 900,
+            fontWeight: 600,
             color: "var(--accent-gold)",
-            letterSpacing: "0.05em",
-            textShadow: "0 0 50px rgba(245,207,93,0.25)",
+            letterSpacing: "-0.01em",
             marginTop: 40,
             lineHeight: 1,
           }}

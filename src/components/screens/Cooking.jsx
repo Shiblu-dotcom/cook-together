@@ -199,22 +199,7 @@ export default function Cooking({
           }}
           style={{ position: "relative", cursor: "pointer", WebkitTapHighlightColor: "transparent" }}
         >
-          <div
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              width: 340,
-              height: 340,
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(245,207,93,0.14) 0%, rgba(255,138,61,0.06) 45%, transparent 70%)",
-              filter: "blur(6px)",
-              animation: paused ? "none" : "glowBreathe 4s ease-in-out infinite",
-              transform: "translate(-50%, -50%)",
-              pointerEvents: "none",
-            }}
-          />
+          {/* No glow behind the clock — the timer ring is the loud element. */}
           <Timer
             onTwistTime={handleTwistTime}
             onCoopTime={handleCoopTime}

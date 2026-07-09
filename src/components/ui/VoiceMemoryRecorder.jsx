@@ -159,13 +159,12 @@ export default function VoiceMemoryRecorder({ open, onClose, onCapture }) {
             width: 96,
             height: 96,
             borderRadius: "50%",
-            background: "linear-gradient(135deg, var(--accent-gold), var(--accent-orange))",
+            background: "#E8703A",
             border: "none",
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 8px 32px rgba(245,207,93,0.3)",
           }}
         >
           <Mic size={36} color="#0d0d0d" aria-hidden="true" />
@@ -182,14 +181,13 @@ export default function VoiceMemoryRecorder({ open, onClose, onCapture }) {
               width: 96,
               height: 96,
               borderRadius: "50%",
-              background: "linear-gradient(135deg, #ff6b8a, #ff9b6b)",
+              background: "#e05c5c",
               border: "none",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               animation: "pulseRing 1.3s ease infinite",
-              boxShadow: "0 8px 32px rgba(255,107,138,0.35)",
             }}
           >
             <Square size={32} color="#0d0d0d" fill="#0d0d0d" aria-hidden="true" />

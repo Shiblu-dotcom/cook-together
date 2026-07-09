@@ -161,7 +161,7 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
           strokeDashoffset={`${2 * Math.PI * 100 * (1 - pct)}`}
           strokeLinecap="round"
           transform="rotate(-90 110 110)"
-          style={{ transition: "stroke-dashoffset 1s linear, stroke 0.5s ease", filter: `drop-shadow(0 0 8px ${glowColor}40)` }}
+          style={{ transition: "stroke-dashoffset 1s linear, stroke 0.5s ease" }}
         />
       </svg>
 
@@ -170,7 +170,6 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
         style={{
           color: glowColor,
           opacity: paused ? 0.45 : 1,
-          textShadow: `0 0 30px ${glowColor}60, 0 0 60px ${glowColor}20`,
           animation: paused ? "none" : getAnimation(),
           lineHeight: "220px",
           width: "220px",

@@ -68,28 +68,14 @@ export default function TheWord({ word, onContinue }) {
         onToggleMute={setMuted}
       />
 
-      {/* Radial glow that keeps breathing after it arrives — candlelight, not a lamp. */}
-      {phase >= 1 && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "radial-gradient(ellipse at center, rgba(245,207,93,0.05) 0%, transparent 70%)",
-            pointerEvents: "none",
-            animation: "fadeIn 2s var(--ease-out) both, glowPulse 7s ease-in-out 2s infinite",
-          }}
-        />
-      )}
-
       {phase >= 1 && (
         <h1
           className="font-display"
           style={{
             fontSize: "clamp(56px, 20vw, 96px)",
-            fontWeight: 900,
+            fontWeight: 600,
             color: "var(--accent-gold)",
-            letterSpacing: "0.05em",
-            textShadow: "0 0 60px rgba(245,207,93,0.3), 0 0 120px rgba(255,138,61,0.1)",
+            letterSpacing: "-0.01em",
             animation: "wordReveal 1.4s var(--ease-out) forwards",
             lineHeight: 1,
             marginBottom: 0,

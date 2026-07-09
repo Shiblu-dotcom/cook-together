@@ -106,22 +106,6 @@ export default function CalmCook({ theme, memories, onAddMemory, onDone }) {
               }}
               style={{ position: "relative", cursor: "pointer", WebkitTapHighlightColor: "transparent" }}
             >
-              <div
-                aria-hidden="true"
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  width: 320,
-                  height: 320,
-                  borderRadius: "50%",
-                  background: "radial-gradient(circle, rgba(245,207,93,0.10) 0%, transparent 65%)",
-                  filter: "blur(8px)",
-                  animation: paused ? "none" : "calmBreathe 7s ease-in-out infinite",
-                  transform: "translate(-50%, -50%)",
-                  pointerEvents: "none",
-                }}
-              />
               <Timer
                 calm
                 paused={paused}

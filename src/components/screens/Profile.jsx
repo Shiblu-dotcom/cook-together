@@ -55,7 +55,6 @@ export default function Profile({ profile, onBack }) {
           maxWidth: 480,
           zIndex: 20,
           background: "rgba(13,13,13,0.9)",
-          backdropFilter: "blur(10px)",
           padding: "14px 20px",
           borderBottom: "1px solid var(--border-subtle)",
           display: "flex",
@@ -124,7 +123,7 @@ export default function Profile({ profile, onBack }) {
                 cursor: "pointer",
                 background: displayMode === mode ? "rgba(245,207,93,0.1)" : "transparent",
                 color: displayMode === mode ? "var(--accent-gold)" : "var(--text-secondary)",
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "'Inter', sans-serif",
                 fontWeight: 600,
                 fontSize: 14,
                 transition: "all 0.15s ease",
@@ -255,7 +254,7 @@ export default function Profile({ profile, onBack }) {
             <div
               id="story-card"
               style={{
-                background: "linear-gradient(160deg, #1d0d28 0%, #120912 60%, #1a0f14 100%)",
+                background: "var(--bg-card)",
                 border: "1px solid var(--border-strong)",
                 borderRadius: 24,
                 padding: "32px 28px",
@@ -335,7 +334,7 @@ export default function Profile({ profile, onBack }) {
                     border: "1px solid rgba(255,107,138,0.4)",
                     borderRadius: 12,
                     color: "var(--accent-red)",
-                    fontFamily: "'DM Sans', sans-serif",
+                    fontFamily: "'Inter', sans-serif",
                     fontWeight: 600,
                     fontSize: 14,
                     padding: "10px",

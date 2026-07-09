@@ -6,7 +6,7 @@ const TEMPLATES = [
   {
     id: "dark_moody",
     label: "Dark & Moody",
-    bg: "linear-gradient(135deg, #0d0d0d 0%, #1a0a2e 100%)",
+    bg: "#141019",
     textColor: "#ffe066",
     accentColor: "#ff9800",
     border: "1px solid rgba(245,207,93,0.2)",
@@ -14,7 +14,7 @@ const TEMPLATES = [
   {
     id: "warm_soft",
     label: "Warm & Soft",
-    bg: "linear-gradient(135deg, #2a1a0e 0%, #1a0f06 100%)",
+    bg: "#20140B",
     textColor: "#f5c97a",
     accentColor: "#e8855a",
     border: "1px solid rgba(245,201,122,0.3)",
@@ -22,7 +22,7 @@ const TEMPLATES = [
   {
     id: "bold_loud",
     label: "Bold & Loud",
-    bg: "linear-gradient(135deg, #1a0030 0%, #0d1a30 100%)",
+    bg: "#12122A",
     textColor: "#ffffff",
     accentColor: "#ffe066",
     border: "1px solid rgba(255,255,255,0.15)",
@@ -30,7 +30,7 @@ const TEMPLATES = [
   {
     id: "cinematic",
     label: "Cinematic",
-    bg: "linear-gradient(160deg, #0a0010 0%, #1a0820 50%, #0d1520 100%)",
+    bg: "#120A18",
     textColor: "#e8d5b7",
     accentColor: "#c8a96e",
     border: "1px solid rgba(200,169,110,0.2)",
@@ -145,7 +145,6 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName,
               marginBottom: 8,
               lineHeight: 1.1,
               position: "relative",
-              textShadow: `0 0 40px ${tpl.accentColor}30`,
             }}
           >
             {theWord}
@@ -243,7 +242,7 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName,
                   color: isSel ? "var(--accent-gold)" : "var(--text-secondary)",
                   cursor: "pointer",
                   transition: "border-color 0.15s ease, color 0.15s ease",
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                 }}
               >
                 {t.label}

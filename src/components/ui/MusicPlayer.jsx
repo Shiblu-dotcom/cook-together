@@ -16,8 +16,7 @@ export default function MusicPlayer({ currentMood, onChangeMood }) {
         width: "100%",
         maxWidth: 480,
         zIndex: 30,
-        background: "rgba(13,13,13,0.85)",
-        backdropFilter: "blur(12px)",
+        background: "var(--bg-primary)",
         borderBottom: "1px solid var(--border-subtle)",
       }}
     >
