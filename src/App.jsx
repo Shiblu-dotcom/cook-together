@@ -3,6 +3,8 @@ import { sfxChime } from "./utils/sfx";
 import { computeNightSignal, formatForNight } from "./utils/nightSignal";
 import { getCalmTheme } from "./data/calm";
 import { cookSecondsForDish } from "./data/dishes";
+import { getQuestionsForTone } from "./data/questions";
+import QuestionCard from "./components/ui/QuestionCard";
 import { useGame, getSavedSession, clearSavedSession } from "./hooks/useGame";
 import { useAI } from "./hooks/useAI";
 import { useStorage } from "./hooks/useStorage";
@@ -57,6 +59,7 @@ const PHASES = {
   COOKING: "cooking",
   TIMEUP: "timeup",
   SUBMIT: "submit",
+  ASK: "ask",
   JUDGING: "judging",
   QUESTION_REVEAL: "question_reveal",
   WINNER: "winner",
@@ -99,7 +102,7 @@ const PHASE_KEY = "cook_together_phase";
 // spot: LOADING_AI has no request in flight after a reload, JUDGING likewise.
 const safePhaseForResume = (p) => {
   if (p === PHASES.LOADING_AI) return PHASES.CHECKIN;
-  if (p === PHASES.JUDGING) return PHASES.SUBMIT;
+  if (p === PHASES.JUDGING || p === PHASES.ASK) return PHASES.SUBMIT;
   // An interrupted calm night stays over — never re-open it uninvited.
   if (p === PHASES.CALM_INTRO || p === PHASES.CALM_CLOSE) return PHASES.WELCOME;
   return p;
@@ -379,11 +382,17 @@ export default function App() {
     [updateGame]
   );
 
-  // ─── Submit ────────────────────────────────────────────────────────────────
+  // ─── Submit → ask → judgment ───────────────────────────────────────────────
+  // The questions moved here from mid-cook: plates are down, hands are free,
+  // the food is still hot — and the judge is deliberating anyway. The wait
+  // becomes the warmest beat instead of the emptiest one.
+  const judgingRef = useRef(null);
+  const [askQuestions, setAskQuestions] = useState([]);
+  const [askIdx, setAskIdx] = useState(0);
+
   const handleSubmit = useCallback(
     async (dishData) => {
       updateGame(dishData);
-      setPhase(PHASES.JUDGING);
       setAiError(null);
 
       // The judge's memory: everything this couple has accumulated. Night 10's
@@ -402,26 +411,50 @@ export default function App() {
             }
           : null,
       };
-      try {
+      // Judge in the background while the couple answers the questions.
+      judgingRef.current = (async () => {
         const judgment = await getJudgment(fullState);
         updateJudgment(judgment);
-
-        // Compute new badges
         const newGamesCount = (gameState.gamesPlayed || 0) + 1;
         const profile = getProfile();
-        const existingBadgeIds = profile?.badges || [];
-        const newBadgeObjects = getNewBadges(newGamesCount, existingBadgeIds);
-        const newBadgeIds = newBadgeObjects.map((b) => b.id);
-        updateGame({ newBadges: newBadgeIds });
-
-        setPhase(PHASES.QUESTION_REVEAL);
-      } catch (err) {
+        const newBadgeObjects = getNewBadges(newGamesCount, profile?.badges || []);
+        updateGame({ newBadges: newBadgeObjects.map((b) => b.id) });
+      })();
+      judgingRef.current.catch((err) => {
         console.error(err);
         setAiError(err.message);
-      }
+      });
+
+      // Plates down, hands free — now the questions.
+      setAskQuestions(
+        getQuestionsForTone(
+          gameState.aiContext.questionTone || "mix",
+          2,
+          gameState.gamesPlayed || 0,
+          gameState.checkIn?.newPair ? "playful" : gameState.night?.questionToneOverride || null
+        )
+      );
+      setAskIdx(0);
+      setPhase(PHASES.ASK);
     },
     [gameState, getJudgment, updateGame, updateJudgment, getProfile]
   );
+
+  // Both questions done (answered or skipped) → catch up with the judge.
+  const finishAsk = useCallback(async () => {
+    setPhase(PHASES.JUDGING);
+    try {
+      await judgingRef.current;
+      setPhase(PHASES.QUESTION_REVEAL);
+    } catch {
+      /* aiError already set — the Judgment screen offers retry */
+    }
+  }, []);
+
+  const handleAskNext = useCallback(() => {
+    if (askIdx + 1 < askQuestions.length) setAskIdx((i) => i + 1);
+    else finishAsk();
+  }, [askIdx, askQuestions.length, finishAsk]);
 
   const handleRetryJudgment = useCallback(() => {
     handleSubmit({
@@ -612,8 +645,6 @@ export default function App() {
           p2Name={gameState.p2Name}
           theme={gameState.aiContext.theme}
           musicMood={gameState.aiContext.musicMood}
-          questionTone={gameState.aiContext.questionTone}
-          questionBias={gameState.checkIn?.newPair ? "playful" : gameState.night?.questionToneOverride}
           twistStyle={gameState.night?.twistStyle}
           night={gameState.night}
           gamesPlayed={gameState.gamesPlayed}
@@ -624,7 +655,6 @@ export default function App() {
           cookSeconds={gameState.cookSeconds}
           memories={gameState.memories}
           onAddMemory={addMemory}
-          onQuestionAnswer={addQuestionAnswer}
           onTimeUp={handleTimeUp}
           onFinishEarly={handleFinishEarly}
           initialSeconds={gameState.secondsLeft}
@@ -643,6 +673,34 @@ export default function App() {
           roles={gameState.roles}
           onSubmit={handleSubmit}
         />
+      )}
+
+      {phase === PHASES.ASK && (
+        <div className="screen-center bg-deep" style={{ textAlign: "center" }}>
+          <div style={{ maxWidth: 380, padding: "0 20px" }}>
+            <div className="label" style={{ marginBottom: 8 }}>While the judge tastes</div>
+            <h2 className="font-display" style={{ fontSize: 26, marginBottom: 10 }}>
+              Two questions, while it's hot
+            </h2>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6 }}>
+              Plates are down, hands are free. Answer or skip — the reveal
+              only shows what you both put in.
+            </p>
+          </div>
+          {askQuestions[askIdx] && (
+            <QuestionCard
+              key={askIdx}
+              question={askQuestions[askIdx]}
+              p1Name={gameState.p1Name}
+              p2Name={gameState.p2Name}
+              onSubmit={(q, a1, a2) => {
+                addQuestionAnswer(q, a1, a2);
+                handleAskNext();
+              }}
+              onDismiss={handleAskNext}
+            />
+          )}
+        </div>
       )}
 
       {phase === PHASES.JUDGING && (

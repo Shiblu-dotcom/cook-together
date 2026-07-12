@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Timer from "../ui/Timer";
-import QuestionCard from "../ui/QuestionCard";
 import MemoryCapture from "../ui/MemoryCapture";
 import MusicPlayer from "../ui/MusicPlayer";
 import CookingAssistant from "../ui/CookingAssistant";
 import { useVoice } from "../../hooks/useVoice";
-import { getQuestionsForTone } from "../../data/questions";
 import { getRandomTwist } from "../../data/twists";
 import { getRandomCoopMoment } from "../../data/coopMoments";
 import { stepsForDish } from "../../data/dishes";
@@ -14,10 +12,10 @@ import { sfxTwist, sfxChime } from "../../utils/sfx";
 import { startAmbient, stopAmbient, setAmbientMood } from "../../utils/ambient";
 
 export default function Cooking({
-  p1Name, p2Name, theme, musicMood: initialMood, questionTone, questionBias,
-  secret1, secret2, twistStyle, gamesPlayed, night, roles,
+  p1Name, p2Name, theme, musicMood: initialMood,
+  secret1, secret2, twistStyle, night, roles,
   suggestedDish, cookSeconds, onFinishEarly,
-  memories, onAddMemory, onQuestionAnswer, onTimeUp,
+  memories, onAddMemory, onTimeUp,
   initialSeconds, onTick,
 }) {
   const [mood, setMood] = useState(initialMood || "chill");
@@ -64,36 +62,17 @@ export default function Cooking({
   // Coarse clock for the Chef assistant — updated every 30s so re-renders
   // stay rare but Chef can give time-aware advice ("plate it, 3 minutes left").
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds || 15 * 60);
-  const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [questions] = useState(() =>
-    getQuestionsForTone(questionTone || "mix", 3, gamesPlayed || 0, questionBias || null)
-  );
-  const questionIdx = useRef(0);
-  const questionTimers = useRef([]);
+  // Questions moved out of the cook entirely — they're asked after the
+  // plates are down, while the judge deliberates (App's ASK phase). Nobody
+  // types with wet hands anymore.
   const twistTimeoutRef = useRef(null);
   const twistRef = useRef(null);
   const voice = useVoice();
 
-  const showNextQuestion = () => {
-    if (questionIdx.current < questions.length) {
-      setCurrentQuestion(questions[questionIdx.current]);
-      questionIdx.current += 1;
-    }
-  };
-
-  // Schedule question cards at 4min and 10min in (≈11min and 5min remaining).
-  // Use refs so cleanup catches both timers regardless of when unmount happens.
   useEffect(() => {
-    const timers = [
-      setTimeout(showNextQuestion, 4 * 60 * 1000),
-      setTimeout(showNextQuestion, 10 * 60 * 1000),
-    ];
-    questionTimers.current = timers;
     return () => {
-      timers.forEach(clearTimeout);
       if (twistTimeoutRef.current) clearTimeout(twistTimeoutRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Ambient pad plays for the whole cook — starts with the AI-picked mood,
@@ -523,20 +502,6 @@ export default function Cooking({
             <p style={{ fontSize: 13, color: "var(--text-secondary)" }}>Tap when you've read it</p>
           </div>
         </div>
-      )}
-
-      {/* Question card */}
-      {currentQuestion && (
-        <QuestionCard
-          question={currentQuestion}
-          p1Name={p1Name}
-          p2Name={p2Name}
-          onSubmit={(q, a1, a2) => {
-            onQuestionAnswer(q, a1, a2);
-            setCurrentQuestion(null);
-          }}
-          onDismiss={() => setCurrentQuestion(null)}
-        />
       )}
 
       {/* Memory capture button */}
