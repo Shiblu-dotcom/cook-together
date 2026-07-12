@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, Download, Flame } from "lucide-react";
 import Mark from "../ui/Mark";
+import { getCrashLog } from "../../utils/crashlog";
 import BadgeDisplay from "../ui/BadgeDisplay";
 import { BADGES } from "../../data/badges";
 import { downloadCard } from "../../utils/shareCard";
@@ -79,25 +80,27 @@ export default function Profile({ profile, onBack }) {
       </div>
 
       <div style={{ width: "100%", maxWidth: 440, padding: "0 20px" }}>
-        {/* Stats row */}
+        {/* Stats row — couple stats, not a leaderboard. Since the one-plate
+            change both partners always banked identical points, so per-person
+            totals were dead weight. What actually accumulates: nights, words. */}
         <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
           {[
-            { label: profile.p1Name, value: profile.totalP1Points || 0, color: "var(--accent-gold)" },
-            { label: profile.p2Name, value: profile.totalP2Points || 0, color: "var(--accent-orange)" },
+            { label: "nights", value: profile.gamesPlayed || 0 },
+            { label: "words", value: (profile.wordCollection || []).length },
+            { label: "badges", value: (profile.badges || []).length },
           ].map((s) => (
             <div
               key={s.label}
               className="card-sm"
-              style={{ flex: 1, textAlign: "center" }}
+              style={{ flex: 1, textAlign: "center", padding: "16px 12px" }}
             >
-              <div style={{ fontSize: 11, color: "var(--text-secondary)", marginBottom: 4 }}>{s.label}</div>
               <div
                 className="font-display"
-                style={{ fontSize: 28, fontWeight: 700, color: s.color }}
+                style={{ fontSize: 28, fontWeight: 600, color: "var(--text-primary)" }}
               >
                 {s.value}
               </div>
-              <div style={{ fontSize: 11, color: "var(--text-secondary)" }}>points</div>
+              <div style={{ fontSize: 11, color: "var(--text-secondary)", marginTop: 4 }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -312,6 +315,36 @@ export default function Profile({ profile, onBack }) {
             </button>
           </div>
         )}
+
+        {/* Keep your story safe + report problems — quiet utilities */}
+        <div style={{ marginTop: 32, display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+          <button
+            className="btn-ghost"
+            style={{ fontSize: 12 }}
+            onClick={() => {
+              // The whole story as a file — so clearing a browser can never
+              // silently erase fifteen words of a couple's history.
+              const blob = new Blob([JSON.stringify(profile, null, 2)], { type: "application/json" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "cook-together-story.json";
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+          >
+            Save your story
+          </button>
+          <a
+            className="btn-ghost"
+            style={{ fontSize: 12, textDecoration: "none", display: "inline-flex", alignItems: "center" }}
+            href={`mailto:mahadihasan6274@gmail.com?subject=${encodeURIComponent("Cook Together — a problem")}&body=${encodeURIComponent(
+              "What happened:\n\n\n— recent errors —\n" + JSON.stringify(getCrashLog(), null, 1).slice(0, 1500)
+            )}`}
+          >
+            Report a problem
+          </a>
+        </div>
 
         {/* Start fresh — quiet, two-step, at the very bottom where it belongs */}
         <div style={{ marginTop: 40, textAlign: "center" }}>

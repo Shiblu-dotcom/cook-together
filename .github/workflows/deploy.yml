@@ -26,7 +26,13 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
+      # VITE_PROXY_URL is a repo *variable* (Settings → Secrets and variables →
+      # Actions → Variables). Point it at the Vercel proxy, e.g.
+      # https://cook-together.vercel.app/api/claude — the real AI switches on
+      # at the next deploy. Unset, the app falls back to canned responses.
       - run: npm run build
+        env:
+          VITE_PROXY_URL: ${{ vars.VITE_PROXY_URL }}
       - uses: actions/configure-pages@v5
         with:
           enablement: true

@@ -137,14 +137,17 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName,
           <h1
             className="font-display"
             style={{
-              fontSize: "clamp(56px, 19vw, 76px)",
+              // One line, always — the Word must never break mid-word on the
+              // artifact people post. Sized to fit the narrowest card (319px
+              // inner at 375px viewport); Fraunces 600 averages ~0.58em/char.
+              fontSize: Math.min(72, Math.round(300 / (Math.max(4, theWord.length) * 0.58))),
+              whiteSpace: "nowrap",
               fontWeight: 600,
               color: tpl.accentColor,
               letterSpacing: "-0.02em",
               marginBottom: 14,
-              lineHeight: 0.98,
+              lineHeight: 1.02,
               position: "relative",
-              overflowWrap: "anywhere",
             }}
           >
             {theWord}

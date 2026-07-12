@@ -26,7 +26,9 @@ const runMessage = async (body) => {
   if (client) {
     return client.messages.create({ model: MODEL, ...body });
   }
-  const res = await fetch("/api/claude", {
+  // On GitHub Pages the proxy lives on another origin (a Vercel deployment) —
+  // VITE_PROXY_URL points at it. Same-origin "/api/claude" stays the default.
+  const res = await fetch(import.meta.env.VITE_PROXY_URL || "/api/claude", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),

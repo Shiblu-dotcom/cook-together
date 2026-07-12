@@ -12,7 +12,26 @@ const MAX_TOKENS_CAP = 1024;
 // abuse — the pinned model + max_tokens cap do the real cost-limiting.
 const MAX_BODY_CHARS = 600_000;
 
+// The game is served from GitHub Pages while this proxy lives on Vercel, so
+// cross-origin calls from the Pages origin must be allowed explicitly.
+const ALLOWED_ORIGINS = new Set([
+  "https://shiblu-dotcom.github.io",
+  "http://localhost:5173",
+  "http://localhost:5174",
+]);
+
 export default async function handler(req, res) {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.has(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "content-type");
+  }
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
   if (req.method !== "POST") {
     res.status(405).json({ error: "POST only" });
     return;
