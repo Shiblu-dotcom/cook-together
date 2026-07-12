@@ -598,6 +598,7 @@ export default function App() {
           easyFor={gameState.night?.easyFor}
           coupleState={gameState.night?.coupleState}
           newPair={!!gameState.checkIn?.newPair}
+          skill={Math.round(((Number(gameState.checkIn?.p1Skill) || 3) + (Number(gameState.checkIn?.p2Skill) || 3)) / 2)}
           format={gameState.format}
           roles={gameState.roles}
           onSwapRoles={handleSwapRoles}

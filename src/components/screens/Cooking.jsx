@@ -9,6 +9,7 @@ import { getQuestionsForTone } from "../../data/questions";
 import { getRandomTwist } from "../../data/twists";
 import { getRandomCoopMoment } from "../../data/coopMoments";
 import { stepsForDish } from "../../data/dishes";
+import { useAI } from "../../hooks/useAI";
 import { sfxTwist, sfxChime } from "../../utils/sfx";
 import { startAmbient, stopAmbient, setAmbientMood } from "../../utils/ambient";
 
@@ -27,6 +28,39 @@ export default function Cooking({
   const [paused, setPaused] = useState(false);
   const [peeking, setPeeking] = useState(null); // null | 'choose' | 'p1' | 'p2'
   const [stepsFor, setStepsFor] = useState(null); // null | 'p1' | 'p2'
+  // The real how — quantities, heat, timing — one tap behind the beats.
+  // Generated per dish+role through the same three-tier AI stack, cached
+  // forever in localStorage so each recipe costs one call, ever.
+  const [detail, setDetail] = useState(null); // null | "loading" | string
+  const { chatWithAssistant } = useAI();
+
+  const fetchDetail = async (who) => {
+    const side = roles?.[who] === "prep" || roles?.[who] === "the sauce & side" ? "a" : "b";
+    const cacheKey = `ct_recipe::${suggestedDish.name}::${side}`;
+    try {
+      const hit = localStorage.getItem(cacheKey);
+      if (hit) { setDetail(hit); return; }
+    } catch { /* cache is best-effort */ }
+    setDetail("loading");
+    const name = who === "p1" ? p1Name : p2Name;
+    const beats = stepsForDish(suggestedDish, side).join("; ");
+    const text = await chatWithAssistant(
+      [{
+        role: "user",
+        content:
+          `${name} is cooking their part of "${suggestedDish.name}" (role: ${roles?.[who]}). ` +
+          `Their beats: ${beats}. Core ingredients: ${suggestedDish.pantry_core.join(", ")}. ` +
+          `Give the exact how for ONLY their part: real quantities for two people, pan heat, ` +
+          `timing, order. Max 110 words, plain sentences, no preamble, no headings.`,
+      }],
+      { p1Name, p2Name, theme, secret1: null, secret2: null }
+    );
+    setDetail(text);
+    try {
+      // Don't cache the offline fallback — a real recipe may come later.
+      if (text && !/kitchen brain/i.test(text)) localStorage.setItem(cacheKey, text);
+    } catch { /* full storage is fine */ }
+  };
   // Coarse clock for the Chef assistant — updated every 30s so re-renders
   // stay rare but Chef can give time-aware advice ("plate it, 3 minutes left").
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds || 15 * 60);
@@ -232,10 +266,10 @@ export default function Cooking({
             own. Big text, few words, readable with messy hands. */}
         {suggestedDish && (
           <div style={{ display: "flex", gap: 8, marginTop: 16, justifyContent: "center" }}>
-            <button className="btn-ghost" onClick={() => setStepsFor("p1")} style={{ fontSize: 13 }}>
+            <button className="btn-ghost" onClick={() => { setDetail(null); setStepsFor("p1"); }} style={{ fontSize: 13 }}>
               {p1Name}'s steps
             </button>
-            <button className="btn-ghost" onClick={() => setStepsFor("p2")} style={{ fontSize: 13 }}>
+            <button className="btn-ghost" onClick={() => { setDetail(null); setStepsFor("p2"); }} style={{ fontSize: 13 }}>
               {p2Name}'s steps
             </button>
           </div>
@@ -287,7 +321,7 @@ export default function Cooking({
           role="dialog"
           aria-modal="true"
           className="overlay-in"
-          onClick={() => setStepsFor(null)}
+          onClick={() => { setStepsFor(null); setDetail(null); }}
           style={{
             position: "fixed", inset: 0, background: "rgba(14,11,13,0.94)",
             display: "flex", flexDirection: "column", alignItems: "center",
@@ -301,18 +335,44 @@ export default function Cooking({
             <p className="font-display" style={{ fontSize: 20, fontWeight: 600, marginBottom: 20 }}>
               {suggestedDish.name}
             </p>
-            {stepsForDish(
-              suggestedDish,
-              roles?.[stepsFor] === "prep" || roles?.[stepsFor] === "the sauce & side" ? "a" : "b"
-            ).map((beat, i) => (
-              <p key={i} style={{ fontSize: 19, lineHeight: 1.45, color: "var(--text-primary)", marginBottom: 14 }}>
-                <span style={{ color: "var(--accent-gold)", marginRight: 10 }}>{i + 1}</span>
-                {beat}
-              </p>
-            ))}
-            <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>
-              Tap anywhere to get back to it — Chef has the details if you need them
-            </p>
+            {detail && detail !== "loading" ? (
+              <>
+                {/* The real how — only this person's part */}
+                <p style={{ fontSize: 15.5, lineHeight: 1.7, color: "var(--text-primary)", whiteSpace: "pre-wrap" }}>
+                  {detail}
+                </p>
+                <button
+                  className="btn-ghost"
+                  onClick={(e) => { e.stopPropagation(); setDetail(null); }}
+                  style={{ marginTop: 14, fontSize: 13 }}
+                >
+                  ← back to the beats
+                </button>
+              </>
+            ) : (
+              <>
+                {stepsForDish(
+                  suggestedDish,
+                  roles?.[stepsFor] === "prep" || roles?.[stepsFor] === "the sauce & side" ? "a" : "b"
+                ).map((beat, i) => (
+                  <p key={i} style={{ fontSize: 19, lineHeight: 1.45, color: "var(--text-primary)", marginBottom: 14 }}>
+                    <span style={{ color: "var(--accent-gold)", marginRight: 10 }}>{i + 1}</span>
+                    {beat}
+                  </p>
+                ))}
+                <button
+                  className="btn-ghost"
+                  onClick={(e) => { e.stopPropagation(); fetchDetail(stepsFor); }}
+                  disabled={detail === "loading"}
+                  style={{ marginTop: 6, fontSize: 13 }}
+                >
+                  {detail === "loading" ? "Chef is writing it down…" : "Need more detail?"}
+                </button>
+                <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>
+                  Tap anywhere to get back to it — Chef has the answers for anything else
+                </p>
+              </>
+            )}
           </div>
         </div>
       )}

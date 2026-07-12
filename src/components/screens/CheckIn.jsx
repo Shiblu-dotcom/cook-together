@@ -137,23 +137,27 @@ export default function CheckIn({ p1Name, p2Name, isReturning, onComplete }) {
             </Section>
           )}
 
-          <Section label={`${p1Name}'s cooking skill`}>
-            <SliderInput
-              value={data.p1Skill}
-              onChange={(v) => set("p1Skill", v)}
-              labels={SKILL_LABELS}
-            />
-          </Section>
-
-          <Section label={`${p2Name}'s cooking skill`}>
-            <SliderInput
-              value={data.p2Skill}
-              onChange={(v) => set("p2Skill", v)}
-              labels={SKILL_LABELS}
-            />
-          </Section>
         </>
       )}
+
+      {/* Skill picks the dish — visible EVERY night, not just the first.
+          A nervous 2 tonight gets a no-cook or easy dish; a confident 5
+          unlocks the hard ones. Honest answers make better nights. */}
+      <Section label={`${p1Name}'s cooking skill tonight`}>
+        <SliderInput
+          value={data.p1Skill}
+          onChange={(v) => set("p1Skill", v)}
+          labels={SKILL_LABELS}
+        />
+      </Section>
+
+      <Section label={`${p2Name}'s cooking skill tonight`}>
+        <SliderInput
+          value={data.p2Skill}
+          onChange={(v) => set("p2Skill", v)}
+          labels={SKILL_LABELS}
+        />
+      </Section>
 
       {isReturning && (
         <Section

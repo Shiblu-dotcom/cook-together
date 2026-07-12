@@ -5,6 +5,7 @@ import { BADGES } from "../../data/badges";
 import { useVoice } from "../../hooks/useVoice";
 import { useStorage } from "../../hooks/useStorage";
 import { sfxFanfare } from "../../utils/sfx";
+import { speakNeural, stopNeural } from "../../utils/neuralVoice";
 import { hapticSuccess } from "../../utils/haptics";
 
 export default function WinnerAnnouncement({
@@ -64,9 +65,13 @@ export default function WinnerAnnouncement({
       : `Tonight's winner is ${winner}. ${winnerReason} You are ${coupleTitle}.`;
     const closer = futurePrediction ? `Here's the prediction. ${futurePrediction}` : "";
     const fullText = [verdicts, opener, closer].filter(Boolean).join(" ");
-    const t = setTimeout(() => speak(fullText), 900);
+    // The judge speaks in his own voice; browser TTS is the fallback tier.
+    const t = setTimeout(() => {
+      speakNeural(fullText, "judge").then((ok) => { if (!ok) speak(fullText); });
+    }, 900);
     return () => {
       clearTimeout(t);
+      stopNeural();
       stop();
     };
     // We intentionally only re-run when the judgment payload changes.

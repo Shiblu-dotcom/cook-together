@@ -5,7 +5,7 @@ import { RefreshCw } from "lucide-react";
 import { useVoice } from "../../hooks/useVoice";
 import VoiceControl from "../ui/VoiceControl";
 
-export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, openingMessage, easyFor, coupleState, newPair, format, roles, onSwapRoles, onReady }) {
+export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, openingMessage, easyFor, coupleState, newPair, skill, format, roles, onSwapRoles, onReady }) {
   const [step, setStep] = useState(0); // 0=theme, 1=p1 secret, 2=p2 secret
   // Ingredients are drawn from the pool that fits tonight's theme — dessert
   // nights get dessert-compatible picks, savory nights never get matcha.
@@ -24,7 +24,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
   const [swapOptions, setSwapOptions] = useState([]);
   // A concrete head start from the dish book — matched to tonight's state
   // and shape, always optional. "Another idea" deals a different one.
-  const [dish, setDish] = useState(() => suggestDish(coupleState, format, { newPair }));
+  const [dish, setDish] = useState(() => suggestDish(coupleState, format, { newPair, skill }));
   const { supported, muted, setMuted, speaking, speak, stop, voices, voiceName, setVoice } = useVoice();
 
   // Read out each reveal step out loud so players don't need to keep their
@@ -194,7 +194,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                   </p>
                   <button
                     className="btn-ghost"
-                    onClick={() => setDish(suggestDish(coupleState, format, { newPair, exclude: [dish.name] }))}
+                    onClick={() => setDish(suggestDish(coupleState, format, { newPair, skill, exclude: [dish.name] }))}
                     style={{ marginTop: 6, fontSize: 12 }}
                   >
                     Another idea →

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { sfxWord } from "../../utils/sfx";
 import { useVoice } from "../../hooks/useVoice";
+import { speakNeural, stopNeural } from "../../utils/neuralVoice";
 import VoiceControl from "../ui/VoiceControl";
 
 // The calm night's ending. No result card, no confetti, no sharing —
@@ -26,9 +27,15 @@ export default function CalmClose({ witness, word, onGoodnight }) {
   // The witness is read softly, once. The Word is not spoken — it just is.
   useEffect(() => {
     if (!supported || muted || !witness) return undefined;
-    const t = setTimeout(() => speak(witness, { rate: 0.88, pitch: 1.0, volume: 0.85 }), 700);
+    // The witness gets its own, gentler voice — never the judge's.
+    const t = setTimeout(() => {
+      speakNeural(witness, "witness").then((ok) => {
+        if (!ok) speak(witness, { rate: 0.88, pitch: 1.0, volume: 0.85 });
+      });
+    }, 700);
     return () => {
       clearTimeout(t);
+      stopNeural();
       stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ChefHat, Mic, MicOff, Send, X, Loader2, Volume2, VolumeX } from "lucide-react";
 import { useSpeechInput } from "../../hooks/useSpeechInput";
 import { useVoice } from "../../hooks/useVoice";
+import { speakNeural } from "../../utils/neuralVoice";
 import { useAI } from "../../hooks/useAI";
 
 /**
@@ -82,7 +83,8 @@ export default function CookingAssistant({ ctx = {} }) {
       const replyMsg = { role: "assistant", content: reply };
       setMessages((m) => [...m, replyMsg]);
       if (voice.supported && !voice.muted) {
-        voice.speak(reply);
+        // Chef speaks in the judge's voice — one character all night.
+        speakNeural(reply, "judge").then((ok) => { if (!ok) voice.speak(reply); });
       }
     } catch {
       setMessages((m) => [

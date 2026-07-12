@@ -3,6 +3,7 @@ import VoiceControl from "../ui/VoiceControl";
 import { useVoice } from "../../hooks/useVoice";
 import { sfxWord } from "../../utils/sfx";
 import { hapticHeartbeat } from "../../utils/haptics";
+import { speakNeural, stopNeural } from "../../utils/neuralVoice";
 
 export default function TheWord({ word, onContinue }) {
   const [phase, setPhase] = useState(0); // 0=black, 1=word, 2=subtitle, 3=saved, 4=button
@@ -37,9 +38,13 @@ export default function TheWord({ word, onContinue }) {
   useEffect(() => {
     if (phase !== 1) return;
     if (!supported || muted || !word) return;
-    const t = setTimeout(() => speak(`${word}. That's tonight.`, { rate: 0.85, pitch: 1.05 }), 200);
+    const line = `${word}. That's tonight.`;
+    const t = setTimeout(() => {
+      speakNeural(line, "judge").then((ok) => { if (!ok) speak(line, { rate: 0.85, pitch: 1.05 }); });
+    }, 200);
     return () => {
       clearTimeout(t);
+      stopNeural();
       stop();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

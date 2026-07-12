@@ -137,6 +137,14 @@ describe("dish book", () => {
     }
   });
 
+  it("low-skill couples only ever draw easy dishes; medium never draws hard", () => {
+    for (let i = 0; i < 30; i++) {
+      expect(suggestDish("celebration", "two-component", { skill: 2 }).difficulty).toBe("easy");
+      expect(suggestDish("balanced", "one-dish", { skill: 1 }).difficulty).toBe("easy");
+      expect(["easy", "medium"]).toContain(suggestDish("celebration", "two-component", { skill: 3 }).difficulty);
+    }
+  });
+
   it("the clock matches the dish: easy 12, medium 15, hard 20 minutes", () => {
     expect(cookSecondsForDish({ difficulty: "easy" })).toBe(12 * 60);
     expect(cookSecondsForDish({ difficulty: "medium" })).toBe(15 * 60);

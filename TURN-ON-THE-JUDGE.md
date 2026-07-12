@@ -26,3 +26,12 @@ counts are capped inside `api/claude.js`.
 
 To verify: play a night — the judge's verdict should mention your actual
 dish by name. Canned verdicts never do.
+
+## Optional: the judge's real voice (+3 min)
+Browser speech synthesis is the fallback; a neural voice makes the judge a
+character. In the same Vercel project add a second environment variable:
+- Name: `ELEVENLABS_API_KEY` — Value: your key from https://elevenlabs.io
+- Redeploy. Done — the verdict, the Word, and Chef speak in the judge's
+  voice; the calm night's witness gets a separate, gentler one.
+- Optional: override the characters with `JUDGE_VOICE_ID` / `WITNESS_VOICE_ID`
+  (any ElevenLabs voice id).

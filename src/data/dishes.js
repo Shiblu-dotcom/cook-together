@@ -69,16 +69,39 @@ export const stepsForDish = (dish, side) => {
  * `format` is the app's ("two-component" | "one-dish").
  * `exclude` lets a reshuffle avoid repeating the current suggestion.
  */
-export const suggestDish = (coupleState, format, { newPair = false, exclude = [] } = {}) => {
+// Never hand a nervous cook a dish they can't make. `skill` is the couple's
+// combined read (1–5, from the check-in sliders): low keeps to easy dishes
+// (which is where all 29 no-cook dishes live), medium unlocks medium,
+// high unlocks everything.
+const difficultiesForSkill = (skill) => {
+  if (skill == null) return null; // no reading → no restriction
+  if (skill <= 2) return ["easy"];
+  if (skill <= 3) return ["easy", "medium"];
+  return null; // 4–5: anything, including hard
+};
+
+export const suggestDish = (coupleState, format, { newPair = false, exclude = [], skill = null } = {}) => {
   const state = newPair ? "new-pair" : DISH_STATE[coupleState] ?? null;
   const formats = FORMAT_MATCH[format] || ["two-roles", "no-cook"];
+  const allowed = difficultiesForSkill(skill);
 
   let pool = DISHES.filter(
     (d) =>
       formats.includes(d.format) &&
       (!state || d.couple_states.includes(state)) &&
+      (!allowed || allowed.includes(d.difficulty)) &&
       !exclude.includes(d.name)
   );
+  // Relax the state first but never the skill guard — a couple that can't
+  // cook should get a different vibe before they get a harder dish.
+  if (pool.length === 0) {
+    pool = DISHES.filter(
+      (d) => formats.includes(d.format) && (!allowed || allowed.includes(d.difficulty)) && !exclude.includes(d.name)
+    );
+  }
+  if (pool.length === 0) {
+    pool = DISHES.filter((d) => (!allowed || allowed.includes(d.difficulty)) && !exclude.includes(d.name));
+  }
   // Never come back empty-handed: relax the state, then the format.
   if (pool.length === 0) {
     pool = DISHES.filter((d) => formats.includes(d.format) && !exclude.includes(d.name));
