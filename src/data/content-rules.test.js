@@ -8,7 +8,7 @@ import {
   CALM_THEMES, CALM_MOMENTS, CALM_QUESTIONS, CALM_WORDS, CALM_WITNESS_FALLBACKS,
   getCalmTheme, getCalmMoment, getCalmQuestion, getCalmWord, getCalmWitnessFallback,
 } from "./calm";
-import { DISHES, suggestDish } from "./dishes";
+import { DISHES, suggestDish, cookSecondsForDish, stepsForDish } from "./dishes";
 import { DIETARY_RULE, buildContextPrompt, buildJudgmentPrompt, buildWitnessPrompt } from "../utils/aiPrompts";
 
 // Hard content rule: no pork or alcohol anywhere — static data or AI prompts.
@@ -135,6 +135,36 @@ describe("dish book", () => {
     for (const state of ["celebration", "comfort", "gentle", "divergent", "balanced"]) {
       expect(suggestDish(state, "one-dish")).toBeTruthy();
     }
+  });
+
+  it("the clock matches the dish: easy 12, medium 15, hard 20 minutes", () => {
+    expect(cookSecondsForDish({ difficulty: "easy" })).toBe(12 * 60);
+    expect(cookSecondsForDish({ difficulty: "medium" })).toBe(15 * 60);
+    expect(cookSecondsForDish({ difficulty: "hard" })).toBe(20 * 60);
+    expect(cookSecondsForDish(null)).toBe(15 * 60); // no suggestion → the classic clock
+  });
+
+  it("every dish yields 2-4 short, glanceable beats per person", () => {
+    for (const d of DISHES) {
+      for (const side of ["a", "b"]) {
+        const steps = stepsForDish(d, side);
+        expect(steps.length).toBeGreaterThanOrEqual(2);
+        expect(steps.length).toBeLessThanOrEqual(4);
+        for (const s of steps) {
+          expect(s.length).toBeLessThan(95); // glanceable, not a paragraph
+          expect(s).not.toMatch(/^\s*$/);
+        }
+      }
+    }
+  });
+
+  it("beats read as commands, not descriptions", () => {
+    const fried = DISHES.find((d) => d.name === "Egg Fried Rice");
+    const heat = stepsForDish(fried, "b");
+    expect(heat[0]).toBe("Fry everything in the wok"); // "Fries…" → imperative
+    const prep = stepsForDish(fried, "a");
+    expect(prep[0]).toMatch(/^Get out: /);
+    expect(prep[1]).toBe("Prep rice, veg, egg"); // short fragments folded, not orphaned
   });
 });
 

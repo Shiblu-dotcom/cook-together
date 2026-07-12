@@ -22,6 +22,47 @@ const FORMAT_MATCH = {
   "one-dish": ["two-roles", "no-cook"],
 };
 
+// The clock matches the dish, not a constant: easy 12, medium 15, hard 20.
+// Fixed once the night starts — the pressure is the point.
+const DIFFICULTY_MINUTES = { easy: 12, medium: 15, hard: 20 };
+export const cookSecondsForDish = (dish) =>
+  (DIFFICULTY_MINUTES[dish?.difficulty] || 15) * 60;
+
+// Turn a dish's third-person split ("Boils pasta, saves pasta water") into
+// imperative beats ("Boil the pasta" · "Save pasta water").
+const toImperative = (clause) => {
+  const t = clause.trim();
+  return (t.charAt(0).toUpperCase() + t.slice(1)).replace(/^(\S+)/, (verb) => {
+    if (/ies$/.test(verb)) return verb.replace(/ies$/, "y");        // fries → fry
+    if (/(ss|sh|ch|x)es$/.test(verb)) return verb.replace(/es$/, ""); // tosses → toss
+    if (/[^s]s$/.test(verb)) return verb.replace(/s$/, "");          // boils → boil
+    return verb;
+  });
+};
+
+/**
+ * 3–4 glanceable beats per person, derived from the dish itself. No
+ * measurements, no timings — short enough to read with messy hands.
+ * `side` is "a" (the prep-side role) or "b" (the heat-side role).
+ */
+export const stepsForDish = (dish, side) => {
+  if (!dish) return [];
+  const raw = side === "a" ? dish.split.person_a : dish.split.person_b;
+  // Fold one-word fragments back into the previous clause so "Preps rice,
+  // veg, egg" stays one beat instead of degrading to "Veg" / "Egg".
+  const clauses = raw.split(/,\s*/).reduce((acc, part) => {
+    const p = part.trim();
+    if (acc.length && p.split(/\s+/).length < 2) acc[acc.length - 1] += `, ${p}`;
+    else acc.push(p);
+    return acc;
+  }, []);
+  const beats = clauses.map(toImperative);
+  if (side === "a") {
+    return [`Get out: ${dish.pantry_core.join(", ")}`, ...beats].slice(0, 4);
+  }
+  return [...beats, "Plate it together — make it look on purpose"].slice(0, 4);
+};
+
 /**
  * Suggest a dish for tonight. `coupleState` is the Conductor's word
  * (celebration/comfort/gentle/divergent/balanced) or "new-pair";

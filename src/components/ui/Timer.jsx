@@ -2,17 +2,25 @@ import { useState, useEffect, useRef } from "react";
 import { sfxTick, sfxTimesUp, sfxChime } from "../../utils/sfx";
 import { hapticTap, hapticTimeUp } from "../../utils/haptics";
 
-const TOTAL = 15 * 60;
+const DEFAULT_TOTAL = 15 * 60;
 
 // `calm` strips every urgency cue: no color shift, no shaking, no countdown
 // beeps, no red flash — and the end is a soft chime instead of a gong.
 // Calm nights have a clock, not a countdown.
-export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, paused = false, initialSeconds = TOTAL, calm = false }) {
-  const [seconds, setSeconds] = useState(initialSeconds);
+// `totalSeconds` adapts to the dish (12/15/20 min); the twist and Together
+// Moment marks scale with it so the beats land at the same point in the arc.
+export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, paused = false, totalSeconds = DEFAULT_TOTAL, initialSeconds, calm = false }) {
+  const TOTAL = totalSeconds;
+  const start = initialSeconds ?? TOTAL;
+  // Same fractions of the night as the original 15-minute arc:
+  // Together Moment with 60% left, twist with ~27% left.
+  const coopAt = Math.round(TOTAL * 0.6);
+  const twistAt = Math.round(TOTAL * (4 / 15));
+  const [seconds, setSeconds] = useState(start);
   const [running, setRunning] = useState(true);
   // If we're resuming past a trigger mark, that beat already happened.
-  const twistFired = useRef(initialSeconds <= 4 * 60);
-  const coopFired = useRef(initialSeconds <= 9 * 60);
+  const twistFired = useRef(start <= twistAt);
+  const coopFired = useRef(start <= coopAt);
   const intervalRef = useRef(null);
 
   // The interval only decrements — pure state update, no side effects. All
@@ -45,7 +53,7 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
 
     // The Together Moment fires crossing the 9-minute mark — mid-cook,
     // when both dishes exist enough to cooperate over.
-    if (seconds <= 9 * 60 && seconds > 0 && !coopFired.current) {
+    if (seconds <= coopAt && seconds > 0 && !coopFired.current) {
       coopFired.current = true;
       hapticTap();
       if (cb.onCoopTime) cb.onCoopTime();
@@ -53,7 +61,7 @@ export default function Timer({ onTwistTime, onCoopTime, onTimeUp, onTick, pause
 
     // Twist fires when we cross the 4-minute mark (crossing, not equality,
     // so the 60x demo step and resumed sessions can't skip over it).
-    if (seconds <= 4 * 60 && seconds > 0 && !twistFired.current) {
+    if (seconds <= twistAt && seconds > 0 && !twistFired.current) {
       twistFired.current = true;
       hapticTap();
       if (cb.onTwistTime) cb.onTwistTime();

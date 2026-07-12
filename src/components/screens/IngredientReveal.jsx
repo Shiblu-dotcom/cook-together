@@ -82,6 +82,9 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
       swapped2: p2Swapped,
       mode,
       stakes: mode === "win" ? stakes : "",
+      // The suggested dish sets the clock (easy 12 / medium 15 / hard 20)
+      // and carries the per-person steps into the cook screen.
+      dish,
     });
   };
 

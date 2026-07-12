@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef, lazy, Suspense } from "react"
 import { sfxChime } from "./utils/sfx";
 import { computeNightSignal, formatForNight } from "./utils/nightSignal";
 import { getCalmTheme } from "./data/calm";
+import { cookSecondsForDish } from "./data/dishes";
 import { useGame, getSavedSession, clearSavedSession } from "./hooks/useGame";
 import { useAI } from "./hooks/useAI";
 import { useStorage } from "./hooks/useStorage";
@@ -332,9 +333,26 @@ export default function App() {
 
   // ─── Ingredients ───────────────────────────────────────────────────────────
   const handleIngredientsReady = useCallback(
-    ({ secret1, secret2, swapped1, swapped2, stakes, mode }) => {
-      updateGame({ secret1, secret2, swapped1, swapped2, mode: mode || "fun", stakes: stakes || "" });
+    ({ secret1, secret2, swapped1, swapped2, stakes, mode, dish }) => {
+      updateGame({
+        secret1, secret2, swapped1, swapped2,
+        mode: mode || "fun",
+        stakes: stakes || "",
+        suggestedDish: dish || null,
+        // The clock matches the dish and is fixed once the night starts.
+        cookSeconds: cookSecondsForDish(dish),
+      });
       setPhase(PHASES.COOKING);
+    },
+    [updateGame]
+  );
+
+  // Early finish: a couple that plates at minute 8 goes straight to
+  // submission — no "STOP" theatre for a stop they chose themselves.
+  const handleFinishEarly = useCallback(
+    (twist, coopMoment) => {
+      updateGame({ twist, coopMoment, secondsLeft: null });
+      setPhase(PHASES.SUBMIT);
     },
     [updateGame]
   );
@@ -601,10 +619,13 @@ export default function App() {
           secret1={gameState.secret1}
           secret2={gameState.secret2}
           roles={gameState.roles}
+          suggestedDish={gameState.suggestedDish}
+          cookSeconds={gameState.cookSeconds}
           memories={gameState.memories}
           onAddMemory={addMemory}
           onQuestionAnswer={addQuestionAnswer}
           onTimeUp={handleTimeUp}
+          onFinishEarly={handleFinishEarly}
           initialSeconds={gameState.secondsLeft}
           onTick={handleCookTick}
         />

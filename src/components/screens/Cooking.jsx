@@ -8,12 +8,14 @@ import { useVoice } from "../../hooks/useVoice";
 import { getQuestionsForTone } from "../../data/questions";
 import { getRandomTwist } from "../../data/twists";
 import { getRandomCoopMoment } from "../../data/coopMoments";
+import { stepsForDish } from "../../data/dishes";
 import { sfxTwist, sfxChime } from "../../utils/sfx";
 import { startAmbient, stopAmbient, setAmbientMood } from "../../utils/ambient";
 
 export default function Cooking({
   p1Name, p2Name, theme, musicMood: initialMood, questionTone, questionBias,
   secret1, secret2, twistStyle, gamesPlayed, night, roles,
+  suggestedDish, cookSeconds, onFinishEarly,
   memories, onAddMemory, onQuestionAnswer, onTimeUp,
   initialSeconds, onTick,
 }) {
@@ -24,6 +26,7 @@ export default function Cooking({
   const [showCoop, setShowCoop] = useState(false);
   const [paused, setPaused] = useState(false);
   const [peeking, setPeeking] = useState(null); // null | 'choose' | 'p1' | 'p2'
+  const [stepsFor, setStepsFor] = useState(null); // null | 'p1' | 'p2'
   // Coarse clock for the Chef assistant — updated every 30s so re-renders
   // stay rare but Chef can give time-aware advice ("plate it, 3 minutes left").
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds || 15 * 60);
@@ -206,6 +209,7 @@ export default function Cooking({
             onTimeUp={handleTimeUp}
             onTick={handleTick}
             paused={paused}
+            totalSeconds={cookSeconds || undefined}
             initialSeconds={initialSeconds || undefined}
           />
         </div>
@@ -224,14 +228,27 @@ export default function Cooking({
           </p>
         )}
 
-        {/* The early-finish door — a couple that plates at minute 7 shouldn't
-            sit watching a clock. Quiet on purpose; the timer stays the hero. */}
+        {/* Per-person steps — glanceable beats, each person sees only their
+            own. Big text, few words, readable with messy hands. */}
+        {suggestedDish && (
+          <div style={{ display: "flex", gap: 8, marginTop: 16, justifyContent: "center" }}>
+            <button className="btn-ghost" onClick={() => setStepsFor("p1")} style={{ fontSize: 13 }}>
+              {p1Name}'s steps
+            </button>
+            <button className="btn-ghost" onClick={() => setStepsFor("p2")} style={{ fontSize: 13 }}>
+              {p2Name}'s steps
+            </button>
+          </div>
+        )}
+
+        {/* The early-finish door — a couple that plates at minute 7 goes
+            straight to submission. Quiet on purpose; the timer stays the hero. */}
         <button
           className="btn-ghost"
-          onClick={handleTimeUp}
-          style={{ marginTop: 18, fontSize: 13, color: "var(--text-secondary)" }}
+          onClick={() => (onFinishEarly ? onFinishEarly(twistRef.current, coopRef.current) : handleTimeUp())}
+          style={{ marginTop: 10, fontSize: 13, color: "var(--text-secondary)" }}
         >
-          We're done early →
+          We're done →
         </button>
 
         {/* One quiet entry point for secret re-checks. */}
@@ -263,6 +280,42 @@ export default function Cooking({
           </div>
         )}
       </div>
+
+      {/* Steps overlay — your beats only, huge and few, tap to close */}
+      {stepsFor && suggestedDish && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="overlay-in"
+          onClick={() => setStepsFor(null)}
+          style={{
+            position: "fixed", inset: 0, background: "rgba(14,11,13,0.94)",
+            display: "flex", flexDirection: "column", alignItems: "center",
+            justifyContent: "center", zIndex: 65, padding: 28, cursor: "pointer",
+          }}
+        >
+          <div className="animate-step-in" style={{ maxWidth: 380, width: "100%" }}>
+            <div className="label" style={{ marginBottom: 6 }}>
+              {stepsFor === "p1" ? p1Name : p2Name} — {roles?.[stepsFor] || "your part"}
+            </div>
+            <p className="font-display" style={{ fontSize: 20, fontWeight: 600, marginBottom: 20 }}>
+              {suggestedDish.name}
+            </p>
+            {stepsForDish(
+              suggestedDish,
+              roles?.[stepsFor] === "prep" || roles?.[stepsFor] === "the sauce & side" ? "a" : "b"
+            ).map((beat, i) => (
+              <p key={i} style={{ fontSize: 19, lineHeight: 1.45, color: "var(--text-primary)", marginBottom: 14 }}>
+                <span style={{ color: "var(--accent-gold)", marginRight: 10 }}>{i + 1}</span>
+                {beat}
+              </p>
+            ))}
+            <p style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 8 }}>
+              Tap anywhere to get back to it — Chef has the details if you need them
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Secret peek overlay — first pick who's peeking, then reveal privately */}
       {peeking && (
