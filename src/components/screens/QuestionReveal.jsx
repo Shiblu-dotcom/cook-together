@@ -74,8 +74,8 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
           style={{ textAlign: "center", marginBottom: 24 }}
           key={`q-${qIdx}`}
         >
-          <div className="label" style={{ marginBottom: 10, color: "var(--accent-gold)" }}>While you cooked, we asked</div>
-          <p className="font-display" style={{ fontSize: 18, lineHeight: 1.6, color: "var(--text-primary)" }}>
+          <div className="label" style={{ marginBottom: 10 }}>While you cooked, we asked</div>
+          <p style={{ fontSize: 15, lineHeight: 1.6, color: "var(--text-secondary)" }}>
             {current.question}
           </p>
         </div>
@@ -118,8 +118,8 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
                 })}
               </div>
             </div>
-            {/* Their own words get the serif — same register as the witness. */}
-            <p className="font-display" style={{ fontSize: 17, fontStyle: "italic", color: "var(--text-primary)", lineHeight: 1.65 }}>
+            {/* Their own words are the hero of this screen — big serif italic. */}
+            <p className="font-display" style={{ fontSize: 19, fontStyle: "italic", color: "var(--text-primary)", lineHeight: 1.6 }}>
               {current.p1Answer}
             </p>
           </div>
@@ -163,7 +163,7 @@ export default function QuestionReveal({ questionsAnswered, p1Name, p2Name, onCo
                 })}
               </div>
             </div>
-            <p className="font-display" style={{ fontSize: 17, fontStyle: "italic", color: "var(--text-primary)", lineHeight: 1.65 }}>
+            <p className="font-display" style={{ fontSize: 19, fontStyle: "italic", color: "var(--text-primary)", lineHeight: 1.6 }}>
               {current.p2Answer}
             </p>
           </div>

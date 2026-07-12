@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Mark from "../ui/Mark";
 
 // The calm night's front door. Deliberate, private, zero drama — warm plain
 // words, no therapy-speak. Both partners opt in together; nobody is ambushed.
@@ -9,8 +10,8 @@ export default function CalmIntro({ onStart, onBack }) {
   return (
     <div className="screen-center bg-deep calm-scene" style={{ textAlign: "center" }}>
       <div style={{ width: "100%", maxWidth: 380, padding: "0 20px" }} className="animate-calm-in">
-        <div className="calm-flame" aria-hidden="true" style={{ fontSize: 56, marginBottom: 24 }}>
-          🕯️
+        <div className="calm-flame" aria-hidden="true" style={{ marginBottom: 24 }}>
+          <Mark variant="flame" size={60} color="#E8703A" />
         </div>
 
         <h1 className="font-display" style={{ fontSize: 30, fontWeight: 700, marginBottom: 12 }}>

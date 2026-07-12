@@ -116,7 +116,10 @@ export default function CookingAssistant({ ctx = {} }) {
         title="Ask Chef"
         style={{
           position: "fixed",
-          bottom: "max(96px, env(safe-area-inset-bottom, 0px) + 88px)",
+          // Sits ABOVE the voice-memo FAB (88–136px) with a 16px gap — these
+          // three buttons stack in one corner and must never overlap, or
+          // taps meant for one land on another.
+          bottom: "max(152px, env(safe-area-inset-bottom, 0px) + 144px)",
           right: "max(20px, env(safe-area-inset-right, 0px) + 12px)",
           width: 56,
           height: 56,
@@ -147,7 +150,7 @@ export default function CookingAssistant({ ctx = {} }) {
           style={{
             animation: "slideUp 0.45s var(--ease-out) backwards",
             position: "fixed",
-            bottom: "max(160px, env(safe-area-inset-bottom, 0px) + 152px)",
+            bottom: "max(216px, env(safe-area-inset-bottom, 0px) + 208px)",
             right: "max(20px, env(safe-area-inset-right, 0px) + 12px)",
             left: "max(20px, env(safe-area-inset-left, 0px) + 12px)",
             maxWidth: 400,
@@ -228,15 +231,15 @@ export default function CookingAssistant({ ctx = {} }) {
                   maxWidth: "85%",
                   background:
                     m.role === "user"
-                      ? "rgba(245,207,93,0.12)"
-                      : "rgba(255,255,255,0.04)",
+                      ? "rgba(232,112,58,0.12)"
+                      : "var(--bg-card-strong)",
                   border:
                     m.role === "user"
-                      ? "1px solid rgba(245,207,93,0.25)"
+                      ? "1px solid rgba(232,112,58,0.35)"
                       : "1px solid var(--border-subtle)",
                   color: "var(--text-primary)",
                   padding: "8px 12px",
-                  borderRadius: 14,
+                  borderRadius: 10,
                   whiteSpace: "pre-wrap",
                 }}
               >

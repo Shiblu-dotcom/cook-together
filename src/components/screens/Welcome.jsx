@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { ChefHat, Flame } from "lucide-react";
+import { Flame } from "lucide-react";
+import Mark from "../ui/Mark";
 import { useStorage } from "../../hooks/useStorage";
 
 // The AI calls require a Claude API key. If the key is missing or is still the
@@ -94,20 +95,7 @@ export default function Welcome({ onStart, onViewProfile, onCalmNight, resumeSlo
           className="animate-fade-in opacity-0"
           style={{ marginBottom: 24, animationFillMode: "forwards" }}
         >
-          <div
-            style={{
-              width: 72,
-              height: 72,
-              borderRadius: "50%",
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-strong)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <ChefHat size={32} color="#E8703A" aria-hidden="true" />
-          </div>
+          <Mark variant="plate" size={64} color="#E8703A" />
         </div>
 
         {/* Title */}

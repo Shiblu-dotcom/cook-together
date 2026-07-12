@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Timer from "../ui/Timer";
+import Mark from "../ui/Mark";
 import MemoryCapture from "../ui/MemoryCapture";
 import { getCalmMoment, getCalmQuestion } from "../../data/calm";
 import { sfxChime } from "../../utils/sfx";
@@ -78,8 +79,8 @@ export default function CalmCook({ theme, memories, onAddMemory, onDone }) {
       >
         {phase === "cooking" && (
           <>
-            <div className="calm-flame" aria-hidden="true" style={{ fontSize: 34, marginBottom: 14 }}>
-              🕯️
+            <div className="calm-flame" aria-hidden="true" style={{ marginBottom: 14 }}>
+              <Mark variant="flame" size={38} color="#E8703A" />
             </div>
             <div
               style={{
@@ -124,8 +125,8 @@ export default function CalmCook({ theme, memories, onAddMemory, onDone }) {
         {/* The gentle close of the cook — naming is optional, photo optional */}
         {phase === "naming" && (
           <div className="animate-calm-in" style={{ width: "100%" }}>
-            <div className="calm-flame" aria-hidden="true" style={{ fontSize: 40, marginBottom: 18 }}>
-              🕯️
+            <div className="calm-flame" aria-hidden="true" style={{ marginBottom: 18 }}>
+              <Mark variant="flame" size={44} color="#E8703A" />
             </div>
             <h2 className="font-display" style={{ fontSize: 26, marginBottom: 10 }}>
               Come look at what you made

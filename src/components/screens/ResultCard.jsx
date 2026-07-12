@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Download, Share2, Edit2, Check } from "lucide-react";
 import { downloadCard, shareCard } from "../../utils/shareCard";
+import Mark from "../ui/Mark";
 
 const TEMPLATES = [
   {
@@ -119,48 +120,46 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName,
             />
           )}
 
-          {/* App name + date */}
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20, position: "relative" }}>
-            <span style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5, fontFamily: "'Fraunces', serif", letterSpacing: "0.05em" }}>
-              Cook Together
-            </span>
-            <span style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5 }}>
+          {/* The mark + date — small, like a maker's stamp */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, position: "relative" }}>
+            <Mark variant="plate" size={30} color={tpl.accentColor} />
+            <span style={{ fontSize: 11, color: tpl.textColor, opacity: 0.55 }}>
               {new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
             </span>
           </div>
 
-          {/* Names */}
-          <p style={{ fontSize: 14, color: tpl.textColor, opacity: 0.7, marginBottom: 4, position: "relative" }}>
-            {p1Name} & {p2Name}
+          {/* Names — small caps over the hero */}
+          <p style={{ fontSize: 12, color: tpl.textColor, opacity: 0.7, marginBottom: 10, letterSpacing: "0.14em", textTransform: "uppercase", position: "relative" }}>
+            {p1Name} &amp; {p2Name}
           </p>
 
-          {/* The Word */}
+          {/* The Word IS the poster */}
           <h1
             className="font-display"
             style={{
-              fontSize: 56,
-              fontWeight: 900,
+              fontSize: "clamp(56px, 19vw, 76px)",
+              fontWeight: 600,
               color: tpl.accentColor,
-              letterSpacing: "0.04em",
-              marginBottom: 8,
-              lineHeight: 1.1,
+              letterSpacing: "-0.02em",
+              marginBottom: 14,
+              lineHeight: 0.98,
               position: "relative",
+              overflowWrap: "anywhere",
             }}
           >
             {theWord}
           </h1>
 
           {/* Couple title */}
-          <p style={{ fontSize: 14, color: tpl.textColor, opacity: 0.8, marginBottom: plateName ? 6 : 20, fontStyle: "italic", position: "relative" }}>
+          <p className="font-display" style={{ fontSize: 15, color: tpl.textColor, opacity: 0.85, marginBottom: 24, fontStyle: "italic", position: "relative" }}>
             {coupleTitle}
           </p>
 
-          {/* The plate they made */}
-          {plateName && (
-            <p style={{ fontSize: 13, color: tpl.textColor, opacity: 0.6, marginBottom: 20, position: "relative" }}>
-              "{plateName}"
-            </p>
-          )}
+          {/* One hand-ruled line, then one quiet line of facts — no boxes */}
+          <div style={{ width: 44, height: 3, background: tpl.accentColor, borderRadius: 2, marginBottom: 14, position: "relative" }} />
+          <p style={{ fontSize: 12.5, color: tpl.textColor, opacity: 0.7, marginBottom: 4, position: "relative" }}>
+            {plateName ? `"${plateName}"` : ""}
+          </p>
 
           {/* Memory photo */}
           {heroMemory && (
@@ -173,48 +172,20 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName,
             </div>
           )}
 
-          {/* Stats row */}
-          <div style={{ display: "flex", gap: 12, marginBottom: 16, position: "relative" }}>
-            <div
-              style={{
-                flex: 1,
-                background: "rgba(255,255,255,0.05)",
-                borderRadius: 12,
-                padding: "10px 14px",
-                textAlign: "center",
-              }}
-            >
-              <div style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5, marginBottom: 4 }}>The plate</div>
-              <div style={{ fontSize: 20, fontFamily: "'Fraunces', serif", fontWeight: 700, color: tpl.accentColor }}>
-                {plateScore}<span style={{ fontSize: 12, opacity: 0.6 }}>/100</span>
-              </div>
-            </div>
-            <div
-              style={{
-                flex: 1,
-                background: "rgba(255,255,255,0.05)",
-                borderRadius: 12,
-                padding: "10px 14px",
-                textAlign: "center",
-              }}
-            >
-              <div style={{ fontSize: 11, color: tpl.textColor, opacity: 0.5, marginBottom: 4 }}>Winner</div>
-              <div style={{ fontSize: 16, fontFamily: "'Fraunces', serif", fontWeight: 700, color: tpl.accentColor }}>
-                {winner === "tie" ? "Tie" : winner}
-              </div>
-            </div>
-          </div>
+          {/* One quiet line of facts — a poster credit, not a receipt */}
+          <p style={{ fontSize: 12.5, color: tpl.textColor, opacity: 0.6, marginBottom: caption ? 14 : 0, position: "relative" }}>
+            {plateScore}/100 · {winner === "tie" ? "a tie" : `${winner}'s night`} · {theme}
+          </p>
 
           {/* Caption */}
           {caption && (
-            <p style={{ fontSize: 13, color: tpl.textColor, opacity: 0.6, fontStyle: "italic", position: "relative" }}>
+            <p style={{ fontSize: 13, color: tpl.textColor, opacity: 0.65, fontStyle: "italic", position: "relative" }}>
               "{caption}"
             </p>
           )}
 
-          {/* Theme */}
-          <p style={{ fontSize: 11, color: tpl.textColor, opacity: 0.35, marginTop: 16, position: "relative" }}>
-            {theme} • Cook Together
+          <p style={{ fontSize: 11, color: tpl.textColor, opacity: 0.4, marginTop: 20, fontFamily: "'Fraunces', serif", fontStyle: "italic", position: "relative" }}>
+            Cook Together, Stay Together
           </p>
         </div>
 

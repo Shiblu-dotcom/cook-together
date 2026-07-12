@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArrowLeft, Download, Flame } from "lucide-react";
+import Mark from "../ui/Mark";
 import BadgeDisplay from "../ui/BadgeDisplay";
 import { BADGES } from "../../data/badges";
 import { downloadCard } from "../../utils/shareCard";
@@ -261,16 +262,13 @@ export default function Profile({ profile, onBack }) {
                 textAlign: "center",
               }}
             >
-              <p
-                className="font-display"
-                style={{ fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.08em", marginBottom: 6 }}
-              >
-                Cook Together
-              </p>
-              <h3 className="font-display text-gold" style={{ fontSize: 26, fontWeight: 900, marginBottom: 4 }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}>
+                <Mark variant="plate" size={34} color="#E8703A" />
+              </div>
+              <h3 className="font-display" style={{ fontSize: 28, fontWeight: 600, letterSpacing: "-0.01em", color: "var(--text-primary)", marginBottom: 6 }}>
                 {profile.p1Name} &amp; {profile.p2Name}
               </h3>
-              <p style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 20 }}>
+              <p style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 22 }}>
                 {profile.gamesPlayed} night{profile.gamesPlayed !== 1 ? "s" : ""} together
                 {compatibilityHistory.length > 0 &&
                   ` · ${Math.round(compatibilityHistory.reduce((a, b) => a + b, 0) / compatibilityHistory.length)}% compatible`}

@@ -24,7 +24,6 @@ export default function TimeUp({ onContinue }) {
       <div style={{ position: "relative", zIndex: 2 }}>
         {phase === 0 && (
           <div style={{ animation: "shakeIntense 0.4s ease" }}>
-            <div style={{ fontSize: 64, marginBottom: 20 }}>⏱️</div>
             <h1
               className="font-display text-gold"
               style={{ fontSize: 52, fontWeight: 900, lineHeight: 1.1, letterSpacing: "-1px" }}
@@ -38,7 +37,6 @@ export default function TimeUp({ onContinue }) {
 
         {phase >= 1 && (
           <div className="animate-fade-in" style={{ animationFillMode: "forwards" }}>
-            <div style={{ fontSize: 64, marginBottom: 20 }}>⏱️</div>
             <h1
               className="font-display text-gold"
               style={{ fontSize: 52, fontWeight: 900, lineHeight: 1.1, letterSpacing: "-1px", marginBottom: 24 }}
