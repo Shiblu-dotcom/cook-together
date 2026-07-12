@@ -42,6 +42,9 @@ const initialGameState = {
   questionsAnswered: [],
   memories: [],
 
+  // How the night ends: "fun" (default — no winner, no scores) or "win".
+  // Both keep the secret ingredients; repair mode bypasses this entirely.
+  mode: "fun",
   // One plate. The format decides how it's split; the parts are each
   // person's own contribution to it.
   format: "one-dish",

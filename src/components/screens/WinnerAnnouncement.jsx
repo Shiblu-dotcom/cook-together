@@ -9,8 +9,9 @@ import { hapticSuccess } from "../../utils/haptics";
 
 export default function WinnerAnnouncement({
   p1Name, p2Name, judgment, stakes, newBadges = [], existingBadges = [],
-  newPair = false, onContinue,
+  newPair = false, mode = "win", onContinue,
 }) {
+  const isFun = mode === "fun";
   // Fanfare as the winner flies in.
   useEffect(() => {
     sfxFanfare();
@@ -56,7 +57,9 @@ export default function WinnerAnnouncement({
   useEffect(() => {
     if (!supported || muted) return undefined;
     const verdicts = [p1Reaction, p2Reaction].filter(Boolean).join(" ");
-    const opener = isTie
+    const opener = isFun
+      ? `You are ${coupleTitle}.`
+      : isTie
       ? `Tonight, nobody loses. ${coupleTitle}.`
       : `Tonight's winner is ${winner}. ${winnerReason} You are ${coupleTitle}.`;
     const closer = futurePrediction ? `Here's the prediction. ${futurePrediction}` : "";
@@ -94,7 +97,17 @@ export default function WinnerAnnouncement({
         {/* The hero — typography only, one loud statement. Everything after
             this is deliberately quieter (the model is the Word screen). */}
         <div className="animate-fly-in" style={{ textAlign: "center", marginBottom: 48, marginTop: 24 }}>
-          {isTie ? (
+          {isFun ? (
+            <>
+              <div className="label" style={{ marginBottom: 10 }}>You are</div>
+              <h1 className="font-display" style={{ fontSize: 40, fontWeight: 600, lineHeight: 1.12, letterSpacing: "-0.02em", color: "var(--accent-gold)", marginBottom: 12 }}>
+                {coupleTitle}
+              </h1>
+              <p style={{ fontSize: 15, color: "var(--text-secondary)", fontStyle: "italic", lineHeight: 1.5, maxWidth: 340, margin: "0 auto" }}>
+                One plate, made together. That was the whole game.
+              </p>
+            </>
+          ) : isTie ? (
             <h1 className="font-display" style={{ fontSize: 44, fontWeight: 600, lineHeight: 1.08, letterSpacing: "-0.02em", color: "var(--text-primary)", marginBottom: 12 }}>
               Tonight,<br />nobody loses
             </h1>
@@ -148,7 +161,9 @@ export default function WinnerAnnouncement({
           </div>
         )}
 
-        {/* One plate, one score — they rise and fall together */}
+        {/* One plate, one score — they rise and fall together. Fun nights
+            have no score at all: the plate just was. */}
+        {!isFun && (
         <div className="card animate-fade-in-up delay-200" style={{ marginBottom: 20, textAlign: "center", animationFillMode: "forwards" }}>
           <div className="label" style={{ marginBottom: 6 }}>The plate</div>
           <div
@@ -161,6 +176,7 @@ export default function WinnerAnnouncement({
             out of 100 — earned together
           </div>
         </div>
+        )}
 
         {/* The Judge's Verdict — the AI's personal reaction to each dish */}
         {(p1Reaction || p2Reaction) && (
@@ -199,7 +215,8 @@ export default function WinnerAnnouncement({
           </div>
         )}
 
-        {/* Couple title */}
+        {/* Couple title — on fun nights it IS the hero above, so no repeat */}
+        {!isFun && (
         <div
           className="card-sm animate-fade-in-up delay-300"
           style={{ textAlign: "center", marginBottom: 16, animationFillMode: "forwards" }}
@@ -209,6 +226,7 @@ export default function WinnerAnnouncement({
             {coupleTitle}
           </p>
         </div>
+        )}
 
         {/* Compatibility — never shown on new-pair nights: two people still
             new to each other don't get scored as a couple. */}

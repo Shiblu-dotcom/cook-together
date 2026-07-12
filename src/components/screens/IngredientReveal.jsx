@@ -14,8 +14,11 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
   const [ingredients, setIngredients] = useState(() => getRandomIngredients(2, theme, easyFor));
   const [p1Swapped, setP1Swapped] = useState(false);
   const [p2Swapped, setP2Swapped] = useState(false);
+  // How tonight ends. "fun" is the default — no winner, no scores, just the
+  // game. Both modes keep the secret ingredients. Repair mode never gets here.
+  const [mode, setMode] = useState("fun");
   // Tiny real-world stakes make the cook-off count — agreed up front,
-  // paid off on the winner screen.
+  // paid off on the winner screen. Only offered when playing to win.
   const [stakes, setStakes] = useState("");
   const [showSwapOptions, setShowSwapOptions] = useState(null); // null | 'p1' | 'p2'
   const [swapOptions, setSwapOptions] = useState([]);
@@ -71,7 +74,15 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
   };
 
   const handleFinish = () => {
-    onReady({ secret1: ingredients[0], secret2: ingredients[1], swapped1: p1Swapped, swapped2: p2Swapped, stakes });
+    // Stakes only exist in "play to win" — there's no loser to pay them in fun mode.
+    onReady({
+      secret1: ingredients[0],
+      secret2: ingredients[1],
+      swapped1: p1Swapped,
+      swapped2: p2Swapped,
+      mode,
+      stakes: mode === "win" ? stakes : "",
+    });
   };
 
   const STAKES = [
@@ -207,7 +218,34 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
               </div>
             )}
 
-            {/* Optional stakes — one tap, real-world consequence */}
+            {/* How tonight ends — both ways keep the secret ingredients */}
+            <div style={{ marginBottom: 20 }}>
+              <div className="label" style={{ marginBottom: 10 }}>Tonight we're playing…</div>
+              <div style={{ display: "flex", gap: 8, justifyContent: "center" }} role="radiogroup" aria-label="How tonight ends">
+                <button
+                  className={`chip ${mode === "fun" ? "selected" : ""}`}
+                  role="radio"
+                  aria-checked={mode === "fun"}
+                  onClick={() => setMode("fun")}
+                  style={{ fontSize: 13 }}
+                >
+                  For fun — no winner
+                </button>
+                <button
+                  className={`chip ${mode === "win" ? "selected" : ""}`}
+                  role="radio"
+                  aria-checked={mode === "win"}
+                  onClick={() => setMode("win")}
+                  style={{ fontSize: 13 }}
+                >
+                  To win
+                </button>
+              </div>
+            </div>
+
+            {/* Optional stakes — one tap, real-world consequence. Only when
+                someone can actually lose. */}
+            {mode === "win" && (
             <div style={{ marginBottom: 28 }}>
               <div className="label" style={{ marginBottom: 10 }}>Tonight's stakes (optional)</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
@@ -223,6 +261,7 @@ export default function IngredientReveal({ p1Name, p2Name, theme, cookingTip, op
                 ))}
               </div>
             </div>
+            )}
 
             <button className="btn-primary" onClick={() => setStep(1)}>
               Reveal {p1Name}'s Secret →

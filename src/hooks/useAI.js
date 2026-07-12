@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { buildContextPrompt, buildJudgmentPrompt, buildWitnessPrompt, DIETARY_RULE } from "../utils/aiPrompts";
+import { normalizeJudgmentForMode } from "../utils/mode";
 import { getFallbackWord } from "../utils/wordGenerator";
 import { getCalmWord, getCalmWitnessFallback } from "../data/calm";
 import { THEMES } from "../data/themes";
@@ -162,7 +163,7 @@ export const useAI = () => {
         ? result.winner
         : "tie";
 
-      return {
+      return normalizeJudgmentForMode({
         p1Reaction: result.p1Reaction || `${gameState.p1Name}, your part held the plate together.`,
         p2Reaction: result.p2Reaction || `${gameState.p2Name}, your part gave it its voice.`,
         plateScore,
@@ -182,7 +183,7 @@ export const useAI = () => {
         futurePrediction: result.futurePrediction || "You'll accidentally invent a new cuisine together.",
         secretIngredientComment: result.secretIngredientComment || "Bold choices were made in this kitchen.",
         theWord: result.theWord || getFallbackWord(),
-      };
+      }, gameState.mode);
     } catch (err) {
       logApiError("AI judgment", err);
       // Score the plate honestly from what actually happened — secrets
@@ -201,7 +202,7 @@ export const useAI = () => {
         : gameState.usedSecret2 && !gameState.usedSecret1 ? gameState.p2Name
         : "tie";
 
-      return {
+      return normalizeJudgmentForMode({
         p1Reaction: `${gameState.p1Name}, your part was made with real care. It showed on the plate.`,
         p2Reaction: `${gameState.p2Name}, your part brought the imagination tonight.`,
         plateScore,
@@ -215,7 +216,7 @@ export const useAI = () => {
         futurePrediction: "You'll open a pop-up restaurant by accident on a Tuesday.",
         secretIngredientComment: "The secret ingredients were handled with varying levels of confidence.",
         theWord: getFallbackWord(),
-      };
+      }, gameState.mode);
     }
   };
 

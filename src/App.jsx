@@ -332,8 +332,8 @@ export default function App() {
 
   // ─── Ingredients ───────────────────────────────────────────────────────────
   const handleIngredientsReady = useCallback(
-    ({ secret1, secret2, swapped1, swapped2, stakes }) => {
-      updateGame({ secret1, secret2, swapped1, swapped2, stakes: stakes || "" });
+    ({ secret1, secret2, swapped1, swapped2, stakes, mode }) => {
+      updateGame({ secret1, secret2, swapped1, swapped2, mode: mode || "fun", stakes: stakes || "" });
       setPhase(PHASES.COOKING);
     },
     [updateGame]
@@ -646,6 +646,7 @@ export default function App() {
           p1Name={gameState.p1Name}
           p2Name={gameState.p2Name}
           newPair={!!gameState.checkIn?.newPair}
+          mode={gameState.mode}
           judgment={gameState.judgment}
           stakes={gameState.stakes}
           newBadges={gameState.newBadges || []}
@@ -663,6 +664,7 @@ export default function App() {
           p1Name={gameState.p1Name}
           p2Name={gameState.p2Name}
           judgment={gameState.judgment}
+          mode={gameState.mode}
           plateName={gameState.plateName}
           theme={gameState.aiContext.theme}
           memories={gameState.memories}

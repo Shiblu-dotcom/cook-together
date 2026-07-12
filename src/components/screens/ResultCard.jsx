@@ -38,7 +38,7 @@ const TEMPLATES = [
   },
 ];
 
-export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName, memories, onPlayAgain }) {
+export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName, mode = "win", memories, onPlayAgain }) {
   const [templateIdx, setTemplateIdx] = useState(0);
   const [caption, setCaption] = useState("");
   const [editingCaption, setEditingCaption] = useState(false);
@@ -172,9 +172,12 @@ export default function ResultCard({ p1Name, p2Name, judgment, theme, plateName,
             </div>
           )}
 
-          {/* One quiet line of facts — a poster credit, not a receipt */}
+          {/* One quiet line of facts — a poster credit, not a receipt.
+              Fun nights carry no score and no winner, just the night. */}
           <p style={{ fontSize: 12.5, color: tpl.textColor, opacity: 0.6, marginBottom: caption ? 14 : 0, position: "relative" }}>
-            {plateScore}/100 · {winner === "tie" ? "a tie" : `${winner}'s night`} · {theme}
+            {mode === "win"
+              ? `${plateScore}/100 · ${winner === "tie" ? "a tie" : `${winner}'s night`} · ${theme}`
+              : `made together · ${theme}`}
           </p>
 
           {/* Caption */}

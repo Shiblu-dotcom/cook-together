@@ -101,6 +101,14 @@ VOICE & STYLE:
 - Specific, vivid, present-tense beats generic. Reference one concrete detail (a dish element, their day, the twist) per reaction.
 - Don't repeat the player's name more than once per reaction.
 
+${gameState.mode === "fun" ? `
+TONIGHT'S ENDING — they chose to play FOR FUN: no winner, no scores, no
+compatibility. React warmly to the plate and to each person's part in
+p1Reaction/p2Reaction — never rank them, never compare, never declare anyone
+better. Set plateScore to 0, winner to "tie", compatibilityScore to 0.
+The coupleTitle, futurePrediction, secretIngredientComment, and theWord still
+matter — make those sing.
+` : ""}
 SCORING RULES — one plate, one score:
 - The plate earns ONE score, 0-100. They rise and fall together.
 - Each secret ingredient worked in: +10 to the plate (both in = +20).
