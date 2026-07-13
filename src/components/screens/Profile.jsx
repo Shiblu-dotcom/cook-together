@@ -330,7 +330,9 @@ export default function Profile({ profile, onBack }) {
               a.href = url;
               a.download = "cook-together-story.json";
               a.click();
-              URL.revokeObjectURL(url);
+              // Revoke on a delay — revoking synchronously races the download
+              // start on some browsers and silently produces an empty file.
+              setTimeout(() => URL.revokeObjectURL(url), 3000);
             }}
           >
             Save your story
