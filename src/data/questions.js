@@ -41,6 +41,19 @@ export const QUESTIONS = {
   ],
 };
 
+// Depth tags — every question is light or deep. Light opens the door,
+// deep walks through it. Each night asks light FIRST, deep second: escalation
+// inside a single night, separate from the across-nights trust gating below.
+const DEEP_TAGGED = new Set([
+  ...QUESTIONS.deep,
+  "What's one thing you wish your partner knew you loved about them?", // flirty
+  "What's something your partner makes you want to be better at?", // mix
+  // Supportive's gentle-deep — opening up without probing:
+  "What's one thing your partner could take off your plate this week?",
+  "What's one way your partner made your life easier recently?",
+]);
+export const questionDepth = (q) => (DEEP_TAGGED.has(q) ? "deep" : "light");
+
 // Rotation memory: questions a couple has already been asked, persisted so
 // repeat game nights get fresh questions until the pool is exhausted.
 const USED_KEY = "cook_together_used_questions";
@@ -73,35 +86,52 @@ const toneForNight = (tone, gamesPlayed) => {
 // `bias` comes from the couple's day signal and overrides the AI's tone:
 // "supportive" on comfort/divergent nights (never probe someone who's raw),
 // "flirty" on celebration nights.
-export const getQuestionsForTone = (tone, count = 3, gamesPlayed = 0, bias = null) => {
+export const getQuestionsForTone = (tone, count = 2, gamesPlayed = 0, bias = null) => {
   const baseTone = bias && QUESTIONS[bias] ? bias : tone;
   const effectiveTone = toneForNight(baseTone, gamesPlayed);
   const pool = QUESTIONS[effectiveTone] || QUESTIONS.mix;
   let used = loadUsed();
 
-  // Prefer questions this couple has never seen. If the tone's pool is
-  // exhausted, retire its entries from the used list and start a fresh cycle.
-  let fresh = pool.filter((q) => !used.includes(q));
-  if (fresh.length < count) {
-    used = used.filter((q) => !pool.includes(q));
-    fresh = pool;
-  }
-
-  const picked = [...fresh].sort(() => Math.random() - 0.5).slice(0, count);
-
-  // From night 7 on, one earned deep question joins even the lighter tones —
-  // the game has been around long enough to ask. Supportive nights are
-  // exempt: never fire a probing question at someone who's already raw.
-  if (gamesPlayed >= 7 && effectiveTone !== "deep" && effectiveTone !== "supportive" && picked.length > 0) {
-    const deepFresh = QUESTIONS.deep.filter(
-      (q) => !used.includes(q) && !picked.includes(q)
-    );
-    if (deepFresh.length > 0) {
-      picked[picked.length - 1] =
-        deepFresh[Math.floor(Math.random() * deepFresh.length)];
+  const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  // Draw preferring never-seen questions; recycle the candidate set's used
+  // entries only when it's fully exhausted.
+  const draw = (cands, exclude) => {
+    if (!cands.length) return null;
+    let fresh = cands.filter((q) => !used.includes(q) && !exclude.includes(q));
+    if (!fresh.length) {
+      used = used.filter((q) => !cands.includes(q));
+      fresh = cands.filter((q) => !exclude.includes(q));
     }
+    return fresh.length ? rand(fresh) : null;
+  };
+  // Fresh-only draw — returns null instead of recycling. Used for the deep
+  // slot so a dry deep well falls back to light rather than repeating.
+  const drawFresh = (cands, exclude) => {
+    const fresh = cands.filter((q) => !used.includes(q) && !exclude.includes(q));
+    return fresh.length ? rand(fresh) : null;
+  };
+
+  const lights = pool.filter((q) => questionDepth(q) === "light");
+  // The deep slot: the night's own deeper questions, plus the earned deep
+  // pool once trust exists. Supportive nights only ever use their own
+  // gentle-deep — never probe someone who's already raw.
+  let deeps = pool.filter((q) => questionDepth(q) === "deep");
+  if (effectiveTone !== "supportive" && effectiveTone !== "deep" && gamesPlayed >= 2) {
+    deeps = [...new Set([...deeps, ...QUESTIONS.deep])];
   }
 
-  saveUsed([...used, ...picked]);
-  return picked;
+  // The ritual shape: light first, deep second — the same arc every night.
+  const picked = [];
+  const first = draw(lights.length ? lights : pool, picked);
+  if (first) picked.push(first);
+  const second = drawFresh(deeps, picked) || draw(pool, picked);
+  if (second) picked.push(second);
+  while (picked.length < count) {
+    const extra = draw(pool, picked);
+    if (!extra) break;
+    picked.push(extra);
+  }
+
+  saveUsed([...new Set([...used, ...picked])]);
+  return picked.slice(0, count);
 };

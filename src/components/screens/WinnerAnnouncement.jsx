@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import BadgeDisplay from "../ui/BadgeDisplay";
 import VoiceControl from "../ui/VoiceControl";
-import { BADGES } from "../../data/badges";
 import { useVoice } from "../../hooks/useVoice";
 import { useStorage } from "../../hooks/useStorage";
 import { sfxFanfare } from "../../utils/sfx";
@@ -9,7 +7,7 @@ import { speakNeural, stopNeural } from "../../utils/neuralVoice";
 import { hapticSuccess } from "../../utils/haptics";
 
 export default function WinnerAnnouncement({
-  p1Name, p2Name, judgment, stakes, newBadges = [], existingBadges = [],
+  p1Name, p2Name, judgment, stakes,
   newPair = false, mode = "win", onContinue,
 }) {
   const isFun = mode === "fun";
@@ -77,13 +75,6 @@ export default function WinnerAnnouncement({
     // We intentionally only re-run when the judgment payload changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [winner, winnerReason, coupleTitle, futurePrediction, supported, muted]);
-
-  // Deduplicate badge ids so any badge that lives in both existing and new lists
-  // only renders once.
-  const allBadgeIds = Array.from(new Set([...existingBadges, ...newBadges]));
-  const allBadgeObjects = allBadgeIds
-    .map((id) => BADGES.find((b) => b.id === id))
-    .filter(Boolean);
 
   return (
     <div className="screen bg-deep" style={{ paddingTop: 48, paddingBottom: 48 }}>
@@ -286,14 +277,9 @@ export default function WinnerAnnouncement({
           </div>
         ) : null}
 
-        {/* Badges */}
-        {allBadgeObjects.length > 0 && (
-          <div className="animate-fade-in-up delay-600" style={{ marginBottom: 24, animationFillMode: "forwards" }}>
-            <div className="label" style={{ marginBottom: 12 }}>Your Badges</div>
-            <BadgeDisplay badges={allBadgeObjects} newBadges={newBadges.map((id) => ({ id }))} />
-          </div>
-        )}
-
+        {/* Badges deliberately do NOT appear here — extrinsic rewards decay
+            fast and compete with the Word, the night's real centerpiece.
+            They still accrue quietly and live in the Profile's corner. */}
         <button className="btn-primary animate-fade-in-up delay-700" onClick={onContinue} style={{ animationFillMode: "forwards" }}>
           Reveal The Word →
         </button>

@@ -166,8 +166,8 @@ export const useAI = () => {
         : "tie";
 
       return normalizeJudgmentForMode({
-        p1Reaction: result.p1Reaction || `${gameState.p1Name}, your part held the plate together.`,
-        p2Reaction: result.p2Reaction || `${gameState.p2Name}, your part gave it its voice.`,
+        p1Reaction: result.p1Reaction || `${gameState.p1Name}, your part held ${gameState.p2Name}'s half up — this plate needed both of you.`,
+        p2Reaction: result.p2Reaction || `${gameState.p2Name}, your part gave ${gameState.p1Name}'s work its voice.`,
         plateScore,
         winner,
         winnerReason: result.winnerReason ||
@@ -205,8 +205,8 @@ export const useAI = () => {
         : "tie";
 
       return normalizeJudgmentForMode({
-        p1Reaction: `${gameState.p1Name}, your part was made with real care. It showed on the plate.`,
-        p2Reaction: `${gameState.p2Name}, your part brought the imagination tonight.`,
+        p1Reaction: `${gameState.p1Name}, the care in your part made ${gameState.p2Name}'s half land better. That's how this plate works.`,
+        p2Reaction: `${gameState.p2Name}, your imagination lifted what ${gameState.p1Name} built. Neither half stands alone.`,
         plateScore,
         winner,
         winnerReason: winner === "tie"

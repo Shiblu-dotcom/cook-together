@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { QUESTIONS, getQuestionsForTone } from "./questions";
+import { QUESTIONS, getQuestionsForTone, questionDepth } from "./questions";
 
 // questions.js persists rotation state via localStorage — stub it for node.
 const store = new Map();
@@ -55,5 +55,25 @@ describe("question rotation", () => {
   it("falls back to the mix pool for unknown tones", () => {
     const qs = getQuestionsForTone("nonsense", 2);
     qs.forEach((q) => expect(QUESTIONS.mix).toContain(q));
+  });
+
+  it("every night runs light then deep — the same arc every time", () => {
+    for (let i = 0; i < 8; i++) {
+      store.clear();
+      const [q1, q2] = getQuestionsForTone("mix", 2, 5);
+      expect(questionDepth(q1)).toBe("light");
+      expect(questionDepth(q2)).toBe("deep");
+    }
+  });
+
+  it("supportive nights still sequence light → gentle-deep, from their own pool only", () => {
+    for (let i = 0; i < 8; i++) {
+      store.clear();
+      const [q1, q2] = getQuestionsForTone("flirty", 2, 10, "supportive");
+      expect(questionDepth(q1)).toBe("light");
+      expect(QUESTIONS.supportive).toContain(q1);
+      expect(QUESTIONS.supportive).toContain(q2);
+      expect(QUESTIONS.deep).not.toContain(q2);
+    }
   });
 });

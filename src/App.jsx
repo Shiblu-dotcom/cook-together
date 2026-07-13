@@ -729,8 +729,6 @@ export default function App() {
           mode={gameState.mode}
           judgment={gameState.judgment}
           stakes={gameState.stakes}
-          newBadges={gameState.newBadges || []}
-          existingBadges={profile?.badges || []}
           onContinue={handleWinnerContinue}
         />
       )}
